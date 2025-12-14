@@ -1,0 +1,39 @@
+Total orders: 5
+Sample Order: {
+  "guestInfo": null,
+  "deliveryLocation": null,
+  "paymentDetails": {
+    "transactionId": null,
+    "isPaid": false,
+    "paidAt": null
+  },
+  "_id": "69280322ee769052d3f0d956",
+  "user": "6928030bee769052d3f0d94c",
+  "items": [
+    {
+      "product": "6927fc5a18be453dfcf6d8d7",
+      "name": "apple",
+      "quantity": 2,
+      "price": 300,
+      "_id": "69280322ee769052d3f0d957"
+    }
+  ],
+  "subtotal": 600,
+  "deliveryFee": 50,
+  "tax": 78,
+  "discount": 0,
+  "totalAmount": 728,
+  "shippingAddress": "Koteshwar, Kathmandu Metropolitan City",
+  "deliveryTime": "Instant (15-30 mins)",
+  "paymentMethod": "Cash on Delivery",
+  "tip": 0,
+  "isSubscription": false,
+  "status": "Delivered",
+  "trackingHistory": [],
+  "createdAt": "2025-11-27T07:52:02.227Z",
+  "updatedAt": "2025-11-27T10:01:48.057Z",
+  "__v": 0
+}
+Total users: 2
+User: Admin User (admin@hambasket.com) ID: 6927fb81bcccf3e6d3b3ac31
+User: skb (9815769007) ID: 6928030bee769052d3f0d94c

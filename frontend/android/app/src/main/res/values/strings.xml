@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">HamBasket</string>
+    <string name="title_activity_main">HamBasket</string>
+    <string name="package_name">com.hambasket.app</string>
+    <string name="custom_url_scheme">com.hambasket.app</string>
+</resources>

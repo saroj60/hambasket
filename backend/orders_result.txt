@@ -1,0 +1,180 @@
+Total Orders: 18
+
+Recent Orders:
+[
+  {
+    "guestInfo": null,
+    "paymentDetails": {
+      "transactionId": null,
+      "isPaid": false,
+      "paidAt": null
+    },
+    "refundStatus": "None",
+    "_id": "6925653de1d47b0ef61bcfeb",
+    "user": "69252d762531985f20f56ee7",
+    "items": [
+      {
+        "product": "6924913bbb46abad6fe2ab42",
+        "name": "Whole Milk",
+        "quantity": 1,
+        "price": 120,
+        "_id": "6925653de1d47b0ef61bcfec"
+      }
+    ],
+    "subtotal": 120,
+    "deliveryFee": 50,
+    "tax": 16,
+    "discount": 0,
+    "totalAmount": 186,
+    "shippingAddress": "Thamel, Kathmandu, Nepal",
+    "deliveryTime": "Instant (15-30 mins)",
+    "paymentMethod": "Cash on Delivery",
+    "tip": 0,
+    "isSubscription": false,
+    "status": "Delivered",
+    "createdAt": "2025-11-25T08:13:49.327Z",
+    "updatedAt": "2025-11-25T09:04:33.460Z",
+    "__v": 0,
+    "trackingHistory": []
+  },
+  {
+    "guestInfo": null,
+    "paymentDetails": {
+      "transactionId": null,
+      "isPaid": false,
+      "paidAt": null
+    },
+    "refundStatus": "None",
+    "_id": "692568d3209d9b30ccd5b436",
+    "user": "69252d762531985f20f56ee7",
+    "items": [
+      {
+        "product": "6924913bbb46abad6fe2ab41",
+        "name": "Avocado",
+        "quantity": 1,
+        "price": 450,
+        "_id": "692568d3209d9b30ccd5b437"
+      }
+    ],
+    "subtotal": 450,
+    "deliveryFee": 50,
+    "tax": 59,
+    "discount": 0,
+    "totalAmount": 559,
+    "shippingAddress": "Thamel, Kathmandu, Nepal",
+    "deliveryTime": "Instant (15-30 mins)",
+    "paymentMethod": "Cash on Delivery",
+    "tip": 0,
+    "isSubscription": false,
+    "status": "Pending",
+    "createdAt": "2025-11-25T08:29:07.308Z",
+    "updatedAt": "2025-11-25T08:29:07.308Z",
+    "__v": 0,
+    "trackingHistory": []
+  },
+  {
+    "guestInfo": null,
+    "paymentDetails": {
+      "transactionId": null,
+      "isPaid": false,
+      "paidAt": null
+    },
+    "refundStatus": "None",
+    "_id": "69256c9eaae25b9711613dd2",
+    "user": "69252d762531985f20f56ee7",
+    "items": [
+      {
+        "product": "6924913bbb46abad6fe2ab42",
+        "name": "Whole Milk",
+        "quantity": 1,
+        "price": 120,
+        "_id": "69256c9eaae25b9711613dd3"
+      }
+    ],
+    "subtotal": 120,
+    "deliveryFee": 50,
+    "tax": 16,
+    "discount": 0,
+    "totalAmount": 186,
+    "shippingAddress": "Kathmandu, Nepal",
+    "deliveryTime": "Instant (15-30 mins)",
+    "paymentMethod": "Cash on Delivery",
+    "tip": 0,
+    "isSubscription": false,
+    "status": "Pending",
+    "createdAt": "2025-11-25T08:45:18.335Z",
+    "updatedAt": "2025-11-25T08:45:18.335Z",
+    "__v": 0,
+    "trackingHistory": []
+  },
+  {
+    "guestInfo": null,
+    "paymentDetails": {
+      "transactionId": null,
+      "isPaid": false,
+      "paidAt": null
+    },
+    "refundStatus": "None",
+    "_id": "69257007aae25b9711613e14",
+    "user": "69252d762531985f20f56ee7",
+    "items": [
+      {
+        "product": "6924913bbb46abad6fe2ab42",
+        "name": "Whole Milk",
+        "quantity": 1,
+        "price": 120,
+        "_id": "69257007aae25b9711613e15"
+      }
+    ],
+    "subtotal": 120,
+    "deliveryFee": 50,
+    "tax": 16,
+    "discount": 0,
+    "totalAmount": 186,
+    "shippingAddress": "Phildol, Tallogau, Mahalaxmi-05, Mahalaxmi, Mahalaxmi Municipality, Lalitpur, Bagamati Province, 44795, Nepal",
+    "deliveryTime": "Instant (15-30 mins)",
+    "paymentMethod": "Cash on Delivery",
+    "tip": 0,
+    "isSubscription": false,
+    "status": "Pending",
+    "createdAt": "2025-11-25T08:59:51.160Z",
+    "updatedAt": "2025-11-25T08:59:51.160Z",
+    "__v": 0,
+    "trackingHistory": []
+  },
+  {
+    "guestInfo": null,
+    "paymentDetails": {
+      "transactionId": null,
+      "isPaid": false,
+      "paidAt": null
+    },
+    "refundStatus": "None",
+    "_id": "6925702faae25b9711613e27",
+    "user": "69252d762531985f20f56ee7",
+    "items": [
+      {
+        "product": "6924913bbb46abad6fe2ab42",
+        "name": "Whole Milk",
+        "quantity": 1,
+        "price": 120,
+        "_id": "6925702faae25b9711613e28"
+      }
+    ],
+    "subtotal": 120,
+    "deliveryFee": 50,
+    "tax": 16,
+    "discount": 0,
+    "totalAmount": 186,
+    "shippingAddress": "Phildol, Tallogau, Mahalaxmi-05, Mahalaxmi, Mahalaxmi Municipality, Lalitpur, Bagamati Province, 44795, Nepal",
+    "deliveryTime": "Instant (15-30 mins)",
+    "paymentMethod": "Cash on Delivery",
+    "tip": 0,
+    "isSubscription": false,
+    "status": "Pending",
+    "createdAt": "2025-11-25T09:00:31.441Z",
+    "updatedAt": "2025-11-25T09:00:31.441Z",
+    "__v": 0,
+    "trackingHistory": []
+  }
+]

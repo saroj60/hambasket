@@ -1,0 +1,102 @@
+Property settings:
+    file.encoding = UTF-8
+    file.separator = \
+    java.class.path = 
+    java.class.version = 66.0
+    java.home = C:\Program Files\Java\jdk-22
+    java.io.tmpdir = C:\Users\saroj\AppData\Local\Temp\
+    java.library.path = C:\Program Files\Java\jdk-22\bin
+        C:\WINDOWS\Sun\Java\bin
+        C:\WINDOWS\system32
+        C:\WINDOWS
+        C:\Program Files\Common Files\Oracle\Java\javapath
+        C:\windows\system32
+        C:\windows
+        C:\windows\System32\Wbem
+        C:\windows\System32\WindowsPowerShell\v1.0\
+        C:\windows\System32\OpenSSH\
+        C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common
+        C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR
+        C:\msys64\mingw64\bin
+        C:\msys64\usr\bin
+        C:\Program Files\Java\jdk-19\bin
+        C:\WINDOWS\system32
+        C:\WINDOWS
+        C:\WINDOWS\System32\Wbem
+        C:\WINDOWS\System32\WindowsPowerShell\v1.0\
+        C:\WINDOWS\System32\OpenSSH\
+        C:\php-8.3.4
+        C:\Program Files\HP\HP One Agent
+        C:\Program Files\Docker\Docker\resources\bin
+        C:\WINDOWS\system32
+        C:\WINDOWS
+        C:\WINDOWS\System32\Wbem
+        C:\WINDOWS\System32\WindowsPowerShell\v1.0\
+        C:\WINDOWS\System32\OpenSSH\
+        C:\Program Files\nodejs\
+        C:\Program Files\Git\cmd
+        C:\Program Files\cursor\resources\app\bin
+        C:\Users\saroj\AppData\Local\Programs\Python\Python311\
+        C:\Users\saroj\AppData\Local\Programs\Python\Launcher\
+        C:\Users\saroj\AppData\Local\Microsoft\WindowsApps
+        C:\Users\saroj\AppData\Local\Programs\Microsoft VS Code\bin
+        C:\Program Files\MongoDB\Server\6.0\bin
+        C:\ghcup\bin
+        C:\Users\saroj\AppData\Local\Coursier\data\bin
+        C:\Users\saroj\AppData\Local\Programs\Python\Python311\Scripts\
+        C:\Users\saroj\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\Scripts
+        
+        C:\Users\saroj\AppData\Local\Microsoft\WindowsApps
+        C:\Users\saroj\AppData\Roaming\npm
+        C:\Users\saroj\AppData\Local\Programs\cursor\resources\app\bin
+        C:\Users\saroj\AppData\Local\Programs\Windsurf\bin
+        C:\Users\saroj\AppData\Local\Programs\Antigravity\bin
+        c:\Users\saroj\.antigravity\extensions\vscjava.vscode-java-debug-0.58.3-universal\bundled\scripts\noConfigScripts
+        .
+    java.runtime.name = Java(TM) SE Runtime Environment
+    java.runtime.version = 22.0.1+8-16
+    java.specification.name = Java Platform API Specification
+    java.specification.vendor = Oracle Corporation
+    java.specification.version = 22
+    java.vendor = Oracle Corporation
+    java.vendor.url = https://java.oracle.com/
+    java.vendor.url.bug = https://bugreport.java.com/bugreport/
+    java.version = 22.0.1
+    java.version.date = 2024-04-16
+    java.vm.compressedOopsMode = 32-bit
+    java.vm.info = mixed mode, sharing
+    java.vm.name = Java HotSpot(TM) 64-Bit Server VM
+    java.vm.specification.name = Java Virtual Machine Specification
+    java.vm.specification.vendor = Oracle Corporation
+    java.vm.specification.version = 22
+    java.vm.vendor = Oracle Corporation
+    java.vm.version = 22.0.1+8-16
+    jdk.debug = release
+    line.separator = \r \n 
+    native.encoding = Cp1252
+    os.arch = amd64
+    os.name = Windows 11
+    os.version = 10.0
+    path.separator = ;
+    stderr.encoding = Cp1252
+    stdout.encoding = cp437
+    sun.arch.data.model = 64
+    sun.boot.library.path = C:\Program Files\Java\jdk-22\bin
+    sun.cpu.endian = little
+    sun.cpu.isalist = amd64
+    sun.io.unicode.encoding = UnicodeLittle
+    sun.java.launcher = SUN_STANDARD
+    sun.jnu.encoding = Cp1252
+    sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+    sun.os.patch.level = 
+    user.country = IN
+    user.dir = C:\Users\saroj\Desktop\HB\frontend\android
+    user.home = C:\Users\saroj
+    user.language = en
+    user.name = saroj
+    user.script = 
+    user.variant = 
+
+java version "22.0.1" 2024-04-16
+Java(TM) SE Runtime Environment (build 22.0.1+8-16)
+Java HotSpot(TM) 64-Bit Server VM (build 22.0.1+8-16, mixed mode, sharing)
