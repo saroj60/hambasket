@@ -43,6 +43,11 @@ mongoose
   .then(() => console.log("✅ MongoDB connected..."))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
+// Root Endpoint
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
 // Serve Uploads
 import path from 'path';
 import { fileURLToPath } from 'url';
