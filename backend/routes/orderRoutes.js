@@ -1,6 +1,6 @@
 import express from "express";
 import Driver from "../models/driver.js";
-import Order from "../models/order.js";
+import Order from "../models/Order.js";
 import User from "../models/user.js";
 import Notification from "../models/notification.js";
 import jwt from "jsonwebtoken";
