@@ -37,14 +37,77 @@ const seedData = async () => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash("admin123", salt);
 
-    await User.create({
+    const adminUser = await User.create({
       name: "Admin User",
-      email: "sarojbhagat666@gmail.com",
+      email: "admin@gmail.com",
       password: hashedPassword,
       role: "admin",
       isVerified: true
     });
-    console.log("✅ Admin user created: admin@hambasket.com / admin123");
+    console.log("✅ Admin user created: admin@gmail.com / admin123");
+
+    // Seed Dummy Orders
+    await Order.deleteMany();
+    const orders = [
+      {
+        user: adminUser._id,
+        items: [
+          { product: products[0], quantity: 2, price: 150 },
+          { product: products[1], quantity: 1, price: 300 }
+        ],
+        totalAmount: 600,
+        status: "Delivered",
+        paymentStatus: "Paid",
+        paymentMethod: "COD",
+        createdAt: new Date(Date.now() - 86400000) // Yesterday
+      },
+      {
+        user: adminUser._id,
+        items: [
+          { product: products[3], quantity: 1, price: 120 }
+        ],
+        totalAmount: 120,
+        status: "Pending",
+        paymentStatus: "Pending",
+        paymentMethod: "Online",
+        createdAt: new Date() // Today
+      },
+      {
+        user: adminUser._id,
+        items: [
+          { product: products[4], quantity: 2, price: 600 }
+        ],
+        totalAmount: 1200,
+        status: "Processing",
+        paymentStatus: "Paid",
+        paymentMethod: "Online",
+        createdAt: new Date(Date.now() - 172800000) // 2 days ago
+      }
+    ];
+    // Need to re-fetch products to get IDs if real IDs are needed, 
+    // but for simple string/embedded docs in some schemas this might pass.
+    // However, Order schema likely references Product by ID.
+    // Let's assume Order schema uses embedded product details or we need real IDs.
+    // To be safe, we should fetch the inserted products first.
+
+    // Actually, let's keep it simple. If we rely on valid ObjectIDs, we need to fetch them.
+    // But since we are deleting/inserting products above, we can just grab them.
+    const createdProducts = await Product.find();
+
+    const finalOrders = orders.map((order, index) => {
+      // Map dummy product indices to real DB products
+      order.items.forEach(item => {
+        const p = createdProducts.find(cp => cp.name === item.product.name);
+        if (p) {
+          item.product = p._id; // Replace full object with ID if schema requires ID
+          // Or item.product could be the object. Let's assume ID for "product" field.
+        }
+      });
+      return order;
+    });
+
+    await Order.insertMany(finalOrders);
+    console.log("✅ Sample Orders seeded!");
 
   } catch (error) {
     console.error("❌ Error seeding data:", error);
