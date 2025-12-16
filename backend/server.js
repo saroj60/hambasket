@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -17,17 +18,19 @@ import driverRoutes from "./routes/driverRoutes.js";
 import storeRoutes from "./routes/storeRoutes.js";
 import offerRoutes from "./routes/offerRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+import setupRoutes from "./routes/setupRoutes.js";
 
 dotenv.config();
 const app = express();
 
-import cookieParser from "cookie-parser";
-
 app.use(cors({
-  origin: true, // Allow all origins for development
+  origin: true,
   credentials: true
 }));
 app.use(express.json());
+
+// Routes
+app.use("/api/setup", setupRoutes);
 app.use(cookieParser());
 
 // Logging Middleware (After parsing)
