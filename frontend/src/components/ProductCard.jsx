@@ -118,7 +118,7 @@ const ProductCard = ({ product, onClick }) => {
         {product.image ? (
           <img
             src={
-              product.image.startsWith('http') || product.image.startsWith('/assets')
+              product.image.startsWith('http') || product.image.startsWith('/assets') || product.image.startsWith('data:')
                 ? product.image
                 : `${BASE_URL}${product.image}`
             }
@@ -139,11 +139,6 @@ const ProductCard = ({ product, onClick }) => {
             OUT OF STOCK
           </div>
         )}
-      </div>
-
-      {/* DEBUG: Show raw image path */}
-      <div style={{ fontSize: '10px', color: 'red', wordBreak: 'break-all' }}>
-        DEBUG: {product.image}
       </div>
 
       {/* Veg Indicator */}
