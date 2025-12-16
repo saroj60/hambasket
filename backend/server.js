@@ -40,29 +40,55 @@ app.use((req, res, next) => {
   console.log("Body:", JSON.stringify(req.body, null, 2));
   next();
 });
-// MongoDB connection
-// MongoDB connection
-let isConnected = false;
-const connectDB = async () => {
-  if (isConnected) return;
-  try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
+// Optimized MongoDB Connection for Vercel
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false, // Disable buffering to fail fast if no connection
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
+    };
+
+    console.log("Connecting to MongoDB...");
+    cached.promise = mongoose.connect(process.env.MONGO_URI, opts).then((mongoose) => {
+      console.log("✅ MongoDB New Connection Established");
+      return mongoose;
     });
-    isConnected = !!conn.connections[0].readyState;
-    console.log("✅ MongoDB connected...");
-  } catch (err) {
-    console.error("❌ MongoDB connection error:", err);
   }
-};
-connectDB(); // Initial connection attempt
-// Middleware to ensure connection on requests
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    console.error("❌ MongoDB connection error:", e);
+    throw e;
+  }
+
+  return cached.conn;
+}
+
+// Middleware to ensure connection on every request
 app.use(async (req, res, next) => {
-  if (!isConnected) {
+  try {
     await connectDB();
+    next();
+  } catch (error) {
+    console.error("🔥 Database connection failed:", error);
+    res.status(500).json({
+      message: "Database connection failed",
+      error: error.message
+    });
   }
-  next();
 });
 
 // Root Endpoint
