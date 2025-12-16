@@ -60,13 +60,15 @@ export const ProductProvider = ({ children }) => {
             const res = await fetch(`${API_URL}/products`, {
                 method: 'POST',
                 headers: headers,
-                body: isFormData ? product : JSON.stringify(product)
+                body: isFormData ? product : JSON.stringify(product),
+                credentials: 'include' // Send cookies
             });
             if (!res.ok) throw new Error('Failed to add product');
             const newProduct = await res.json();
             setProducts(prev => [...prev, newProduct]);
         } catch (err) {
             console.error("Error adding product:", err);
+            alert("Failed to add product: " + err.message);
         }
     };
 
@@ -89,19 +91,22 @@ export const ProductProvider = ({ children }) => {
             const res = await fetch(`${API_URL}/products/${id}`, {
                 method: 'PUT',
                 headers: headers,
-                body: isFormData ? updatedProduct : JSON.stringify(updatedProduct)
+                body: isFormData ? updatedProduct : JSON.stringify(updatedProduct),
+                credentials: 'include' // Send cookies
             });
             if (!res.ok) throw new Error('Failed to update product');
             const data = await res.json();
             setProducts(prev => prev.map(p => p._id === id ? data : p));
         } catch (err) {
             console.error("Error updating product:", err);
+            alert("Failed to update product: " + err.message);
         }
     };
 
     const deleteProduct = async (id) => {
         try {
             let token = user?.token;
+            // ... (token logic is redundant if using cookies, but harmless)
             if (!token) {
                 try {
                     const stored = localStorage.getItem('user');
@@ -112,7 +117,8 @@ export const ProductProvider = ({ children }) => {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
-                }
+                },
+                credentials: 'include' // Send cookies
             });
             if (!res.ok) throw new Error('Failed to delete product');
             setProducts(prev => prev.filter(p => p._id !== id));
