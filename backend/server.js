@@ -41,10 +41,29 @@ app.use((req, res, next) => {
   next();
 });
 // MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected..."))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+// MongoDB connection
+let isConnected = false;
+const connectDB = async () => {
+  if (isConnected) return;
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    isConnected = !!conn.connections[0].readyState;
+    console.log("✅ MongoDB connected...");
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+  }
+};
+connectDB(); // Initial connection attempt
+// Middleware to ensure connection on requests
+app.use(async (req, res, next) => {
+  if (!isConnected) {
+    await connectDB();
+  }
+  next();
+});
 
 // Root Endpoint
 app.get("/", (req, res) => {
