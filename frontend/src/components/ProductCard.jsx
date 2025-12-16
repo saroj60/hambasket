@@ -117,7 +117,11 @@ const ProductCard = ({ product, onClick }) => {
       <div className="product-image">
         {product.image ? (
           <img
-            src={product.image.startsWith('http') ? product.image : `${BASE_URL}${product.image}`}
+            src={
+              product.image.startsWith('http') || product.image.startsWith('/assets')
+                ? product.image
+                : `${BASE_URL}${product.image}`
+            }
             alt={product.name}
             style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '0.5rem' }}
           />
