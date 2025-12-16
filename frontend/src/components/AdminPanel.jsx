@@ -243,11 +243,18 @@ const AdminPanel = () => {
 
         const data = new FormData();
         Object.keys(formData).forEach(key => {
-            if (key === 'imageFile' && formData[key]) {
-                data.append('image', formData[key]);
+            if (key === 'imageFile') {
+                if (formData[key]) {
+                    data.append('image', formData[key]);
+                }
+            } else if (key === 'image') {
+                // Only append image URL if no file is selected
+                if (!formData.imageFile && formData[key]) {
+                    data.append('image', formData[key]);
+                }
             } else if (key === 'flashSale') {
                 data.append('flashSale', JSON.stringify(formData[key]));
-            } else if (key !== 'imageFile' && key !== 'image') {
+            } else {
                 data.append(key, formData[key]);
             }
         });
