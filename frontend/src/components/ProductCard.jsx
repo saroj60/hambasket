@@ -141,6 +141,11 @@ const ProductCard = ({ product, onClick }) => {
         )}
       </div>
 
+      {/* DEBUG: Show raw image path */}
+      <div style={{ fontSize: '10px', color: 'red', wordBreak: 'break-all' }}>
+        DEBUG: {product.image}
+      </div>
+
       {/* Veg Indicator */}
       <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '0.25rem' }}>
         <div style={{
