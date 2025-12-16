@@ -40,55 +40,49 @@ router.get('/seed-data', async (req, res) => {
         const orders = [
             {
                 user: admin._id,
-                orderItems: [
-                    { name: createdProducts[0].name, qty: 2, image: createdProducts[0].image, price: createdProducts[0].price, product: createdProducts[0]._id },
-                    { name: createdProducts[2].name, qty: 1, image: createdProducts[2].image, price: createdProducts[2].price, product: createdProducts[2]._id }
+                items: [
+                    { name: createdProducts[0].name, quantity: 2, price: createdProducts[0].price, product: createdProducts[0]._id },
+                    { name: createdProducts[2].name, quantity: 1, price: createdProducts[2].price, product: createdProducts[2]._id }
                 ],
-                shippingAddress: { address: "123 Main St", city: "Kathmandu", postalCode: "44600", country: "Nepal" },
-                paymentMethod: "COD",
-                paymentResult: { id: "COD_ID", status: "Pending", update_time: String(Date.now()), email_address: admin.email },
-                itemsPrice: 420,
-                taxPrice: 0,
-                shippingPrice: 50,
-                totalPrice: 470,
-                isPaid: false,
-                isDelivered: false,
+                shippingAddress: "123 Main St, Kathmandu, Nepal",
+                paymentMethod: "Cash on Delivery",
+                paymentDetails: { isPaid: false },
+                subtotal: 420,
+                tax: 0,
+                deliveryFee: 50,
+                totalAmount: 470,
+                status: "Pending",
                 createdAt: new Date() // Today
             },
             {
                 user: admin._id,
-                orderItems: [
-                    { name: createdProducts[4].name, qty: 1, image: createdProducts[4].image, price: createdProducts[4].price, product: createdProducts[4]._id }
+                items: [
+                    { name: createdProducts[4].name, quantity: 1, price: createdProducts[4].price, product: createdProducts[4]._id }
                 ],
-                shippingAddress: { address: "456 Side St", city: "Pokhara", postalCode: "33700", country: "Nepal" },
-                paymentMethod: "Online",
-                paymentResult: { id: "TXN_123", status: "COMPLETED", update_time: String(Date.now()), email_address: admin.email },
-                itemsPrice: 1500,
-                taxPrice: 100,
-                shippingPrice: 0,
-                totalPrice: 1600,
-                isPaid: true,
-                paidAt: new Date(Date.now() - 86400000), // Yesterday
-                isDelivered: false,
-                createdAt: new Date(Date.now() - 86400000)
+                shippingAddress: "456 Side St, Pokhara, Nepal",
+                paymentMethod: "Khalti",
+                paymentDetails: { transactionId: "TXN_123", isPaid: true, paidAt: new Date(Date.now() - 86400000) },
+                subtotal: 1500,
+                tax: 100,
+                deliveryFee: 0,
+                totalAmount: 1600,
+                status: "Processing",
+                createdAt: new Date(Date.now() - 86400000) // Yesterday
             },
             {
                 user: admin._id,
-                orderItems: [
-                    { name: createdProducts[1].name, qty: 5, image: createdProducts[1].image, price: createdProducts[1].price, product: createdProducts[1]._id }
+                items: [
+                    { name: createdProducts[1].name, quantity: 5, price: createdProducts[1].price, product: createdProducts[1]._id }
                 ],
-                shippingAddress: { address: "789 Hill Rd", city: "Lalitpur", postalCode: "44700", country: "Nepal" },
-                paymentMethod: "Online",
-                paymentResult: { id: "TXN_456", status: "COMPLETED", update_time: String(Date.now()), email_address: admin.email },
-                itemsPrice: 1500,
-                taxPrice: 0,
-                shippingPrice: 20,
-                totalPrice: 1520,
-                isPaid: true,
-                paidAt: new Date(Date.now() - 172800000), // 2 days ago
-                isDelivered: true,
-                deliveredAt: new Date(Date.now() - 86400000),
-                createdAt: new Date(Date.now() - 172800000)
+                shippingAddress: "789 Hill Rd, Lalitpur, Nepal",
+                paymentMethod: "Esewa",
+                paymentDetails: { transactionId: "TXN_456", isPaid: true, paidAt: new Date(Date.now() - 172800000) },
+                subtotal: 1500,
+                tax: 0,
+                deliveryFee: 20,
+                totalAmount: 1520,
+                status: "Delivered",
+                createdAt: new Date(Date.now() - 172800000) // 2 days ago
             }
         ];
 
