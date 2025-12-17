@@ -74,25 +74,24 @@ const ProductDetails = ({ product, onClose, onAdd }) => {
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
             backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 105, backdropFilter: 'blur(2px)'
         }}>
-            <div className="modal-content animate-fade-in" onClick={e => e.stopPropagation()} style={{
+            <div className="modal-content animate-fade-in product-details-content" onClick={e => e.stopPropagation()} style={{
                 position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                 backgroundColor: 'white', borderRadius: 'var(--radius-lg)',
                 width: '90%', maxWidth: '800px', zIndex: 106,
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-                display: 'flex', overflow: 'hidden', maxHeight: '90vh'
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
             }}>
 
                 {/* Image Section */}
-                <div style={{ flex: 1, backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8rem', minHeight: '300px' }}>
+                <div className="product-details-image">
                     {product.image ? (
-                        <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     ) : (
                         product.emoji
                     )}
                 </div>
 
                 {/* Details Section */}
-                <div style={{ flex: 1, padding: '2rem', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+                <div className="product-details-info">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
                         <div>
                             <span style={{ fontSize: '0.9rem', color: 'var(--primary)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
