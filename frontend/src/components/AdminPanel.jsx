@@ -19,12 +19,8 @@ const CATEGORIES = [
     "Fruits & Vegetables",
     "Dairy, Bread & Eggs",
     "Atta, Rice, Oil & Dals",
-    "Meat, Fish & Eggs",
-    "Masala & Dry Fruits",
-    "Breakfast & Sauces",
-    "Packaged Food",
-    "Tea, Coffee & More",
-    "Ice Creams & Frozen",
+    "Snacks & Beverages",
+    "Household & Personal Care",
     "Pharmacy"
 ];
 
