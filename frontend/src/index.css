@@ -431,17 +431,17 @@ body {
   }
 
   .grid-cols-4 {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
 
   .product-card {
-    padding: 0.4rem;
+    padding: 0.5rem;
   }
 
   .product-image {
-    height: 90px;
-    font-size: 2.5rem;
+    height: 110px;
+    font-size: 3rem;
     margin-bottom: 0.5rem;
   }
 
@@ -532,18 +532,29 @@ body {
     overflow-y: auto;
     max-height: 85vh;
     /* slightly smaller on mobile */
+    width: 95% !important;
+    /* Wider on mobile */
   }
 
   .product-details-image {
-    min-height: 200px;
+    min-height: 180px;
     /* Reduced height for mobile */
-    max-height: 250px;
-    font-size: 5rem;
+    max-height: 220px;
+    font-size: 4rem;
   }
 
   .product-details-info {
-    padding: 1rem;
+    padding: 1.25rem;
     overflow-y: visible;
     /* Let container scroll */
+  }
+
+  .product-details-info h2 {
+    font-size: 1.5rem !important;
+    /* Smaller title */
+  }
+
+  .product-details-info .price-tag {
+    font-size: 1.25rem !important;
   }
 }
