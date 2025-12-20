@@ -14,8 +14,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'HamBasket',
-        short_name: 'HamBasket',
+        name: 'Hamket',
+        short_name: 'Hamket',
         description: 'Groceries in Minutes',
         theme_color: '#84c225',
         background_color: '#ffffff',

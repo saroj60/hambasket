@@ -9,7 +9,7 @@ const Terms = () => {
                 <section style={{ marginBottom: '2rem' }}>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>1. Introduction</h2>
                     <p style={{ lineHeight: '1.6', color: 'var(--text-muted)' }}>
-                        Welcome to HamBasket. By accessing our website and using our services, you agree to be bound by the following terms and conditions.
+                        Welcome to Hamket. By accessing our website and using our services, you agree to be bound by the following terms and conditions.
                     </p>
                 </section>
 
@@ -37,7 +37,7 @@ const Terms = () => {
                 <section>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>5. Contact</h2>
                     <p style={{ lineHeight: '1.6', color: 'var(--text-muted)' }}>
-                        If you have any questions about these Terms, please contact us at support@hambasket.com.
+                        If you have any questions about these Terms, please contact us at support@hamket.com.
                     </p>
                 </section>
             </div>

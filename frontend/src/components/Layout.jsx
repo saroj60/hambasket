@@ -20,9 +20,9 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
         <div className="container header-content">
           {/* Logo */}
           <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <img src="/logo.png" alt="HamBasket" style={{ height: '45px', width: 'auto', objectFit: 'contain' }} />
+            <img src="/logo.png" alt="Hamket" style={{ height: '45px', width: 'auto', objectFit: 'contain' }} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--primary)', lineHeight: 1 }}>HamBasket</span>
+              <span style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--primary)', lineHeight: 1 }}>Hamket</span>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-light)' }}>Fresh & Fast</span>
             </div>
           </Link>
@@ -176,7 +176,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       <footer style={{ backgroundColor: '#1f2937', color: 'white', padding: '3rem 0', marginTop: 'auto', width: '100%' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>HamBasket</h3>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>Hamket</h3>
             <p style={{ color: '#9ca3af', fontSize: '0.9rem', lineHeight: '1.6' }}>
               Fresh groceries delivered to your doorstep in minutes. Quality you can trust.
             </p>
@@ -195,12 +195,12 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
             <ul style={{ listStyle: 'none', padding: 0, color: '#9ca3af', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <li>📍 Thamel, Kathmandu</li>
               <li>📞 +977 9815769007</li>
-              <li>📧 support@hambasket.com</li>
+              <li>📧 support@hamket.com</li>
             </ul>
           </div>
         </div>
         <div className="container" style={{ borderTop: '1px solid #374151', marginTop: '2rem', paddingTop: '2rem', textAlign: 'center', color: '#9ca3af', fontSize: '0.875rem' }}>
-          © 2024 HamBasket. All rights reserved.
+          © 2024 Hamket. All rights reserved.
         </div>
       </footer>
 

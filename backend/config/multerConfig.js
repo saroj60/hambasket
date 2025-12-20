@@ -16,7 +16,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'hambasket_products',
+        folder: 'hamket_products',
         allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
     },
 });

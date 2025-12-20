@@ -113,7 +113,7 @@ const VendorDashboard = () => {
             <div className="max-w-2xl mx-auto p-8">
                 <div className="card p-8 text-center">
                     <h2 className="text-2xl font-bold mb-4">Become a Vendor</h2>
-                    <p className="text-gray-600 mb-8">Start selling your products on HamBasket today!</p>
+                    <p className="text-gray-600 mb-8">Start selling your products on Hamket today!</p>
 
                     <form onSubmit={handleCreateStore} className="text-left space-y-4">
                         <div>
