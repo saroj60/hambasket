@@ -9,7 +9,9 @@ export const fetchProducts = async () => {
 
 // Cart API
 export const getCartItems = async () => {
-  const res = await fetch(`${API_URL}/cart`);
+  const res = await fetch(`${API_URL}/cart`, {
+    credentials: 'include'
+  });
   return res.json();
 };
 
@@ -17,14 +19,16 @@ export const addToCart = async ({ productId, name, price, image, qty }) => {
   const res = await fetch(`${API_URL}/cart`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ productId, name, price, image, qty })
+    body: JSON.stringify({ productId, name, price, image, qty }),
+    credentials: 'include'
   });
   return res.json();
 };
 
 export const removeFromCart = async (productId) => {
   const res = await fetch(`${API_URL}/cart/${productId}`, {
-    method: 'DELETE'
+    method: 'DELETE',
+    credentials: 'include'
   });
   return res.json();
 };

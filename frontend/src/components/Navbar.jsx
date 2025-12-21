@@ -32,11 +32,7 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
             {/* Logo & Location */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: 1 }}>
               <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ fontSize: '2rem' }}>🧺</div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'white', lineHeight: 1 }}>Hamket</span>
-                  <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.9)', letterSpacing: '0.5px' }}>Grocery in minutes</span>
-                </div>
+                <img src="/brand_logo.png" alt="Hamket" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
               </Link>
 
               <div

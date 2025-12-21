@@ -19,12 +19,8 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       <header style={{ backgroundColor: 'white', boxShadow: 'var(--shadow-sm)', position: 'sticky', top: 0, zIndex: 50 }}>
         <div className="container header-content">
           {/* Logo */}
-          <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <img src="/logo.png" alt="Hamket" style={{ height: '45px', width: 'auto', objectFit: 'contain' }} />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '1.25rem', fontWeight: '700', color: 'var(--primary)', lineHeight: 1 }}>Hamket</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-light)' }}>Fresh & Fast</span>
-            </div>
+          <Link to="/" className="header-logo" style={{ textDecoration: 'none' }}>
+            <img src="/brand_logo.png" alt="Hamket" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
           </Link>
 
           {/* Location Selector */}
