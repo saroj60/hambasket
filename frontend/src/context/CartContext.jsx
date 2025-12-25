@@ -76,7 +76,13 @@ export const CartProvider = ({ children }) => {
         }
       } catch (e) {
         console.error("Add to cart failed", e);
-        alert("Failed to add to cart");
+        // If unauthorized or error, verify session
+        if (e.message.includes("401") || e.message.includes("Unauthorized")) {
+          alert("Session expired. Please log in again.");
+          // Ideally could fallback to guest: addToCart(product, qty) (recursive with user=null?) => tricky with state
+        } else {
+          alert("Failed to add to cart. Please try again.");
+        }
       }
     } else {
       // Guest Logic

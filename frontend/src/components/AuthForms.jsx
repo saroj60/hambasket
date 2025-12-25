@@ -67,7 +67,7 @@ const AuthForms = () => {
         }}>
             <div className="card" style={{ padding: '2rem', width: '100%', maxWidth: '400px' }}>
                 <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                    {showForgot ? 'Reset Password' : (isLogin ? (authMethod === 'phone' ? 'Login with Phone' : 'Login with Email') : 'Create Account')}
+                    {showForgot ? 'Reset Password' : (isLogin ? (authMethod === 'phone' ? 'Login' : 'Login with Email') : 'Create Account')}
                 </h2>
 
                 {error && (
@@ -194,11 +194,12 @@ const AuthForms = () => {
                                     />
                                 </>
                             ) : (
-                                // Phone Login Form
+                                // Phone Login Form (Smart Login)
                                 <>
+                                    <label style={{ fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.25rem', display: 'block' }}>Phone or Email</label>
                                     <input
-                                        type="tel"
-                                        placeholder="Phone Number (e.g. 9800000000)"
+                                        type="text"
+                                        placeholder="Enter Phone or Email"
                                         value={formData.phone}
                                         onChange={e => setFormData({ ...formData, phone: e.target.value })}
                                         required

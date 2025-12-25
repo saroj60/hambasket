@@ -4,9 +4,22 @@ import bcrypt from "bcryptjs";
 import Product from "./models/product.js";
 import User from "./models/user.js";
 
-dotenv.config();
+import path from "path";
+import { fileURLToPath } from "url";
 
-mongoose.connect(process.env.MONGO_URI)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, ".env") });
+
+// Use the same fallback URI as server.js to avoid "bad auth" with stale .env vars
+const LOCAL_URI = 'mongodb://127.0.0.1:27017/quick-commerce';
+// FORCE local URI because the env var is invalid/broken
+const uri = LOCAL_URI;
+
+console.log("Connecting to:", uri);
+
+mongoose.connect(uri)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 

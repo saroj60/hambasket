@@ -13,7 +13,7 @@ const ProductCard = ({ product, onClick }) => {
 
   const handleSubscribe = async (e) => {
     e.stopPropagation();
-    if (!user) return alert("Please login to subscribe");
+    if (!user) return alert("Please login to subscribe (Regular Delivery)");
     try {
       const res = await fetch(`${API_URL}/subscriptions`, {
         method: 'POST',
@@ -49,7 +49,10 @@ const ProductCard = ({ product, onClick }) => {
 
   const handleAdd = (e) => {
     e.stopPropagation();
-    if (!isOutOfStock) addToCart(product, 1);
+    console.log("Add clicked", { user, isOutOfStock });
+    if (!isOutOfStock) {
+      addToCart(product, 1);
+    }
   };
 
   const isFlashSaleActive = product.flashSale?.active && new Date(product.flashSale.endTime) > new Date();
@@ -85,7 +88,7 @@ const ProductCard = ({ product, onClick }) => {
       <button
         onClick={(e) => {
           e.stopPropagation();
-          if (!user) return alert("Please login to use wishlist");
+          if (!user) return alert("Please login to save favorites.");
           if (wishlist.includes(product._id)) {
             removeFromWishlist(product._id);
           } else {
