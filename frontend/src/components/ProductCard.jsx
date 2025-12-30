@@ -62,62 +62,42 @@ const ProductCard = ({ product, onClick }) => {
   return (
     <div
       className="card product-card"
-      style={{ opacity: isOutOfStock ? 0.8 : 1 }}
+      style={{
+        opacity: isOutOfStock ? 0.8 : 1,
+        border: '1px solid #e0e0e0',
+        borderRadius: '12px',
+        boxShadow: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: '0.75rem',
+        height: '100%',
+        backgroundColor: 'white'
+      }}
       onClick={() => onClick(product)}
     >
       {/* Discount Tag */}
       {(isFlashSaleActive || discount > 0) && (
         <div style={{
           position: 'absolute',
-          top: '10px',
+          top: '0',
           left: '0',
-          backgroundColor: '#ef4444',
+          backgroundColor: '#535bf2', // Different blue for offers
           color: 'white',
-          fontSize: '0.65rem',
-          fontWeight: '700',
+          fontSize: '0.6rem',
+          fontWeight: '800',
           padding: '2px 8px',
-          borderTopRightRadius: '4px',
-          borderBottomRightRadius: '4px',
-          zIndex: 1
+          borderTopLeftRadius: '12px',
+          borderBottomRightRadius: '12px',
+          zIndex: 1,
+          textTransform: 'uppercase'
         }}>
-          {isFlashSaleActive ? `⚡ ${discount}% OFF` : 'GET 20% OFF'}
+          {isFlashSaleActive ? `⚡ ${discount}% OFF` : '20% OFF'}
         </div>
       )}
 
-      {/* Wishlist Heart */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          if (!user) return alert("Please login to save favorites.");
-          if (wishlist.includes(product._id)) {
-            removeFromWishlist(product._id);
-          } else {
-            addToWishlist(product._id);
-          }
-        }}
-        style={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          background: 'white',
-          border: 'none',
-          borderRadius: '50%',
-          width: '30px',
-          height: '30px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          zIndex: 2,
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          color: wishlist.includes(product._id) ? '#ef4444' : '#9ca3af'
-        }}
-      >
-        ♥
-      </button>
-
       {/* Image Area */}
-      <div className="product-image">
+      <div className="product-image" style={{ height: '120px', marginBottom: '0.5rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {product.image ? (
           <img
             src={
@@ -126,143 +106,97 @@ const ProductCard = ({ product, onClick }) => {
                 : `${BASE_URL}${product.image}`
             }
             alt={product.name}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '0.5rem' }}
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           />
         ) : (
-          product.emoji
-        )}
-        {isOutOfStock && (
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(255,255,255,0.7)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'var(--danger)', fontWeight: '800', fontSize: '1rem',
-            borderRadius: 'var(--radius-md)'
-          }}>
-            OUT OF STOCK
-          </div>
+          <div style={{ fontSize: '3rem' }}>{product.emoji}</div>
         )}
       </div>
 
-      {/* Veg Indicator */}
-      <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '0.25rem' }}>
+      {/* Content */}
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
         <div style={{
-          width: '12px',
-          height: '12px',
-          border: '1px solid #16a34a',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '1px'
+          fontSize: '0.75rem',
+          color: 'var(--text-muted)',
+          backgroundColor: '#f8f8f8',
+          width: 'fit-content',
+          padding: '2px 4px',
+          borderRadius: '4px',
+          marginBottom: '4px'
         }}>
-          <div style={{ width: '6px', height: '6px', backgroundColor: '#16a34a', borderRadius: '50%' }}></div>
+          ⏳ 12 MINS
         </div>
-      </div>
-
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h3 className="product-title" style={{ fontSize: '0.85rem', marginBottom: '0.2rem' }}>
+        <h3 style={{
+          fontSize: '0.9rem',
+          fontWeight: '600',
+          color: '#1c1c1c',
+          marginBottom: '0.25rem',
+          lineHeight: '1.2',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          minHeight: '2.2em'
+        }}>
           {product.name}
         </h3>
-        <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
-          {/* Hide weight on very small screens if needed, or keep small */}
-          {product.weight}
-        </p>
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
+          {product.weight || '1 unit'}
+        </div>
 
-        <div className="product-actions">
-          <div style={{ flex: 1, lineHeight: 1 }}>
+        {/* Price & Add Row */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             {isFlashSaleActive ? (
               <>
-                <div style={{ fontSize: '0.65rem', textDecoration: 'line-through', color: 'var(--text-muted)' }}>
-                  Rs. {product.price}
-                </div>
-                <div style={{ fontSize: '0.9rem', fontWeight: '700', color: '#ef4444' }}>
-                  Rs. {finalPrice}
-                </div>
+                <span style={{ fontSize: '0.75rem', textDecoration: 'line-through', color: '#999' }}>₹{product.price}</span>
+                <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#1c1c1c' }}>₹{finalPrice}</span>
               </>
             ) : (
-              <>
-                {/* Only show one price if no discount to save space */}
-                <div style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--text-main)' }}>
-                  Rs. {product.price}
-                </div>
-              </>
+              <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#1c1c1c' }}>₹{product.price}</span>
             )}
           </div>
 
-          {/* Add / Quantity Button - Compact */}
-          {quantity > 0 ? (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              backgroundColor: 'var(--primary)',
-              borderRadius: 'var(--radius-sm)',
-              overflow: 'hidden',
-              height: '30px', /* Smaller height */
-              width: '100%',
-              maxWidth: '80px',
-              justifyContent: 'space-between'
-            }}>
-              <button
-                onClick={handleDecrement}
-                style={{
-                  padding: '0 6px',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  border: 'none',
-                  background: 'transparent',
-                  cursor: 'pointer',
-                  height: '100%',
-                  fontSize: '1rem'
-                }}
-              >
-                -
-              </button>
-              <span style={{
+          {/* ADD Button - Blinkit Style */}
+          <div style={{ width: '70px', height: '32px' }}>
+            {quantity > 0 ? (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: 'var(--primary)',
+                borderRadius: '6px',
+                height: '100%',
                 color: 'white',
-                fontWeight: 'bold',
-                fontSize: '0.8rem'
+                fontWeight: '700',
+                fontSize: '0.9rem',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }}>
-                {quantity}
-              </span>
+                <button onClick={handleDecrement} style={{ border: 'none', background: 'transparent', color: 'white', padding: '0 8px', height: '100%', cursor: 'pointer' }}>-</button>
+                <span>{quantity}</span>
+                <button onClick={handleIncrement} style={{ border: 'none', background: 'transparent', color: 'white', padding: '0 8px', height: '100%', cursor: 'pointer' }}>+</button>
+              </div>
+            ) : (
               <button
-                onClick={handleIncrement}
+                onClick={handleAdd}
+                disabled={isOutOfStock}
                 style={{
-                  padding: '0 6px',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  border: 'none',
-                  background: 'transparent',
-                  cursor: 'pointer',
+                  width: '100%',
                   height: '100%',
-                  fontSize: '1rem'
+                  backgroundColor: isOutOfStock ? '#f0f0f0' : '#f7fff9',
+                  border: `1px solid ${isOutOfStock ? '#ccc' : 'var(--primary)'}`,
+                  color: isOutOfStock ? '#999' : 'var(--primary)',
+                  borderRadius: '6px',
+                  fontWeight: '800',
+                  fontSize: '0.8rem',
+                  cursor: isOutOfStock ? 'not-allowed' : 'pointer',
+                  textTransform: 'uppercase'
                 }}
               >
-                +
+                {isOutOfStock ? 'SOLD' : 'ADD'}
               </button>
-            </div>
-          ) : (
-            <button
-              onClick={handleAdd}
-              disabled={isOutOfStock}
-              className="btn btn-outline"
-              style={{
-                fontWeight: '800',
-                color: isOutOfStock ? 'var(--text-muted)' : 'var(--primary)',
-                borderColor: isOutOfStock ? 'var(--border)' : 'var(--primary)',
-                borderWidth: '1px',
-                cursor: isOutOfStock ? 'not-allowed' : 'pointer',
-                backgroundColor: isOutOfStock ? '#f3f4f6' : '#f0fdf4', /* Light green tint when idle */
-                height: '32px',
-                width: '100%',
-                maxWidth: '70px',
-                fontSize: '0.8rem',
-                padding: '0',
-                boxShadow: isOutOfStock ? 'none' : '0 2px 5px rgba(0,184,83,0.1)'
-              }}
-            >
-              {isOutOfStock ? 'SOLD' : 'ADD'}
-            </button>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

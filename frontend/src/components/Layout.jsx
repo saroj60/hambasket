@@ -16,70 +16,51 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
       {/* Header */}
-      <header style={{ backgroundColor: 'white', boxShadow: 'var(--shadow-sm)', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div className="container header-content">
+      {/* Blinkit-style Header */}
+      <header style={{ backgroundColor: 'white', borderBottom: '1px solid #f0f0f0', position: 'sticky', top: 0, zIndex: 1000 }}>
+        <div className="container header-container" style={{ display: 'flex', alignItems: 'center', height: '80px', gap: '2rem' }}>
           {/* Logo */}
-          <Link to="/" className="header-logo" style={{ textDecoration: 'none' }}>
-            <img src="/brand_logo.png" alt="Hamket" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
+          <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            {/* Using text logo for now if image fails, or the brand logo */}
+            <h1 style={{ fontWeight: '900', fontSize: '2rem', color: 'var(--brand-yellow)', letterSpacing: '-1px', textShadow: '1px 1px 0px rgba(0,0,0,0.1)' }}>Aone Store</h1>
           </Link>
 
-          {/* Location Selector */}
-          <div onClick={openModal} className="location-selector" style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.5rem 1rem',
-            backgroundColor: '#f3f4f6',
-            borderRadius: 'var(--radius-full)',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-            minWidth: '150px', // Reduced minWidth
-            maxWidth: '100%', // Ensure it doesn't overflow parent
-            flex: 1 // Allow it to shrink/grow
-          }}>
-            <span style={{ fontSize: '1.2rem' }}>📍</span>
-            <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1 }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-light)' }}>Delivering to</span>
-              <span style={{
-                fontWeight: '600',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                maxWidth: '200px' // Explicitly limit text width
-              }}>
-                {location?.address || "Select Location"}
-              </span>
+          {/* Location Block */}
+          <div onClick={openModal} className="location-block" style={{ cursor: 'pointer', minWidth: '200px' }}>
+            <div style={{ fontWeight: '800', fontSize: '1.1rem', lineHeight: '1.2' }}>Delivery in minutes</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px' }}>
+              {location?.address ? location.address : "Select Location"} <span style={{ fontSize: '0.6rem' }}>▼</span>
             </div>
-            <span style={{ marginLeft: 'auto', color: 'var(--text-light)' }}>▼</span>
           </div>
 
-          {/* Search Bar */}
-          <form className="search-bar" onSubmit={handleSearch} style={{ position: 'relative' }}>
-            <div style={{ position: 'relative' }}>
-              <input
-                type="text"
-                placeholder="Search for products..."
-                value={searchTerm}
-                onChange={(e) => {
-                  onSearch(e.target.value);
-                  setShowSuggestions(true);
-                }}
-                onFocus={() => setShowSuggestions(true)}
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem 1rem 0.75rem 2.5rem', // Removed padding right for mic
-                  borderRadius: 'var(--radius-full)',
-                  border: '1px solid var(--border)',
-                  backgroundColor: '#f9fafb',
-                  fontSize: '0.95rem',
-                  transition: 'all 0.2s'
-                }}
-              />
-              <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-light)' }}>🔍</span>
-
-
-            </div>
+          {/* Search Bar - Big & Central */}
+          <div style={{ flex: 1, position: 'relative' }}>
+            <form onSubmit={handleSearch}>
+              <div style={{ position: 'relative', width: '100%' }}>
+                <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '1.2rem' }}>🔍</span>
+                <input
+                  type="text"
+                  placeholder='Search "milk"'
+                  value={searchTerm}
+                  onChange={(e) => {
+                    onSearch(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                  style={{
+                    width: '100%',
+                    padding: '0.9rem 1rem 0.9rem 3rem',
+                    borderRadius: '12px',
+                    border: '1px solid #f0f0f0',
+                    backgroundColor: '#f8f8f8',
+                    fontSize: '1rem',
+                    outline: 'none',
+                    transition: 'all 0.2s'
+                  }}
+                />
+              </div>
+            </form>
 
             {/* Auto-suggest Dropdown */}
             {showSuggestions && searchTerm && suggestions.length > 0 && (
@@ -89,13 +70,14 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
                 left: 0,
                 right: 0,
                 backgroundColor: 'white',
-                borderRadius: 'var(--radius-md)',
-                boxShadow: 'var(--shadow-lg)',
-                marginTop: '0.5rem',
+                borderRadius: '0 0 12px 12px',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                marginTop: '0',
                 zIndex: 100,
                 maxHeight: '300px',
                 overflowY: 'auto',
-                border: '1px solid var(--border)'
+                border: '1px solid #f0f0f0',
+                borderTop: 'none'
               }}>
                 {suggestions.slice(0, 5).map(product => (
                   <div
@@ -107,56 +89,47 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
                     style={{
                       padding: '0.75rem 1rem',
                       cursor: 'pointer',
-                      borderBottom: '1px solid var(--border)',
+                      borderBottom: '1px solid #f0f0f0',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.75rem'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8f8f8'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
                   >
                     <span style={{ fontSize: '1.2rem' }}>{product.emoji}</span>
                     <div>
                       <div style={{ fontWeight: '500' }}>{product.name}</div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>{product.category}</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{product.category}</div>
                     </div>
                   </div>
                 ))}
               </div>
             )}
-          </form>
+          </div>
 
-          {/* Actions */}
-          <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <NotificationBell />
+          {/* Login / Cart Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)', cursor: 'pointer' }}>
+              Login
+            </button>
             <button
               onClick={onOpenCart}
+              className="btn"
               style={{
-                position: 'relative',
-                background: 'none',
-                border: 'none',
-                fontSize: '1.5rem',
-                cursor: 'pointer',
-                color: 'var(--text-main)'
+                backgroundColor: 'var(--primary)',
+                color: 'white',
+                borderRadius: '8px',
+                padding: '0.8rem 1.5rem',
+                gap: '0.5rem',
+                fontWeight: '700'
               }}
             >
-              🛒
+              🛒 My Cart
               {cartCount > 0 && (
-                <span style={{
-                  position: 'absolute',
-                  top: '-5px',
-                  right: '-10px',
-                  backgroundColor: 'var(--danger)',
-                  color: 'white',
-                  fontSize: '0.75rem',
-                  fontWeight: 'bold',
-                  padding: '2px 6px',
-                  borderRadius: '10px',
-                  minWidth: '18px',
-                  textAlign: 'center'
-                }}>
+                <div style={{ padding: '0px 6px', background: 'rgba(255,255,255,0.2)', borderRadius: '4px', fontSize: '0.9rem' }}>
                   {cartCount}
-                </span>
+                </div>
               )}
             </button>
           </div>
@@ -172,7 +145,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       <footer style={{ backgroundColor: '#1f2937', color: 'white', padding: '3rem 0', marginTop: 'auto', width: '100%' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>Hamket</h3>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>Aone Store</h3>
             <p style={{ color: '#9ca3af', fontSize: '0.9rem', lineHeight: '1.6' }}>
               Fresh groceries delivered to your doorstep in minutes. Quality you can trust.
             </p>
@@ -191,12 +164,12 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
             <ul style={{ listStyle: 'none', padding: 0, color: '#9ca3af', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <li>📍 Thamel, Kathmandu</li>
               <li>📞 +977 9815769007</li>
-              <li>📧 support@hamket.com</li>
+              <li>📧 support@aonestore.com</li>
             </ul>
           </div>
         </div>
         <div className="container" style={{ borderTop: '1px solid #374151', marginTop: '2rem', paddingTop: '2rem', textAlign: 'center', color: '#9ca3af', fontSize: '0.875rem' }}>
-          © 2024 Hamket. All rights reserved.
+          © 2024 Aone Store. All rights reserved.
         </div>
       </footer>
 

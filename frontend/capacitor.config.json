@@ -1,6 +1,6 @@
 {
-  "appId": "com.hamket.app",
-  "appName": "Hamket",
+  "appId": "com.aonestore.app",
+  "appName": "Aone Store",
   "webDir": "dist",
   "server": {
     "cleartext": true

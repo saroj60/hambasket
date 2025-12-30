@@ -18,3 +18,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </ErrorBoundary>
   </React.StrictMode>
 );
+
+// Remove loading screen after 2.5 seconds to show the animation
+setTimeout(() => {
+  const loader = document.getElementById('app-loading');
+  if (loader) {
+    loader.style.transition = 'opacity 0.5s';
+    loader.style.opacity = '0';
+    setTimeout(() => loader.remove(), 500); // Wait for fade out
+  }
+}, 2500);

@@ -22,10 +22,10 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'Hamket',
-        short_name: 'Hamket',
-        description: 'Groceries in Minutes',
-        theme_color: '#84c225',
+        name: 'Aone Store',
+        short_name: 'Aone Store',
+        description: 'Groceries delivered in minutes',
+        theme_color: '#7c3aed',
         background_color: '#ffffff',
         display: 'standalone',
         icons: [
