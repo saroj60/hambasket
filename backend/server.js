@@ -36,8 +36,8 @@ app.use(cookieParser());
 // Logging Middleware (After parsing)
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  console.log("Headers:", JSON.stringify(req.headers, null, 2));
-  console.log("Body:", JSON.stringify(req.body, null, 2));
+  // console.log("Headers:", JSON.stringify(req.headers, null, 2));
+  // console.log("Body:", JSON.stringify(req.body, null, 2));
   next();
 });
 // Optimized MongoDB Connection for Vercel
@@ -60,8 +60,12 @@ async function connectDB() {
     };
 
     console.log("Connecting to MongoDB...");
-    cached.promise = mongoose.connect(process.env.MONGO_URI, opts).then((mongoose) => {
-      console.log("✅ MongoDB New Connection Established");
+    // Force local connection for debugging/stability
+    const LOCAL_URI = 'mongodb://127.0.0.1:27017/quick-commerce';
+    const uri = LOCAL_URI || process.env.MONGO_URI;
+
+    cached.promise = mongoose.connect(uri, opts).then((mongoose) => {
+      console.log(`✅ MongoDB New Connection Established to ${uri}`);
       return mongoose;
     });
   }

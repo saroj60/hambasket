@@ -1,5 +1,8 @@
 {
   "appId": "com.hamket.app",
   "appName": "Hamket",
-  "webDir": "dist"
+  "webDir": "dist",
+  "server": {
+    "cleartext": true
+  }
 }

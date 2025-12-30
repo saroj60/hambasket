@@ -1,16 +1,20 @@
 import express from "express";
 import Cart from "../models/Cart.js";
 
+import { protect } from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
-// Checkout = clear cart
-router.post("/", async (req, res) => {
-  let cart = await Cart.findOne();
-  if (cart) {
-    cart.items = [];
-    await cart.save();
+// Checkout = clear cart for authenticated user
+router.post("/", protect, async (req, res) => {
+  try {
+    // Assuming 'Cart' model stores individual items (based on cartRoutes.js analysis)
+    // We delete all items belonging to this user
+    await Cart.deleteMany({ userId: req.user._id });
+    res.json({ message: "Checkout successful, cart cleared ✅" });
+  } catch (error) {
+    res.status(500).json({ message: "Error clearing cart", error: error.message });
   }
-  res.json({ message: "Checkout successful ✅" });
 });
 
 export default router;

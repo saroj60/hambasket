@@ -107,17 +107,19 @@ router.post("/login", async (req, res) => {
         }
 
         // Set Cookies
+        const isProduction = process.env.NODE_ENV === 'production';
+
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
-            secure: true, // Always true for "none"
-            sameSite: "none", // Required for cross-site
+            secure: isProduction,
+            sameSite: isProduction ? "none" : "lax",
             maxAge: 15 * 60 * 1000 // 15 mins
         });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
+            secure: isProduction,
+            sameSite: isProduction ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 

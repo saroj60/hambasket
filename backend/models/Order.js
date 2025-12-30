@@ -5,7 +5,10 @@ const orderSchema = new mongoose.Schema({
   guestInfo: {
     name: String,
     email: String,
-    phone: String
+    phone: {
+      type: String,
+      match: [/^\d{10}$/, 'Please enter a valid 10-digit phone number']
+    }
   },
   items: [
     {

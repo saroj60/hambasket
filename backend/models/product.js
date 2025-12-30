@@ -28,6 +28,11 @@ const productSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+// Indexes for performance
+productSchema.index({ category: 1 });
+productSchema.index({ name: 'text' });
+productSchema.index({ store: 1 });
+
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
 
 export default Product;

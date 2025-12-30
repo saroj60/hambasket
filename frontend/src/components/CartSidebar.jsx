@@ -102,6 +102,11 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
       return;
     }
 
+    if (!user && guestPhone.length < 10) {
+      alert("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
     // 3. Construct Message
     const name = user?.name || guestName;
     const phone = user?.phone || guestPhone;
@@ -221,7 +226,18 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
                   <h4 style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.75rem' }}>Contact Details</h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <input placeholder="Full Name" value={guestName} onChange={(e) => setGuestName(e.target.value)} required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
-                    <input type="tel" placeholder="Phone Number" value={guestPhone} onChange={(e) => setGuestPhone(e.target.value)} required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
+                    <input
+                      type="tel"
+                      placeholder="Phone Number"
+                      value={guestPhone}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '');
+                        setGuestPhone(val);
+                      }}
+                      required
+                      maxLength={10}
+                      style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                    />
                   </div>
                 </div>
               )}

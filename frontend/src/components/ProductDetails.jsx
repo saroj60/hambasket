@@ -32,7 +32,7 @@ const ProductDetails = ({ product, onClose, onAdd }) => {
 
     const handleSubscribe = async () => {
         if (!user) {
-            alert("Please login to subscribe!");
+            alert("Please login to subscribe (Regular Delivery)!");
             return;
         }
         if (!address.trim()) {

@@ -4,7 +4,15 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   build: {
-    target: 'esnext'
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom', 'axios'],
+          maps: ['leaflet', 'react-leaflet', '@react-google-maps/api']
+        }
+      }
+    }
   },
   base: './',
   plugins: [
