@@ -1,131 +1,121 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
 
-// Fix Leaflet default icon
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+const VITE_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-// Component to handle map movements and update center
-const MapController = ({ onMoveEnd, initialCenter }) => {
-    const map = useMap();
-    const isFirstLoad = useRef(true);
-
-    useEffect(() => {
-        if (initialCenter && isFirstLoad.current) {
-            map.setView(initialCenter, 16);
-            isFirstLoad.current = false;
-        }
-    }, [initialCenter, map]);
-
-    useMapEvents({
-        moveend: () => {
-            const center = map.getCenter();
-            onMoveEnd(center);
-        },
-    });
-
-    return null;
+const containerStyle = {
+    width: '100%',
+    height: '100%'
 };
 
+const libraries = ['places'];
+
 const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
-    // Default to Kathmandu if no initial location
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: VITE_GOOGLE_MAPS_API_KEY,
+        libraries: libraries
+    });
+
+    // Default to Kathmandu
     const defaultCenter = initialLocation || { lat: 27.7172, lng: 85.3240 };
 
+    const [map, setMap] = useState(null);
     const [center, setCenter] = useState(defaultCenter);
     const [address, setAddress] = useState('');
-    const [suggestions, setSuggestions] = useState([]);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResult, setSearchResult] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // Ref to access map instance for manual flying
-    const mapRef = useRef(null);
+    // Store the autocomplete instance
+    const autocompleteRef = useRef(null);
 
-    // Initial address fetch
-    useEffect(() => {
-        fetchAddress(center.lat, center.lng);
-    }, []);
+    // Update center when map is dragged
+    const onCenterChanged = () => {
+        if (map) {
+            const newCenter = map.getCenter();
+            // Debounce or just set state, but we usually want the specific lat/lng values
+            // We'll update a ref or state, but for address fetching we might want to wait for "idle"
+        }
+    };
+
+    const onIdle = useCallback(() => {
+        if (map) {
+            const newCenter = map.getCenter();
+            const lat = newCenter.lat();
+            const lng = newCenter.lng();
+            setCenter({ lat, lng });
+            fetchAddress(lat, lng);
+        }
+    }, [map]);
 
     const fetchAddress = async (lat, lng) => {
         setLoading(true);
         try {
-            // Using OpenStreetMap Nominatim for Reverse Geocoding
-            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-            const data = await res.json();
-            if (data && data.display_name) {
-                setAddress(data.display_name);
-            }
+            const geocoder = new window.google.maps.Geocoder();
+            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    setAddress(results[0].formatted_address);
+                } else {
+                    setAddress("Address not found");
+                }
+                setLoading(false);
+            });
         } catch (error) {
-            console.error("Error fetching address:", error);
-            setAddress("Address not found");
-        } finally {
+            console.error("Geocoding error:", error);
             setLoading(false);
         }
     };
 
-    const handleMapMoveEnd = (newCenter) => {
-        setCenter(newCenter);
-        fetchAddress(newCenter.lat, newCenter.lng);
-    };
+    const onLoad = useCallback(function callback(map) {
+        setMap(map);
+    }, []);
 
-    const handleSearch = async (query) => {
-        setSearchQuery(query);
-        if (query.length < 3) {
-            setSuggestions([]);
-            return;
-        }
+    const onUnmount = useCallback(function callback(map) {
+        setMap(null);
+    }, []);
 
-        try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=np`);
-            const data = await res.json();
-            setSuggestions(data);
-        } catch (error) {
-            console.error("Error searching address:", error);
-        }
-    };
+    const onPlaceChanged = () => {
+        if (autocompleteRef.current !== null) {
+            const place = autocompleteRef.current.getPlace();
+            if (place.geometry && place.geometry.location) {
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
+                const newPos = { lat, lng };
 
-    const handleSelectSuggestion = (item) => {
-        const newPos = { lat: parseFloat(item.lat), lng: parseFloat(item.lon) };
-        setCenter(newPos);
-        setAddress(item.display_name);
-        setSearchQuery(item.display_name);
-        setSuggestions([]);
-
-        // Fly to new location
-        if (mapRef.current) {
-            mapRef.current.setView(newPos, 16);
+                setCenter(newPos);
+                map.panTo(newPos);
+                map.setZoom(17);
+                setAddress(place.formatted_address);
+            } else {
+                console.log("No details available for input: '" + place.name + "'");
+            }
         }
     };
 
     const handleLocateMe = () => {
-        if (!navigator.geolocation) {
-            alert("Geolocation is not supported by your browser.");
-            return;
-        }
-        setLoading(true);
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                setCenter(newPos);
-                if (mapRef.current) {
-                    mapRef.current.setView(newPos, 16);
+        if (navigator.geolocation) {
+            setLoading(true);
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+                    setCenter(pos);
+                    map.panTo(pos);
+                    setLoading(false);
+                },
+                () => {
+                    setLoading(false);
+                    alert("Error: The Geolocation service failed.");
                 }
-                // Address fetch will be triggered by moveend if map moves, 
-                // but we can also trigger it manually to be sure
-                fetchAddress(newPos.lat, newPos.lng);
-            },
-            (err) => {
-                console.error("Geolocation error:", err);
-                alert("Unable to retrieve your location.");
-                setLoading(false);
-            }
-        );
+            );
+        } else {
+            alert("Error: Your browser doesn't support geolocation.");
+        }
     };
+
+    if (!isLoaded) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading Maps...</div>;
 
     return (
         <div style={{
@@ -139,93 +129,72 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                 {/* Header / Search */}
                 <div style={{ padding: '1rem', borderBottom: '1px solid var(--border)', backgroundColor: 'white', zIndex: 1001 }}>
                     <h3 style={{ marginBottom: '0.5rem', fontWeight: '700' }}>Select Delivery Location</h3>
-                    <div style={{ position: 'relative' }}>
+
+                    <Autocomplete
+                        onLoad={autocomplete => autocompleteRef.current = autocomplete}
+                        onPlaceChanged={onPlaceChanged}
+                    >
                         <input
                             type="text"
-                            value={searchQuery}
-                            onChange={(e) => handleSearch(e.target.value)}
                             placeholder="Search for a place..."
-                            style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                            style={{
+                                width: '100%',
+                                padding: '0.75rem',
+                                borderRadius: 'var(--radius-md)',
+                                border: '1px solid var(--border)',
+                                fontSize: '1rem'
+                            }}
                         />
-                        {suggestions.length > 0 && (
-                            <ul style={{
-                                position: 'absolute', top: '100%', left: 0, right: 0,
-                                backgroundColor: 'white', border: '1px solid var(--border)',
-                                borderRadius: 'var(--radius-md)', maxHeight: '200px', overflowY: 'auto',
-                                boxShadow: '0 4px 6px rgba(0,0,0,0.1)', listStyle: 'none', padding: 0, margin: 0, zIndex: 2000
-                            }}>
-                                {suggestions.map((item, idx) => (
-                                    <li
-                                        key={idx}
-                                        onClick={() => handleSelectSuggestion(item)}
-                                        style={{ padding: '0.75rem', cursor: 'pointer', borderBottom: '1px solid #f3f4f6' }}
-                                        onMouseOver={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                                        onMouseOut={(e) => e.target.style.backgroundColor = 'white'}
-                                    >
-                                        {item.display_name}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
+                    </Autocomplete>
                 </div>
 
                 {/* Map */}
                 <div style={{ flex: 1, position: 'relative' }}>
-                    <MapContainer
+                    <GoogleMap
+                        mapContainerStyle={containerStyle}
                         center={center}
                         zoom={16}
-                        style={{ height: '100%', width: '100%' }}
-                        whenCreated={(mapInstance) => { mapRef.current = mapInstance; }}
+                        onLoad={onLoad}
+                        onUnmount={onUnmount}
+                        onIdle={onIdle}
+                        options={{
+                            disableDefaultUI: false,
+                            zoomControl: true,
+                            streetViewControl: false,
+                            mapTypeControl: false,
+                            fullscreenControl: false,
+                        }}
                     >
-                        <TileLayer
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        />
-                        <MapController onMoveEnd={handleMapMoveEnd} initialCenter={initialLocation} />
-                    </MapContainer>
+                        {/* 
+                           We don't strictly need a Marker component if we are selecting the center.
+                           We'll place a fixed pin in the center of the UI.
+                        */}
+                    </GoogleMap>
 
                     {/* Fixed Center Pin */}
                     <div style={{
                         position: 'absolute',
                         top: '50%',
                         left: '50%',
-                        transform: 'translate(-50%, -100%)', // Center the bottom tip of the pin
+                        transform: 'translate(-50%, -100%)',
                         zIndex: 1000,
-                        pointerEvents: 'none', // Allow clicks to pass through to map
+                        pointerEvents: 'none',
                         fontSize: '3rem',
                         filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))',
-                        marginTop: '-10px' // Slight adjustment for visual center
+                        marginTop: '-10px'
                     }}>
                         📍
-                    </div>
-
-                    {/* "Move map" hint */}
-                    <div style={{
-                        position: 'absolute',
-                        top: '20px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        backgroundColor: 'rgba(0,0,0,0.7)',
-                        color: 'white',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '20px',
-                        fontSize: '0.875rem',
-                        zIndex: 1000,
-                        pointerEvents: 'none'
-                    }}>
-                        Move map to adjust location
                     </div>
 
                     {/* Locate Me Button */}
                     <button
                         onClick={handleLocateMe}
                         style={{
-                            position: 'absolute', bottom: '20px', right: '20px',
-                            backgroundColor: 'white', border: 'none', borderRadius: '50%',
-                            width: '50px', height: '50px', boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                            position: 'absolute', bottom: '130px', right: '10px', // Adjusted to not be blocked by Google logo
+                            backgroundColor: 'white', border: 'none', borderRadius: '2px', // Google style button
+                            width: '40px', height: '40px', boxShadow: 'rgba(0, 0, 0, 0.3) 0px 1px 4px -1px',
                             cursor: 'pointer', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '1.5rem'
+                            fontSize: '1.2rem'
                         }}
                         title="Locate Me"
                     >
