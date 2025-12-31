@@ -60,9 +60,9 @@ async function connectDB() {
     };
 
     console.log("Connecting to MongoDB...");
-    // Force local connection for debugging/stability
+    // Force local connection for debugging/stability - MODIFIED TO PREFER ENV
     const LOCAL_URI = 'mongodb://127.0.0.1:27017/quick-commerce';
-    const uri = LOCAL_URI || process.env.MONGO_URI;
+    const uri = process.env.MONGO_URI || LOCAL_URI;
 
     cached.promise = mongoose.connect(uri, opts).then((mongoose) => {
       console.log(`✅ MongoDB New Connection Established to ${uri}`);

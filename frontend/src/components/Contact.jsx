@@ -21,7 +21,7 @@ const Contact = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span>📍</span>
-                            <span>Thamel, Kathmandu, Nepal</span>
+                            <span>Tikathali, Lalitpur</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span>📞</span>
@@ -29,7 +29,7 @@ const Contact = () => {
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span>📧</span>
-                            <span>support@hambasket.com</span>
+                            <span>sarojbhagat666@gmail.com</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span>🕒</span>

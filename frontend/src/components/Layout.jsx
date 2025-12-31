@@ -162,9 +162,9 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           <div>
             <h4 style={{ fontWeight: '600', marginBottom: '1rem' }}>Contact</h4>
             <ul style={{ listStyle: 'none', padding: 0, color: '#9ca3af', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <li>📍 Thamel, Kathmandu</li>
+              <li>📍 Tikathali, Lalitpur</li>
               <li>📞 +977 9815769007</li>
-              <li>📧 support@aonestore.com</li>
+              <li>📧 sarojbhagat666@gmail.com</li>
             </ul>
           </div>
         </div>
