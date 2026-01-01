@@ -22,7 +22,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           {/* Logo */}
           <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             {/* Using text logo for now if image fails, or the brand logo */}
-            <img src="/brand_logo.png" alt="Aone Shop" style={{ height: '50px', objectFit: 'contain' }} />
+            <h1 style={{ fontWeight: '900', fontSize: '2rem', color: 'var(--brand-yellow)', letterSpacing: '-1px', textShadow: '1px 1px 0px rgba(0,0,0,0.1)' }}>Aone Shop</h1>
           </Link>
 
           {/* Location Block */}
