@@ -22,8 +22,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'Aone Store',
-        short_name: 'Aone Store',
+        name: 'Aone Shop',
+        short_name: 'Aone Shop',
         description: 'Groceries delivered in minutes',
         theme_color: '#7c3aed',
         background_color: '#ffffff',

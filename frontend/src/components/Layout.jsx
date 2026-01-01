@@ -22,7 +22,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           {/* Logo */}
           <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             {/* Using text logo for now if image fails, or the brand logo */}
-            <h1 style={{ fontWeight: '900', fontSize: '2rem', color: 'var(--brand-yellow)', letterSpacing: '-1px', textShadow: '1px 1px 0px rgba(0,0,0,0.1)' }}>Aone Store</h1>
+            <img src="/brand_logo.png" alt="Aone Shop" style={{ height: '50px', objectFit: 'contain' }} />
           </Link>
 
           {/* Location Block */}
@@ -145,7 +145,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       <footer style={{ backgroundColor: '#1f2937', color: 'white', padding: '3rem 0', marginTop: 'auto', width: '100%' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>Aone Store</h3>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>Aone Shop</h3>
             <p style={{ color: '#9ca3af', fontSize: '0.9rem', lineHeight: '1.6' }}>
               Fresh groceries delivered to your doorstep in minutes. Quality you can trust.
             </p>
@@ -169,7 +169,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           </div>
         </div>
         <div className="container" style={{ borderTop: '1px solid #374151', marginTop: '2rem', paddingTop: '2rem', textAlign: 'center', color: '#9ca3af', fontSize: '0.875rem' }}>
-          © 2024 Aone Store. All rights reserved.
+          © 2024 Aone Shop. All rights reserved.
         </div>
       </footer>
 

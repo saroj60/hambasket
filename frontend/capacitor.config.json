@@ -1,6 +1,6 @@
 {
   "appId": "com.aonestore.app",
-  "appName": "Aone Store",
+  "appName": "Aone Shop",
   "webDir": "dist",
   "server": {
     "cleartext": true

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Aone Store</string>
-    <string name="title_activity_main">Aone Store</string>
+    <string name="app_name">Aone Shop</string>
+    <string name="title_activity_main">Aone Shop</string>
     <string name="package_name">com.hamket.app</string>
     <string name="custom_url_scheme">com.hamket.app</string>
 </resources>
