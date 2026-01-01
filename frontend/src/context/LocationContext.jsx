@@ -22,6 +22,51 @@ export const LocationProvider = ({ children }) => {
         localStorage.setItem('hb_location', JSON.stringify(location));
     }, [location]);
 
+    // Auto-detect location on mount if not already set
+    useEffect(() => {
+        const saved = localStorage.getItem('hb_location');
+        // Only detect if no location is saved or if it's the default/fallback one
+        const isDefault = saved && JSON.parse(saved).address === 'Kathmandu, Nepal' && !JSON.parse(saved).coordinates;
+
+        if (!saved || isDefault) {
+            detectCurrentLocation();
+        }
+    }, []);
+
+    const detectCurrentLocation = () => {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    try {
+                        const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+                        if (API_KEY) {
+                            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`);
+                            const data = await response.json();
+                            if (data.status === 'OK' && data.results[0]) {
+                                const newLocation = {
+                                    address: data.results[0].formatted_address,
+                                    coordinates: { lat: latitude, lng: longitude }
+                                };
+                                setLocation(newLocation);
+                            }
+                        } else {
+                            // Fallback if no key (though key should be present)
+                            updateLocation("Current Location (Address lookup unavailable)", { lat: latitude, lng: longitude });
+                        }
+                    } catch (error) {
+                        console.error("Error reversing geocode:", error);
+                    }
+                },
+                (error) => {
+                    console.log("Auto-location permission denied or failed:", error.message);
+                    // Do nothing, keep default or previously saved
+                },
+                { timeout: 10000, maximumAge: 60000 }
+            );
+        }
+    };
+
     const updateLocation = (address, coordinates = null) => {
         setLocation({ address, coordinates });
         setIsModalOpen(false);
