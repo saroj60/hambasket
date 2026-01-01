@@ -43,7 +43,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
             const newCenter = map.getCenter();
             const lat = newCenter.lat();
             const lng = newCenter.lng();
-            setCenter({ lat, lng });
+            setCenter({ lat, lng }); // This updates internal state for submission, but NOT the map prop (since we removed it)
             fetchAddress(lat, lng);
         }
     }, [map]);
@@ -56,12 +56,14 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                 if (status === 'OK' && results[0]) {
                     setAddress(results[0].formatted_address);
                 } else {
-                    setAddress("Address not found");
+                    console.error("Geocoding failed: " + status);
+                    setAddress(`Error: ${status} (Geocoding API enabled?)`);
                 }
                 setLoading(false);
             });
         } catch (error) {
             console.error("Geocoding error:", error);
+            setAddress(`Error: ${error.message}`);
             setLoading(false);
         }
     };
@@ -82,10 +84,12 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                 const lng = place.geometry.location.lng();
                 const newPos = { lat, lng };
 
-                setCenter(newPos);
-                map.panTo(newPos);
-                map.setZoom(17);
-                setAddress(place.formatted_address);
+                // setCenter(newPos); // Avoid triggering re-render of map prop
+                if (map) {
+                    map.panTo(newPos);
+                    map.setZoom(17);
+                }
+                // setAddress(place.formatted_address); // fetchAddress will handle this onIdle
             } else {
                 console.log("No details available for input: '" + place.name + "'");
             }
@@ -94,19 +98,19 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
     const handleLocateMe = () => {
         if (navigator.geolocation) {
-            setLoading(true);
+            // setLoading(true); // Let onIdle handle loading state to avoid conflict
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const pos = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude,
                     };
-                    setCenter(pos);
-                    map.panTo(pos);
-                    setLoading(false);
+                    // setCenter(pos);
+                    if (map) map.panTo(pos);
+                    // setLoading(false);
                 },
                 () => {
-                    setLoading(false);
+                    // setLoading(false);
                     alert("Error: The Geolocation service failed.");
                 }
             );
@@ -150,9 +154,12 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
                 {/* Map */}
                 <div style={{ flex: 1, position: 'relative' }}>
+                    <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 1000, background: 'white', padding: 5, fontSize: 10 }}>
+                        Debug: {loading ? 'Loading...' : 'Idle'} | {address.substring(0, 20)}
+                    </div>
                     <GoogleMap
                         mapContainerStyle={containerStyle}
-                        center={center}
+                        center={defaultCenter} // Only use for initial render
                         zoom={16}
                         onLoad={onLoad}
                         onUnmount={onUnmount}

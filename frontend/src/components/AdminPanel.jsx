@@ -21,7 +21,8 @@ const CATEGORIES = [
     "Atta, Rice, Oil & Dals",
     "Snacks & Beverages",
     "Household & Personal Care",
-    "Pharmacy"
+    "Pharmacy",
+    "Beauty & Self-Care"
 ];
 
 const AdminPanel = () => {

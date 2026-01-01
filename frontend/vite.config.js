@@ -3,6 +3,9 @@ import react from "@vitejs/plugin-react";
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  define: {
+    'import.meta.env.VITE_GOOGLE_MAPS_API_KEY': JSON.stringify("AIzaSyBN2Pg5ihC-BsvwSPKAsIxh3K4zH0aQ3HQ")
+  },
   build: {
     target: 'esnext',
     rollupOptions: {

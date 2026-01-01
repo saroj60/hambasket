@@ -226,6 +226,19 @@ const VendorDashboard = () => {
                                             onChange={e => setProductForm({ ...productForm, emoji: e.target.value })}
                                             className="p-2 border rounded w-full"
                                         />
+                                        <select
+                                            value={productForm.category}
+                                            onChange={e => setProductForm({ ...productForm, category: e.target.value })}
+                                            className="p-2 border rounded w-full"
+                                        >
+                                            <option value="Fruits & Vegetables">Fruits & Vegetables</option>
+                                            <option value="Dairy, Bread & Eggs">Dairy, Bread & Eggs</option>
+                                            <option value="Atta, Rice, Oil & Dals">Atta, Rice, Oil & Dals</option>
+                                            <option value="Snacks & Beverages">Snacks & Beverages</option>
+                                            <option value="Household & Personal Care">Household & Personal Care</option>
+                                            <option value="Pharmacy">Pharmacy</option>
+                                            <option value="Beauty & Self-Care">Beauty & Self-Care</option>
+                                        </select>
                                         <div className="col-span-2">
                                             <label className="block text-sm font-medium mb-1">Product Image</label>
                                             <input
