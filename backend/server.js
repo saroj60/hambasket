@@ -163,7 +163,8 @@ app.set("io", io);
 export default app;
 
 // Start server only if not in Vercel environment
-if (process.env.NODE_ENV !== 'production') {
+// Start server if not running as a Vercel serverless function
+if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;
   httpServer.listen(PORT, '0.0.0.0', () => console.log(`🚀 Server running on port ${PORT}`));
 }
