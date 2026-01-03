@@ -24,7 +24,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: true,
+  origin: "*", // Allow all origins (Mobile/Web)
   credentials: true
 }));
 app.use(express.json());
