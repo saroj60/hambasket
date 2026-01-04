@@ -205,121 +205,120 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
               )}
             </>
           )}
-        </>
-          )}
 
-        {step === 'checkout' && (
-          <form id="whatsapp-checkout-form" onSubmit={handleWhatsAppCheckout} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {!user && (
-              <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
-                <h4 style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.75rem' }}>Contact Details</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <input placeholder="Full Name" value={guestName} onChange={(e) => setGuestName(e.target.value)} required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
-                  <input
-                    type="tel"
-                    placeholder="Phone Number"
-                    value={guestPhone}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/\D/g, '');
-                      setGuestPhone(val);
-                    }}
+
+          {step === 'checkout' && (
+            <form id="whatsapp-checkout-form" onSubmit={handleWhatsAppCheckout} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              {!user && (
+                <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+                  <h4 style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.75rem' }}>Contact Details</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <input placeholder="Full Name" value={guestName} onChange={(e) => setGuestName(e.target.value)} required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
+                    <input
+                      type="tel"
+                      placeholder="Phone Number"
+                      value={guestPhone}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '');
+                        setGuestPhone(val);
+                      }}
+                      required
+                      maxLength={10}
+                      style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>Delivery Address</label>
+                {/* Simplified Address Selection */}
+                <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', backgroundColor: '#f9fafb' }}>
+                  <textarea
+                    value={customAddress}
+                    onChange={(e) => setCustomAddress(e.target.value)}
                     required
-                    maxLength={10}
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                    placeholder="Describe your location..."
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', minHeight: '80px', marginBottom: '0.5rem' }}
                   />
+
+                  {/* Explicit Mandatory Location Check */}
+                  {!location?.coordinates ? (
+                    <div style={{ color: 'var(--danger)', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                      ⚠️ Location selection on map is required.
+                    </div>
+                  ) : (
+                    <div style={{ color: 'var(--success)', fontSize: '0.875rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      ✅ Location Selected
+                    </div>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => openModal()}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem',
+                      background: location?.coordinates ? '#dcfce7' : 'white',
+                      border: `1px solid ${location?.coordinates ? 'var(--success)' : 'var(--primary)'}`,
+                      color: location?.coordinates ? 'var(--success)' : 'var(--primary)',
+                      cursor: 'pointer',
+                      fontSize: '0.875rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.25rem',
+                      borderRadius: 'var(--radius-sm)'
+                    }}
+                  >
+                    📍 {location?.coordinates ? 'Update Location' : 'Select Location on Map'}
+                  </button>
                 </div>
               </div>
-            )}
 
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>Delivery Address</label>
-              {/* Simplified Address Selection */}
-              <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', backgroundColor: '#f9fafb' }}>
-                <textarea
-                  value={customAddress}
-                  onChange={(e) => setCustomAddress(e.target.value)}
-                  required
-                  placeholder="Describe your location..."
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', minHeight: '80px', marginBottom: '0.5rem' }}
-                />
-
-                {/* Explicit Mandatory Location Check */}
-                {!location?.coordinates ? (
-                  <div style={{ color: 'var(--danger)', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                    ⚠️ Location selection on map is required.
-                  </div>
-                ) : (
-                  <div style={{ color: 'var(--success)', fontSize: '0.875rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                    ✅ Location Selected
-                  </div>
-                )}
-
-                <button
-                  type="button"
-                  onClick={() => openModal()}
-                  style={{
-                    width: '100%',
-                    padding: '0.5rem',
-                    background: location?.coordinates ? '#dcfce7' : 'white',
-                    border: `1px solid ${location?.coordinates ? 'var(--success)' : 'var(--primary)'}`,
-                    color: location?.coordinates ? 'var(--success)' : 'var(--primary)',
-                    cursor: 'pointer',
-                    fontSize: '0.875rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.25rem',
-                    borderRadius: 'var(--radius-sm)'
-                  }}
-                >
-                  📍 {location?.coordinates ? 'Update Location' : 'Select Location on Map'}
-                </button>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>Promo Code</label>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input placeholder="Enter Code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
+                  <button type="button" onClick={applyCoupon} className="btn btn-outline">Apply</button>
+                </div>
+                {couponMessage && <p style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: couponMessage.type === 'success' ? 'var(--success)' : 'var(--danger)' }}>{couponMessage.text}</p>}
               </div>
-            </div>
 
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>Promo Code</label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <input placeholder="Enter Code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
-                <button type="button" onClick={applyCoupon} className="btn btn-outline">Apply</button>
+              <div style={{ backgroundColor: '#f9fafb', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Subtotal</span><span>Rs. {subtotal}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Delivery Fee</span><span>{deliveryFee === 0 ? <span style={{ color: 'var(--success)' }}>Free</span> : `Rs. ${deliveryFee}`}</span></div>
+                {discount > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--success)' }}><span>Discount</span><span>- Rs. {discount}</span></div>}
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.5rem', marginTop: '0.5rem', display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1.125rem' }}><span>Total</span><span>Rs. {total}</span></div>
               </div>
-              {couponMessage && <p style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: couponMessage.type === 'success' ? 'var(--success)' : 'var(--danger)' }}>{couponMessage.text}</p>}
-            </div>
-
-            <div style={{ backgroundColor: '#f9fafb', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Subtotal</span><span>Rs. {subtotal}</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Delivery Fee</span><span>{deliveryFee === 0 ? <span style={{ color: 'var(--success)' }}>Free</span> : `Rs. ${deliveryFee}`}</span></div>
-              {discount > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--success)' }}><span>Discount</span><span>- Rs. {discount}</span></div>}
-              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.5rem', marginTop: '0.5rem', display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1.125rem' }}><span>Total</span><span>Rs. {total}</span></div>
-            </div>
-          </form>
-        )}
-      </div>
-
-      {cartItems.length > 0 && (
-        <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border)', backgroundColor: '#f9fafb', paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
-          {step === 'cart' ? (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', fontSize: '1.125rem', fontWeight: '700' }}><span>Subtotal</span><span>Rs. {subtotal}</span></div>
-              <button onClick={handleProceedToCheckout} className="btn btn-primary" style={{ width: '100%', padding: '1rem' }}>Proceed to Checkout</button>
-            </>
-          ) : (
-            <button
-              form="whatsapp-checkout-form"
-              type="submit"
-              className="btn"
-              style={{
-                width: '100%', padding: '1rem',
-                backgroundColor: '#25D366', color: 'white', border: 'none',
-                fontWeight: 'bold', fontSize: '1rem'
-              }}
-            >
-              💬 Order on WhatsApp
-            </button>
+            </form>
           )}
         </div>
-      )}
-    </div >
+
+        {cartItems.length > 0 && (
+          <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border)', backgroundColor: '#f9fafb', paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
+            {step === 'cart' ? (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', fontSize: '1.125rem', fontWeight: '700' }}><span>Subtotal</span><span>Rs. {subtotal}</span></div>
+                <button onClick={handleProceedToCheckout} className="btn btn-primary" style={{ width: '100%', padding: '1rem' }}>Proceed to Checkout</button>
+              </>
+            ) : (
+              <button
+                form="whatsapp-checkout-form"
+                type="submit"
+                className="btn"
+                style={{
+                  width: '100%', padding: '1rem',
+                  backgroundColor: '#25D366', color: 'white', border: 'none',
+                  fontWeight: 'bold', fontSize: '1rem'
+                }}
+              >
+                💬 Order on WhatsApp
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 };
