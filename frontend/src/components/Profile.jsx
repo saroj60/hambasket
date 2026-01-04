@@ -553,7 +553,7 @@ const Profile = ({ onClose, onTrackOrder }) => {
                 onClose={() => setShowInvoiceModal(false)}
                 order={selectedInvoiceOrder}
             />
-        </div >
+        </div>
     );
 };
 
