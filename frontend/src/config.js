@@ -22,13 +22,13 @@ if (isNative) {
     apiUrl = `${baseUrl}/api`;
 } else {
     // 2. Web Environment
-    // If we are in development (npm run dev), we might want localhost.
-    // BUT if we are in production (Vercel), we want Railway.
-    if (import.meta.env.PROD) {
+    // Always use Railway in production or if VITE_API_URL is missing
+    baseUrl = import.meta.env.VITE_API_URL || `https://hambasket-production.up.railway.app`;
+
+    // Fallback: If we are on Vercel and VITE_API_URL wasn't set, it might default to relative.
+    // Let's force it if it's empty.
+    if (!baseUrl || baseUrl === '/' || baseUrl.includes('vercel.app')) {
         baseUrl = `https://hambasket-production.up.railway.app`;
-    } else {
-        // Local Development: Use VITE_API_URL or fallback to Railway
-        baseUrl = import.meta.env.VITE_API_URL || `https://hambasket-production.up.railway.app`;
     }
     apiUrl = `${baseUrl}/api`;
 }
