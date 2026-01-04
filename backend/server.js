@@ -88,18 +88,18 @@ app.get("/", (req, res) => {
 });
 
 // Middleware to ensure connection on every request
-// app.use(async (req, res, next) => {
-//   try {
-//     await connectDB();
-//     next();
-//   } catch (error) {
-//     console.error("🔥 Database connection failed:", error);
-//     res.status(500).json({
-//       message: "Database connection failed",
-//       error: error.message
-//     });
-//   }
-// });
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("🔥 Database connection failed:", error);
+    res.status(500).json({
+      message: "Database connection failed",
+      error: error.message
+    });
+  }
+});
 
 
 
