@@ -31,7 +31,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
   const [guestPhone, setGuestPhone] = useState('');
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
-  const deliveryFee = subtotal > 150 ? 0 : 50;
+  const deliveryFee = 0; // subtotal > 150 ? 0 : 50;
   const total = subtotal + deliveryFee - discount;
 
   // Reset step when cart opens/closes
@@ -161,176 +161,161 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
         </div>
 
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem' }}>
-          {step === 'cart' && (
-            <>
-              <div style={{ padding: '0.75rem', backgroundColor: '#f0fdf4', borderRadius: 'var(--radius-md)', marginBottom: '1rem', border: '1px solid #bbf7d0' }}>
-                {subtotal >= 150 ? (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontWeight: '700', fontSize: '0.9rem' }}>
-                    <span>🎉</span> Free Delivery Unlocked!
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontWeight: '700', fontSize: '0.9rem' }}>
+            <span>🎉</span> Free Delivery on All Orders!
+          </div>
+
+          {cartItems.length === 0 ? (
+            <div style={{ textAlign: 'center', marginTop: '2rem', color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛒</div>
+              <p>Your basket is empty</p>
+              <button onClick={onClose} className="btn btn-primary" style={{ marginTop: '1rem' }}>Start Shopping</button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {cartItems.map((item) => (
+                <div key={item._id} style={{ display: 'flex', gap: '1rem', padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
+                  <div style={{ width: '60px', height: '60px', backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', borderRadius: 'var(--radius-sm)' }}>{item.emoji}</div>
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{ fontSize: '0.875rem', margin: '0 0 0.25rem 0' }}>{item.name}</h4>
+                    <p style={{ fontSize: '0.875rem', fontWeight: '600' }}>Rs. {item.price}</p>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', height: '100%' }}>
+                    <button
+                      style={{ color: 'var(--danger)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px', marginBottom: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      onClick={() => onRemove(item._id)}
+                      title="Remove Item"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                      </svg>
+                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#f3f4f6', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+                      <button onClick={() => handleQuantityChange(item, -1)} style={{ padding: '2px 8px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: 'bold' }}>-</button>
+                      <span style={{ fontSize: '0.875rem', fontWeight: '600', padding: '0 4px' }}>{item.qty}</span>
+                      <button onClick={() => handleQuantityChange(item, 1)} style={{ padding: '2px 8px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: 'bold' }}>+</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+          )}
+
+        {step === 'checkout' && (
+          <form id="whatsapp-checkout-form" onSubmit={handleWhatsAppCheckout} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {!user && (
+              <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+                <h4 style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.75rem' }}>Contact Details</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <input placeholder="Full Name" value={guestName} onChange={(e) => setGuestName(e.target.value)} required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
+                  <input
+                    type="tel"
+                    placeholder="Phone Number"
+                    value={guestPhone}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      setGuestPhone(val);
+                    }}
+                    required
+                    maxLength={10}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>Delivery Address</label>
+              {/* Simplified Address Selection */}
+              <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', backgroundColor: '#f9fafb' }}>
+                <textarea
+                  value={customAddress}
+                  onChange={(e) => setCustomAddress(e.target.value)}
+                  required
+                  placeholder="Describe your location..."
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', minHeight: '80px', marginBottom: '0.5rem' }}
+                />
+
+                {/* Explicit Mandatory Location Check */}
+                {!location?.coordinates ? (
+                  <div style={{ color: 'var(--danger)', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                    ⚠️ Location selection on map is required.
                   </div>
                 ) : (
-                  <>
-                    <div style={{ fontSize: '0.85rem', marginBottom: '0.4rem', color: '#166534' }}>
-                      Add <b>Rs. {150 - subtotal}</b> more for <span style={{ fontWeight: '700', color: 'var(--success)' }}>Free Delivery</span>
-                    </div>
-                    <div style={{ height: '6px', width: '100%', backgroundColor: '#dcfce7', borderRadius: '4px', overflow: 'hidden' }}>
-                      <div style={{ width: `${(subtotal / 150) * 100}%`, height: '100%', backgroundColor: 'var(--success)', transition: 'width 0.5s ease' }}></div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {cartItems.length === 0 ? (
-                <div style={{ textAlign: 'center', marginTop: '2rem', color: 'var(--text-muted)' }}>
-                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛒</div>
-                  <p>Your basket is empty</p>
-                  <button onClick={onClose} className="btn btn-primary" style={{ marginTop: '1rem' }}>Start Shopping</button>
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {cartItems.map((item) => (
-                    <div key={item._id} style={{ display: 'flex', gap: '1rem', padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-                      <div style={{ width: '60px', height: '60px', backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', borderRadius: 'var(--radius-sm)' }}>{item.emoji}</div>
-                      <div style={{ flex: 1 }}>
-                        <h4 style={{ fontSize: '0.875rem', margin: '0 0 0.25rem 0' }}>{item.name}</h4>
-                        <p style={{ fontSize: '0.875rem', fontWeight: '600' }}>Rs. {item.price}</p>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between', height: '100%' }}>
-                        <button
-                          style={{ color: 'var(--danger)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px', marginBottom: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                          onClick={() => onRemove(item._id)}
-                          title="Remove Item"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                          </svg>
-                        </button>
-                        <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#f3f4f6', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-                          <button onClick={() => handleQuantityChange(item, -1)} style={{ padding: '2px 8px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: 'bold' }}>-</button>
-                          <span style={{ fontSize: '0.875rem', fontWeight: '600', padding: '0 4px' }}>{item.qty}</span>
-                          <button onClick={() => handleQuantityChange(item, 1)} style={{ padding: '2px 8px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: 'bold' }}>+</button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-
-          {step === 'checkout' && (
-            <form id="whatsapp-checkout-form" onSubmit={handleWhatsAppCheckout} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              {!user && (
-                <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
-                  <h4 style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.75rem' }}>Contact Details</h4>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <input placeholder="Full Name" value={guestName} onChange={(e) => setGuestName(e.target.value)} required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
-                    <input
-                      type="tel"
-                      placeholder="Phone Number"
-                      value={guestPhone}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/\D/g, '');
-                        setGuestPhone(val);
-                      }}
-                      required
-                      maxLength={10}
-                      style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
-                    />
+                  <div style={{ color: 'var(--success)', fontSize: '0.875rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    ✅ Location Selected
                   </div>
-                </div>
-              )}
+                )}
 
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>Delivery Address</label>
-                {/* Simplified Address Selection */}
-                <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', backgroundColor: '#f9fafb' }}>
-                  <textarea
-                    value={customAddress}
-                    onChange={(e) => setCustomAddress(e.target.value)}
-                    required
-                    placeholder="Describe your location..."
-                    style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', minHeight: '80px', marginBottom: '0.5rem' }}
-                  />
-
-                  {/* Explicit Mandatory Location Check */}
-                  {!location?.coordinates ? (
-                    <div style={{ color: 'var(--danger)', fontSize: '0.875rem', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                      ⚠️ Location selection on map is required.
-                    </div>
-                  ) : (
-                    <div style={{ color: 'var(--success)', fontSize: '0.875rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      ✅ Location Selected
-                    </div>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => openModal()}
-                    style={{
-                      width: '100%',
-                      padding: '0.5rem',
-                      background: location?.coordinates ? '#dcfce7' : 'white',
-                      border: `1px solid ${location?.coordinates ? 'var(--success)' : 'var(--primary)'}`,
-                      color: location?.coordinates ? 'var(--success)' : 'var(--primary)',
-                      cursor: 'pointer',
-                      fontSize: '0.875rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.25rem',
-                      borderRadius: 'var(--radius-sm)'
-                    }}
-                  >
-                    📍 {location?.coordinates ? 'Update Location' : 'Select Location on Map'}
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => openModal()}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem',
+                    background: location?.coordinates ? '#dcfce7' : 'white',
+                    border: `1px solid ${location?.coordinates ? 'var(--success)' : 'var(--primary)'}`,
+                    color: location?.coordinates ? 'var(--success)' : 'var(--primary)',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.25rem',
+                    borderRadius: 'var(--radius-sm)'
+                  }}
+                >
+                  📍 {location?.coordinates ? 'Update Location' : 'Select Location on Map'}
+                </button>
               </div>
+            </div>
 
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>Promo Code</label>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <input placeholder="Enter Code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
-                  <button type="button" onClick={applyCoupon} className="btn btn-outline">Apply</button>
-                </div>
-                {couponMessage && <p style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: couponMessage.type === 'success' ? 'var(--success)' : 'var(--danger)' }}>{couponMessage.text}</p>}
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>Promo Code</label>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input placeholder="Enter Code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
+                <button type="button" onClick={applyCoupon} className="btn btn-outline">Apply</button>
               </div>
+              {couponMessage && <p style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: couponMessage.type === 'success' ? 'var(--success)' : 'var(--danger)' }}>{couponMessage.text}</p>}
+            </div>
 
-              <div style={{ backgroundColor: '#f9fafb', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Subtotal</span><span>Rs. {subtotal}</span></div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Delivery Fee</span><span>{deliveryFee === 0 ? <span style={{ color: 'var(--success)' }}>Free</span> : `Rs. ${deliveryFee}`}</span></div>
-                {discount > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--success)' }}><span>Discount</span><span>- Rs. {discount}</span></div>}
-                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.5rem', marginTop: '0.5rem', display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1.125rem' }}><span>Total</span><span>Rs. {total}</span></div>
-              </div>
-            </form>
-          )}
-        </div>
-
-        {cartItems.length > 0 && (
-          <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border)', backgroundColor: '#f9fafb', paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
-            {step === 'cart' ? (
-              <>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', fontSize: '1.125rem', fontWeight: '700' }}><span>Subtotal</span><span>Rs. {subtotal}</span></div>
-                <button onClick={handleProceedToCheckout} className="btn btn-primary" style={{ width: '100%', padding: '1rem' }}>Proceed to Checkout</button>
-              </>
-            ) : (
-              <button
-                form="whatsapp-checkout-form"
-                type="submit"
-                className="btn"
-                style={{
-                  width: '100%', padding: '1rem',
-                  backgroundColor: '#25D366', color: 'white', border: 'none',
-                  fontWeight: 'bold', fontSize: '1rem'
-                }}
-              >
-                💬 Order on WhatsApp
-              </button>
-            )}
-          </div>
+            <div style={{ backgroundColor: '#f9fafb', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Subtotal</span><span>Rs. {subtotal}</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Delivery Fee</span><span>{deliveryFee === 0 ? <span style={{ color: 'var(--success)' }}>Free</span> : `Rs. ${deliveryFee}`}</span></div>
+              {discount > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--success)' }}><span>Discount</span><span>- Rs. {discount}</span></div>}
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.5rem', marginTop: '0.5rem', display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1.125rem' }}><span>Total</span><span>Rs. {total}</span></div>
+            </div>
+          </form>
         )}
       </div>
+
+      {cartItems.length > 0 && (
+        <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border)', backgroundColor: '#f9fafb', paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
+          {step === 'cart' ? (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', fontSize: '1.125rem', fontWeight: '700' }}><span>Subtotal</span><span>Rs. {subtotal}</span></div>
+              <button onClick={handleProceedToCheckout} className="btn btn-primary" style={{ width: '100%', padding: '1rem' }}>Proceed to Checkout</button>
+            </>
+          ) : (
+            <button
+              form="whatsapp-checkout-form"
+              type="submit"
+              className="btn"
+              style={{
+                width: '100%', padding: '1rem',
+                backgroundColor: '#25D366', color: 'white', border: 'none',
+                fontWeight: 'bold', fontSize: '1rem'
+              }}
+            >
+              💬 Order on WhatsApp
+            </button>
+          )}
+        </div>
+      )}
+    </div >
     </>
   );
 };
