@@ -5,7 +5,7 @@ import NotificationBell from './NotificationBell';
 import LocationModal from './LocationModal';
 import MapAddressSelector from './MapAddressSelector';
 
-const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggestions = [], bottomNav }) => {
+const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggestions = [], bottomNav, onLogin }) => {
   const { location, openModal, mapState, closeMap, updateLocation } = useLocation();
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -110,7 +110,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
 
           {/* Login / Cart Actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-            <button style={{ background: 'none', border: 'none', fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)', cursor: 'pointer' }}>
+            <button onClick={onLogin} style={{ background: 'none', border: 'none', fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)', cursor: 'pointer' }}>
               Login
             </button>
             <button

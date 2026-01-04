@@ -3,6 +3,7 @@ import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import InvoiceModal from './InvoiceModal';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -110,6 +111,10 @@ const Profile = ({ onClose, onTrackOrder }) => {
     const [addresses, setAddresses] = useState(user?.addresses || []);
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [addressForm, setAddressForm] = useState({ label: '', address: '', isDefault: false });
+
+    // Invoice State
+    const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null);
+    const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
     useEffect(() => {
         if (activeTab === 'addresses') {
@@ -293,6 +298,17 @@ const Profile = ({ onClose, onTrackOrder }) => {
                                             <span>Rs. {order.totalAmount}</span>
                                         </div>
                                         <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedInvoiceOrder(order);
+                                                    setShowInvoiceModal(true);
+                                                }}
+                                                className="btn btn-outline"
+                                                style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                title="View Invoice"
+                                            >
+                                                📄 Receipt
+                                            </button>
                                             {order.status === 'Delivered' && (!order.refundStatus || order.refundStatus === 'None') && (
                                                 <button
                                                     onClick={async () => {
@@ -531,6 +547,12 @@ const Profile = ({ onClose, onTrackOrder }) => {
                     Logout
                 </button>
             </div>
+            {/* Invoice Modal */}
+            <InvoiceModal
+                isOpen={showInvoiceModal}
+                onClose={() => setShowInvoiceModal(false)}
+                order={selectedInvoiceOrder}
+            />
         </div >
     );
 };

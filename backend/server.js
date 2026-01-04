@@ -81,6 +81,12 @@ async function connectDB() {
   return cached.conn;
 }
 
+
+// Root Endpoint - Moved above DB middleware for Health Checks
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
 // Middleware to ensure connection on every request
 app.use(async (req, res, next) => {
   try {
@@ -95,10 +101,7 @@ app.use(async (req, res, next) => {
   }
 });
 
-// Root Endpoint
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
+
 
 // Serve Uploads
 import path from 'path';

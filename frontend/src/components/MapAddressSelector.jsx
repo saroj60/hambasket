@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, Autocomplete } from '@react-google-maps/api';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { GoogleMap, useJsApiLoader, Autocomplete } from '@react-google-maps/api';
+import { Geolocation } from '@capacitor/geolocation';
+import { Capacitor } from '@capacitor/core';
 
 const VITE_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -17,33 +19,31 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
         libraries: libraries
     });
 
-    // Default to Kathmandu
-    const defaultCenter = initialLocation || { lat: 27.7172, lng: 85.3240 };
+    // Stabilize defaultCenter to prevent map resets on re-renders
+    const defaultCenter = useMemo(() => {
+        return initialLocation || { lat: 27.7172, lng: 85.3240 };
+    }, [initialLocation]);
 
     const [map, setMap] = useState(null);
+    // We strictly use internal center state to track where the user has moved the map,
+    // but we DO NOT pass this back to the GoogleMap 'center' prop to avoid fighting with the map's internal state.
     const [center, setCenter] = useState(defaultCenter);
     const [address, setAddress] = useState('');
-    const [searchResult, setSearchResult] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // Store the autocomplete instance
     const autocompleteRef = useRef(null);
+    // Ref to track if we are programmatically moving the map to avoid loops
+    const isProgrammaticMove = useRef(false);
 
-    // Update center when map is dragged
-    const onCenterChanged = () => {
-        if (map) {
-            const newCenter = map.getCenter();
-            // Debounce or just set state, but we usually want the specific lat/lng values
-            // We'll update a ref or state, but for address fetching we might want to wait for "idle"
-        }
-    };
-
+    // Fetch address when map stops moving
     const onIdle = useCallback(() => {
         if (map) {
             const newCenter = map.getCenter();
             const lat = newCenter.lat();
             const lng = newCenter.lng();
-            setCenter({ lat, lng }); // This updates internal state for submission, but NOT the map prop (since we removed it)
+
+            // Update internal state without forcing a map re-center via props
+            setCenter({ lat, lng });
             fetchAddress(lat, lng);
         }
     }, [map]);
@@ -57,7 +57,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                     setAddress(results[0].formatted_address);
                 } else {
                     console.error("Geocoding failed: " + status);
-                    setAddress(`Error: ${status} (Geocoding API enabled?)`);
+                    setAddress(`Error: ${status}`);
                 }
                 setLoading(false);
             });
@@ -84,38 +84,55 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                 const lng = place.geometry.location.lng();
                 const newPos = { lat, lng };
 
-                // setCenter(newPos); // Avoid triggering re-render of map prop
                 if (map) {
                     map.panTo(newPos);
                     map.setZoom(17);
                 }
-                // setAddress(place.formatted_address); // fetchAddress will handle this onIdle
-            } else {
-                console.log("No details available for input: '" + place.name + "'");
             }
         }
     };
 
-    const handleLocateMe = () => {
-        if (navigator.geolocation) {
-            // setLoading(true); // Let onIdle handle loading state to avoid conflict
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    };
-                    // setCenter(pos);
-                    if (map) map.panTo(pos);
-                    // setLoading(false);
-                },
-                () => {
-                    // setLoading(false);
-                    alert("Error: The Geolocation service failed.");
-                }
-            );
-        } else {
-            alert("Error: Your browser doesn't support geolocation.");
+    const handleLocateMe = async () => {
+        setLoading(true);
+        try {
+            let pos;
+            if (Capacitor.isNativePlatform()) {
+                const updatedPosition = await Geolocation.getCurrentPosition({
+                    enableHighAccuracy: true,
+                    timeout: 10000
+                });
+                pos = {
+                    lat: updatedPosition.coords.latitude,
+                    lng: updatedPosition.coords.longitude
+                };
+            } else if (navigator.geolocation) {
+                // Fallback for web
+                await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude,
+                            };
+                            resolve();
+                        },
+                        (err) => reject(err),
+                        { timeout: 10000 }
+                    );
+                });
+            } else {
+                throw new Error("Geolocation not supported");
+            }
+
+            if (map && pos) {
+                map.panTo(pos);
+                map.setZoom(17);
+            }
+        } catch (error) {
+            console.error("Locate me error:", error);
+            alert("Could not detect location. Please ensure GPS is enabled.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -155,11 +172,11 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                 {/* Map */}
                 <div style={{ flex: 1, position: 'relative' }}>
                     <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 1000, background: 'white', padding: 5, fontSize: 10 }}>
-                        Debug: {loading ? 'Loading...' : 'Idle'} | {address.substring(0, 20)}
+                        {loading ? 'Fetching address...' : ''} {address && address.substring(0, 30)}...
                     </div>
                     <GoogleMap
                         mapContainerStyle={containerStyle}
-                        center={defaultCenter} // Only use for initial render
+                        center={defaultCenter}
                         zoom={16}
                         onLoad={onLoad}
                         onUnmount={onUnmount}
@@ -172,10 +189,6 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                             fullscreenControl: false,
                         }}
                     >
-                        {/* 
-                           We don't strictly need a Marker component if we are selecting the center.
-                           We'll place a fixed pin in the center of the UI.
-                        */}
                     </GoogleMap>
 
                     {/* Fixed Center Pin */}
@@ -197,8 +210,8 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                     <button
                         onClick={handleLocateMe}
                         style={{
-                            position: 'absolute', bottom: '130px', right: '10px', // Adjusted to not be blocked by Google logo
-                            backgroundColor: 'white', border: 'none', borderRadius: '2px', // Google style button
+                            position: 'absolute', bottom: '130px', right: '10px',
+                            backgroundColor: 'white', border: 'none', borderRadius: '2px',
                             width: '40px', height: '40px', boxShadow: 'rgba(0, 0, 0, 0.3) 0px 1px 4px -1px',
                             cursor: 'pointer', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontSize: '1.2rem'
@@ -223,7 +236,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                             onClick={() => onConfirm({ address, coordinates: center })}
                             className="btn btn-primary"
                             style={{ flex: 1 }}
-                            disabled={loading || !address}
+                            disabled={loading || !address || address.startsWith('Error')}
                         >
                             Confirm Location
                         </button>

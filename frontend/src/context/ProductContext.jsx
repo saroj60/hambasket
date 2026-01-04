@@ -27,6 +27,7 @@ export const ProductProvider = ({ children }) => {
             if (filters.dietary && filters.dietary.length > 0) params.append('dietary', filters.dietary.join(','));
 
             const url = `${API_URL}/products?${params.toString()}`;
+            console.log("Fetching products from:", url); // DEBUG LOG
             const res = await fetch(url);
             const data = await res.json();
             if (Array.isArray(data)) {
