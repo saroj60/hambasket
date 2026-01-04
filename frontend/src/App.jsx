@@ -75,7 +75,7 @@ function ShopContent() {
       onOpenCart={() => setIsCartOpen(true)}
       searchTerm={filters.search}
       onSearch={(val) => handleFilterChange({ search: val })}
-      onSearch={(val) => handleFilterChange({ search: val })}
+
       suggestions={products}
       onLogin={() => setShowAuthModal(true)}
       bottomNav={
