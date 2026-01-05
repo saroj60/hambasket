@@ -149,11 +149,11 @@ const ProductCard = ({ product, onClick }) => {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {isFlashSaleActive ? (
               <>
-                <span style={{ fontSize: '0.75rem', textDecoration: 'line-through', color: '#999' }}>₹{product.price}</span>
-                <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#1c1c1c' }}>₹{finalPrice}</span>
+                <span style={{ fontSize: '0.75rem', textDecoration: 'line-through', color: '#999' }}>Rs {product.price}</span>
+                <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#1c1c1c' }}>Rs {finalPrice}</span>
               </>
             ) : (
-              <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#1c1c1c' }}>₹{product.price}</span>
+              <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#1c1c1c' }}>Rs {product.price}</span>
             )}
           </div>
 
