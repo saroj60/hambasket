@@ -103,6 +103,8 @@ app.use(async (req, res, next) => {
 
 
 
+app.use("/api/setup", setupRoutes);
+
 // Serve Uploads
 import path from 'path';
 import { fileURLToPath } from 'url';
