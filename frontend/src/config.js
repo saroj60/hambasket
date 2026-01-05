@@ -18,7 +18,7 @@ let isVirtual = false;
 if (isNative) {
     console.log("Running on Native Device/Emulator, using Railway Backend");
     // HARDCODED PRODUCTION URL FOR NATIVE APP
-    baseUrl = `https://hambasket-production.up.railway.app`;
+    baseUrl = `https://hambasket-backend.onrender.com`;
     apiUrl = `${baseUrl}/api`;
 } else {
     // 2. Web Environment
@@ -28,7 +28,7 @@ if (isNative) {
     // Fallback: If we are on Vercel and VITE_API_URL wasn't set, it might default to relative.
     // Let's force it if it's empty.
     if (!baseUrl || baseUrl === '/' || baseUrl.includes('vercel.app')) {
-        baseUrl = `https://hambasket-production.up.railway.app`;
+        baseUrl = `https://hambasket-backend.onrender.com`;
     }
     apiUrl = `${baseUrl}/api`;
 }
