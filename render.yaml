@@ -2,7 +2,7 @@ services:
   - type: web
     name: hambasket-backend
     env: node
-    rootDirectory: backend
+    rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
     plan: free
