@@ -7,7 +7,7 @@
     "backend": "npm run dev --prefix backend",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "build": "cd backend && npm install",
-    "start": "cd backend && node simple_server.js"
+    "start": "cd backend && node server.js"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
