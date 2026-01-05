@@ -30,7 +30,7 @@ app.use(cors({
 app.use(express.json());
 
 // Routes
-app.use("/api/setup", setupRoutes);
+
 app.use(cookieParser());
 
 // Logging Middleware (After parsing)
