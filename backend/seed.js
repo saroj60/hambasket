@@ -36,6 +36,12 @@ const products = [
   { name: "Chocolate Bar", price: 100, emoji: "🍫", category: "Snacks", time: "5 mins", weight: "100g" },
   { name: "Ice Cream", price: 400, emoji: "🍦", category: "Frozen", time: "15 mins", weight: "500ml" },
   { name: "Pizza", price: 850, emoji: "🍕", category: "Frozen", time: "25 mins", weight: "1 box" },
+  { name: "Premium Tea", price: 450, emoji: "☕", category: "Tea and coffee", time: "10 mins", weight: "500g" },
+  { name: "Instant Coffee", price: 600, emoji: "☕", category: "Tea and coffee", time: "10 mins", weight: "100g" },
+  { name: "Mixed Dry Fruits", price: 1200, emoji: "🥜", category: "Masalas & Dry fruits", time: "20 mins", weight: "500g" },
+  { name: "Garam Masala", price: 200, emoji: "🌶️", category: "Masalas & Dry fruits", time: "10 mins", weight: "100g" },
+  { name: "Oats", price: 350, emoji: "🥣", category: "Breakfast and sauce", time: "15 mins", weight: "1kg" },
+  { name: "Tomato Sauce", price: 180, emoji: "🥫", category: "Breakfast and sauce", time: "10 mins", weight: "500g" },
 ];
 
 const seedData = async () => {
