@@ -31,7 +31,7 @@ export const LocationProvider = ({ children }) => {
         const isDefault = saved && JSON.parse(saved).address === 'Kathmandu, Nepal' && !JSON.parse(saved).coordinates;
 
         if (!saved || isDefault) {
-            detectCurrentLocation();
+            setIsModalOpen(true);
         }
     }, []);
 

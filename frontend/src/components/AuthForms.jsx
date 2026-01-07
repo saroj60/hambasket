@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { API_URL, IS_VIRTUAL } from '../config';
 
-const AuthForms = () => {
+const AuthForms = ({ onClose }) => {
     const [authMethod, setAuthMethod] = useState('phone'); // 'phone' or 'email'
     const [isLogin, setIsLogin] = useState(true); // For email only
     const [showForgot, setShowForgot] = useState(false);
@@ -22,6 +22,7 @@ const AuthForms = () => {
     const [otpSent, setOtpSent] = useState(false);
     const [receivedOtp, setReceivedOtp] = useState('');
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -53,6 +54,18 @@ const AuthForms = () => {
             }
         }
 
+        if (res && res.success) {
+            if (!isLogin && !showForgot) {
+                setSuccessMessage("Your account is created. Continue shopping.");
+                // Auto close after 2 seconds
+                setTimeout(() => {
+                    if (onClose) onClose();
+                }, 2000);
+            } else if (showForgot) {
+                // Handled above with alert, but could be unified
+            }
+        }
+
         if (res && !res.success) {
             setError(res.message);
         }
@@ -80,6 +93,18 @@ const AuthForms = () => {
                         fontSize: '0.875rem'
                     }}>
                         {error}
+                    </div>
+                )}
+                {successMessage && (
+                    <div style={{
+                        backgroundColor: '#dcfce7',
+                        color: '#16a34a',
+                        padding: '0.75rem',
+                        borderRadius: 'var(--radius-md)',
+                        marginBottom: '1rem',
+                        fontSize: '0.875rem'
+                    }}>
+                        {successMessage}
                     </div>
                 )}
 

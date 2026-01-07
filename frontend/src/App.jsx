@@ -1,27 +1,29 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, Suspense, lazy } from "react";
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from "./components/Layout";
 import HeroSection from "./components/HeroSection";
 import ProductCard from "./components/ProductCard";
 import CartSidebar from "./components/CartSidebar";
-import AdminPanel from "./components/AdminPanel";
 import AuthForms from "./components/AuthForms";
-import Profile from "./components/Profile";
 import ProductDetails from "./components/ProductDetails";
 import OrderTracking from "./components/OrderTracking";
-import About from "./components/About";
-import Contact from "./components/Contact";
-import FAQ from "./components/FAQ";
-import Terms from "./components/Terms";
 
-import VendorDashboard from "./components/Vendor/VendorDashboard";
+// Lazy Load Pages
+const AdminPanel = lazy(() => import("./components/AdminPanel"));
+const Profile = lazy(() => import("./components/Profile"));
+const About = lazy(() => import("./components/About"));
+const Contact = lazy(() => import("./components/Contact"));
+const FAQ = lazy(() => import("./components/FAQ"));
+const Terms = lazy(() => import("./components/Terms"));
+const VendorDashboard = lazy(() => import("./components/Vendor/VendorDashboard"));
+const StoreList = lazy(() => import("./components/StoreList"));
+const StoreDetails = lazy(() => import("./components/StoreDetails"));
+const VerifyEmail = lazy(() => import("./components/VerifyEmail"));
+const ResetPassword = lazy(() => import("./components/ResetPassword"));
+
 import CategoryShowcase from "./components/CategoryShowcase";
 import FlashSaleSection from "./components/FlashSaleSection";
 import BottomNavigation from "./components/BottomNavigation";
-import StoreList from "./components/StoreList";
-import StoreDetails from "./components/StoreDetails";
-import VerifyEmail from "./components/VerifyEmail";
-import ResetPassword from "./components/ResetPassword";
 import NearbyOffers from "./components/NearbyOffers";
 import OfferBanners from "./components/OfferBanners";
 import { ProductProvider, useProducts } from "./context/ProductContext";
@@ -126,7 +128,7 @@ function ShopContent() {
             >
               ×
             </button>
-            <AuthForms />
+            <AuthForms onClose={() => setShowAuthModal(false)} />
           </div>
         </div>
       )}
@@ -160,125 +162,131 @@ function ShopContent() {
       )}
 
       {/* Main Routes */}
-      <Routes>
-        <Route path="/" element={
-          <>
-            <div className="user-actions-bar">
-              <div>
-                {user ? (
+      <Suspense fallback={
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: 'var(--primary)' }}>
+          <h2>Loading...</h2>
+        </div>
+      }>
+        <Routes>
+          <Route path="/" element={
+            <>
+              <div className="user-actions-bar">
+                <div>
+                  {user ? (
+                    <button
+                      onClick={() => setIsProfileOpen(true)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      <div style={{ width: '32px', height: '32px', backgroundColor: 'var(--primary)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                        {user.name?.charAt(0).toUpperCase() || 'U'}
+                      </div>
+                      <span style={{ fontWeight: '600' }}>Hi, {user.name || 'User'}</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setShowAuthModal(true)}
+                      className="btn btn-outline"
+                    >
+                      Login / Sign Up
+                    </button>
+                  )}
+                </div>
+
+
+                {user?.role === 'admin' && (
                   <button
-                    onClick={() => setIsProfileOpen(true)}
+                    onClick={() => setIsAdminMode(!isAdminMode)}
+                    className="btn"
                     style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
+                      backgroundColor: isAdminMode ? 'var(--primary)' : 'white',
+                      color: isAdminMode ? 'white' : 'var(--border)'
                     }}
                   >
-                    <div style={{ width: '32px', height: '32px', backgroundColor: 'var(--primary)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                      {user.name?.charAt(0).toUpperCase() || 'U'}
-                    </div>
-                    <span style={{ fontWeight: '600' }}>Hi, {user.name || 'User'}</span>
+                    {isAdminMode ? 'Exit Admin' : 'Admin Panel'}
                   </button>
-                ) : (
+                )}
+
+                {user?.role === 'vendor' && (
                   <button
-                    onClick={() => setShowAuthModal(true)}
-                    className="btn btn-outline"
+                    onClick={() => window.location.href = '/vendor/dashboard'}
+                    className="btn"
+                    style={{
+                      backgroundColor: 'var(--accent)',
+                      color: 'var(--primary)',
+                      border: '1px solid var(--primary)'
+                    }}
                   >
-                    Login / Sign Up
+                    Vendor Dashboard
                   </button>
                 )}
               </div>
 
+              {isAdminMode && user?.role === 'admin' ? (
+                <AdminPanel />
+              ) : (
+                <>
+                  {/* Hero / Banner */}
+                  <HeroSection onShopNow={() => {
+                    const grid = document.getElementById('product-grid');
+                    if (grid) {
+                      grid.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }} />
 
-              {user?.role === 'admin' && (
-                <button
-                  onClick={() => setIsAdminMode(!isAdminMode)}
-                  className="btn"
-                  style={{
-                    backgroundColor: isAdminMode ? 'var(--primary)' : 'white',
-                    color: isAdminMode ? 'white' : 'var(--border)'
-                  }}
-                >
-                  {isAdminMode ? 'Exit Admin' : 'Admin Panel'}
-                </button>
-              )}
+                  {/* Promotional Offers */}
+                  <OfferBanners />
 
-              {user?.role === 'vendor' && (
-                <button
-                  onClick={() => window.location.href = '/vendor/dashboard'}
-                  className="btn"
-                  style={{
-                    backgroundColor: 'var(--accent)',
-                    color: 'var(--primary)',
-                    border: '1px solid var(--primary)'
-                  }}
-                >
-                  Vendor Dashboard
-                </button>
-              )}
-            </div>
+                  {/* Nearby Offers */}
+                  <NearbyOffers />
 
-            {isAdminMode && user?.role === 'admin' ? (
-              <AdminPanel />
-            ) : (
-              <>
-                {/* Hero / Banner */}
-                <HeroSection onShopNow={() => {
-                  const grid = document.getElementById('product-grid');
-                  if (grid) {
-                    grid.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }} />
+                  {/* Category Filter */}
+                  <CategoryShowcase
+                    activeCategory={filters.category}
+                    onSelectCategory={(cat) => handleFilterChange({ category: cat })}
+                  />
 
-                {/* Promotional Offers */}
-                <OfferBanners />
+                  <FlashSaleSection
+                    products={products}
+                    onAdd={(p) => addToCart(p, 1)}
+                    onClick={setSelectedProduct}
+                  />
 
-                {/* Nearby Offers */}
-                <NearbyOffers />
+                  <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }} id="product-grid">
+                    {/* Sidebar Removed */}
 
-                {/* Category Filter */}
-                <CategoryShowcase
-                  activeCategory={filters.category}
-                  onSelectCategory={(cat) => handleFilterChange({ category: cat })}
-                />
-
-                <FlashSaleSection
-                  products={products}
-                  onAdd={(p) => addToCart(p, 1)}
-                  onClick={setSelectedProduct}
-                />
-
-                <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }} id="product-grid">
-                  {/* Sidebar Removed */}
-
-                  {/* Product Grid */}
-                  <div className="grid grid-cols-4" style={{ flex: 1 }}>
-                    {products.map((product) => (
-                      <ProductCard
-                        key={product._id}
-                        product={product}
-                        onClick={setSelectedProduct}
-                      />
-                    ))}
+                    {/* Product Grid */}
+                    <div className="grid grid-cols-4" style={{ flex: 1 }}>
+                      {products.map((product) => (
+                        <ProductCard
+                          key={product._id}
+                          product={product}
+                          onClick={setSelectedProduct}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
-          </>
-        } />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/vendor/dashboard" element={<VendorDashboard />} />
-        <Route path="/stores" element={<StoreList />} />
-        <Route path="/stores/:id" element={<StoreDetails />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-      </Routes>
+                </>
+              )}
+            </>
+          } />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+          <Route path="/stores" element={<StoreList />} />
+          <Route path="/stores/:id" element={<StoreDetails />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+        </Routes>
+      </Suspense>
 
       <CartSidebar
         isOpen={isCartOpen}

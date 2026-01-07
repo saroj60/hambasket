@@ -24,7 +24,14 @@ router.post("/register", async (req, res) => {
 
         const existingUser = await User.findOne({ email });
         console.log(`Checking email ${email}: ${existingUser ? "FOUND" : "NOT FOUND"}`);
-        if (existingUser) return res.status(400).json({ message: "User with this email already exists" });
+        if (existingUser) {
+            if (!existingUser.isVerified) {
+                console.log(`User ${email} exists but is not verified. Deleting old record to allow new registration.`);
+                await User.findByIdAndDelete(existingUser._id);
+            } else {
+                return res.status(400).json({ message: "User with this email already exists" });
+            }
+        }
 
         const existingPhone = await User.findOne({ phone });
         console.log(`Checking phone ${phone}: ${existingPhone ? "FOUND" : "NOT FOUND"}`);
