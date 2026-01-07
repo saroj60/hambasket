@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import Driver from "../models/driver.js";
 import Order from "../models/Order.js";
 import User from "../models/user.js";
@@ -193,9 +194,15 @@ router.get("/my-orders", isAuth, async (req, res) => {
 // Get All Orders (Admin)
 router.get("/", isAdmin, async (req, res) => {
     try {
+        console.log(`[GET /orders] Admin request by user: ${req.user.id}, Role: ${req.user.role}`);
+        console.log(`[DB Debug] Connected to: ${mongoose.connection.name} @ ${mongoose.connection.host}`);
+
         const orders = await Order.find().populate('user', 'name phone').sort({ createdAt: -1 });
+        console.log(`[GET /orders] Found ${orders.length} orders.`);
+
         res.json(orders);
     } catch (error) {
+        console.error("[GET /orders] Error:", error);
         res.status(500).json({ message: "Error fetching orders", error: error.message });
     }
 });

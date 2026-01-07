@@ -86,7 +86,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
     }
   };
 
-  const handleWhatsAppCheckout = (e) => {
+  const handleWhatsAppCheckout = async (e) => {
     e.preventDefault();
 
     // 1. Mandatory Location Check
@@ -107,32 +107,81 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
       return;
     }
 
-    // 3. Construct Message
+    // 3. Construct Payload
     const name = user?.name || guestName;
     const phone = user?.phone || guestPhone;
     const addressToUse = selectedAddress === 'new' || !selectedAddress ? customAddress : selectedAddress;
 
-    const itemsList = cartItems.map(i => `• ${i.name} (x${i.qty}) - Rs. ${i.price * i.qty}`).join('\n');
-    const locationLink = location.coordinates ? `https://www.google.com/maps?q=${location.coordinates.lat},${location.coordinates.lng}` : 'N/A';
+    const orderPayload = {
+      items: cartItems.map(item => ({
+        product: item._id,
+        name: item.name,
+        quantity: item.qty,
+        price: item.price
+      })),
+      subtotal,
+      deliveryFee,
+      discount,
+      tax: 0,
+      totalAmount: total,
+      shippingAddress: addressToUse,
+      deliveryLocation: location.coordinates,
+      paymentMethod: 'WhatsApp',
+      guestInfo: user ? null : { name: guestName, phone: guestPhone }
+    };
 
-    const message = `*New Order Request* 🛒\n\n` +
-      `*Customer:* ${name}\n` +
-      `*Phone:* ${phone}\n\n` +
-      `*Items:*\n${itemsList}\n\n` +
-      `*Subtotal:* Rs. ${subtotal}\n` +
-      `*Delivery Fee:* ${deliveryFee === 0 ? 'Free' : 'Rs. ' + deliveryFee}\n` +
-      (discount > 0 ? `*Discount:* -Rs. ${discount}\n` : '') +
-      `*Total:* Rs. ${total}\n\n` +
-      `*Address:* ${addressToUse}\n` +
-      `*Location:* ${locationLink}`;
+    if (user) {
+      orderPayload.user = user._id; // Ensure user ID is passed if logged in
+    }
 
-    // 4. Open WhatsApp
-    const url = `https://wa.me/+9779815769007?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    try {
+      // 4. Create Order in Backend
+      const res = await fetch(`${API_URL}/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(orderPayload)
+      });
 
-    // 5. Clear Cart & Close
-    clearCart();
-    onClose();
+      if (!res.ok) {
+        const errorData = await res.json();
+        alert(`Order Failed: ${errorData.message}`);
+        return;
+      }
+
+      const newOrder = await res.json();
+      const orderId = newOrder._id ? newOrder._id.slice(-6).toUpperCase() : 'N/A';
+
+      // 5. Construct Message with Order ID
+      const itemsList = cartItems.map(i => `• ${i.name} (x${i.qty}) - Rs. ${i.price * i.qty}`).join('\n');
+      const locationLink = location.coordinates ? `https://www.google.com/maps?q=${location.coordinates.lat},${location.coordinates.lng}` : 'N/A';
+
+      const message = `*New Order Request* 🛒\n` +
+        `*Order ID:* #${orderId}\n\n` +
+        `*Customer:* ${name}\n` +
+        `*Phone:* ${phone}\n\n` +
+        `*Items:*\n${itemsList}\n\n` +
+        `*Subtotal:* Rs. ${subtotal}\n` +
+        `*Delivery Fee:* ${deliveryFee === 0 ? 'Free' : 'Rs. ' + deliveryFee}\n` +
+        (discount > 0 ? `*Discount:* -Rs. ${discount}\n` : '') +
+        `*Total:* Rs. ${total}\n\n` +
+        `*Address:* ${addressToUse}\n` +
+        `*Location:* ${locationLink}`;
+
+      // 6. Open WhatsApp
+      const url = `https://wa.me/+9779815769007?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+
+      // 7. Clear Cart & Close
+      clearCart();
+      onClose();
+
+    } catch (error) {
+      console.error("Checkout Error:", error);
+      alert("Failed to place order. Please check your connection.");
+    }
   };
 
   if (!isOpen) return null;
