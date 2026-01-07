@@ -26,11 +26,10 @@ export const LocationProvider = ({ children }) => {
 
     // Auto-detect location on mount if not already set
     useEffect(() => {
-        const saved = localStorage.getItem('hb_location');
-        // Only detect if no location is saved or if it's the default/fallback one
-        const isDefault = saved && JSON.parse(saved).address === 'Kathmandu, Nepal' && !JSON.parse(saved).coordinates;
+        // Check if we are using the default fallback location (meaning no user selection yet)
+        const isDefault = location.address === 'Kathmandu, Nepal' && location.coordinates === null;
 
-        if (!saved || isDefault) {
+        if (isDefault) {
             setIsModalOpen(true);
         }
     }, []);
