@@ -3,7 +3,7 @@ import React from 'react';
 const CATEGORIES_DATA = [
     { id: 'Fruits & Vegetables', label: 'Fresh produce', img: '/assets/categories/fruits_veg.png' },
     { id: 'Dairy, Bread & Eggs', label: 'Dairy & eggs', img: '/assets/categories/dairy_bread.png' },
-    { id: 'Atta, Rice, Oil & Dals', label: 'Staples & pantry items', img: '/assets/categories/staples.png' },
+    { id: 'Atta, Rice, Oil & Dals', label: 'Rice dal and atta', img: '/assets/categories/staples.png' },
     { id: 'Snacks & Beverages', label: 'Snacks & beverages', img: '/assets/categories/snacks_beverages.jpg' },
     { id: 'Tea and coffee', label: 'Tea & Coffee', img: '/assets/categories/tea_coffee.png' },
     { id: 'Masalas & Dry fruits', label: 'Masalas & Dry Fruits', img: '/assets/categories/masala_dryfruits.png' },
