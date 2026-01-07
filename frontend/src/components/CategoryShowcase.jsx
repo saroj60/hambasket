@@ -7,10 +7,12 @@ const CATEGORIES_DATA = [
     { id: 'Snacks & Beverages', label: 'Snacks & beverages', img: '/assets/categories/snacks_beverages.jpg' },
     { id: 'Tea and coffee', label: 'Tea & Coffee', img: '/assets/categories/tea_coffee.png' },
     { id: 'Masalas & Dry fruits', label: 'Masalas & Dry Fruits', img: '/assets/categories/masala_dryfruits.png' },
-    { id: 'Breakfast and sauce', label: 'Breakfast & Sauces', img: '/assets/categories/breakfast_sauces.png' },
+    { id: 'Breakfast and sauce', label: 'Breakfast & Sauces', img: '/assets/categories/breakfast_sauces.jpg' },
     { id: 'Household & Personal Care', label: 'Cleaning Essential', img: '/assets/categories/household_care.png' },
     { id: 'Pharmacy', label: 'Pharmacy', img: '/assets/categories/pharmacy.png' },
     { id: 'Beauty & Self-Care', label: 'Beauty & Self-Care', img: '/assets/categories/beauty_selfcare.png' },
+    { id: 'Liquors', label: 'Liquors', img: '/assets/categories/liquors.png' },
+    { id: 'Cooking Oil', label: 'Cooking Oil', img: '/assets/categories/cooking_oil.png' },
     { id: 'Water & Gas', label: 'Water & Gas', img: '/assets/categories/water_gas.png' }, // Combined category icon
 ];
 
