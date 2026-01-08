@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { API_URL } from '../config';
+import { API_URL, BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { useLocation } from '../context/LocationContext';
 import { CartContext } from '../context/CartContext';
@@ -226,7 +226,23 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {cartItems.map((item) => (
                     <div key={item._id} style={{ display: 'flex', gap: '1rem', padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-                      <div style={{ width: '60px', height: '60px', backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', borderRadius: 'var(--radius-sm)' }}>{item.emoji}</div>
+                      {console.log('Cart Item:', item)}
+                      {console.log('BASE_URL:', BASE_URL, 'Image:', item.image)}
+                      <div style={{ width: '60px', height: '60px', backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+                        {item.image ? (
+                          <img
+                            src={
+                              item.image.startsWith('http') || item.image.startsWith('/assets') || item.image.startsWith('data:')
+                                ? item.image
+                                : `${BASE_URL}${item.image}`
+                            }
+                            alt={item.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <span>{item.emoji}</span>
+                        )}
+                      </div>
                       <div style={{ flex: 1 }}>
                         <h4 style={{ fontSize: '0.875rem', margin: '0 0 0.25rem 0' }}>{item.name}</h4>
                         <p style={{ fontSize: '0.875rem', fontWeight: '600' }}>Rs. {item.price}</p>

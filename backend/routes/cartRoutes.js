@@ -1,5 +1,6 @@
 import express from "express";
 import Cart from "../models/Cart.js";
+import Product from "../models/Product.js";
 
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -9,7 +10,19 @@ const router = express.Router();
 router.get("/", protect, async (req, res) => {
   try {
     const items = await Cart.find({ userId: req.user._id });
-    res.json(items);
+
+    // Hydrate items with fresh product info (specifically image)
+    // Because Cart stores a snapshot, the image link might be outdated or missing
+    const enrichedItems = await Promise.all(items.map(async (item) => {
+      const product = await Product.findById(item.productId).select('image emoji');
+      return {
+        ...item.toObject(),
+        image: product ? product.image : item.image,
+        emoji: product ? product.emoji : item.emoji
+      };
+    }));
+
+    res.json(enrichedItems);
   } catch (error) {
     res.status(500).json({ message: "Error fetching cart", error: error.message });
   }
