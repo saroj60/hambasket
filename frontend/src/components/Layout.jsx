@@ -16,19 +16,39 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
       {/* Header */}
-      {/* Blinkit-style Header */}
       <header style={{ backgroundColor: 'white', borderBottom: '1px solid #f0f0f0', position: 'sticky', top: 0, zIndex: 1000 }}>
         <div className="container header-container">
-          {/* Logo */}
-          <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            {/* Using text logo for now if image fails, or the brand logo */}
-            <h1 style={{ fontWeight: '900', fontSize: '2rem', color: 'var(--brand-yellow)', letterSpacing: '-1px', textShadow: '1px 1px 0px rgba(0,0,0,0.1)' }}>Aone Shop</h1>
+
+          {/* Mobile: App Name (Left) */}
+          <Link to="/" className="header-logo mobile-visible" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            <h1 style={{ fontWeight: '900', fontSize: '1.8rem', color: 'var(--brand-yellow)', letterSpacing: '-1px' }}>Aone Shop</h1>
           </Link>
 
-          {/* Location Block */}
-          <div onClick={openModal} className="location-block">
-            <div className="delivery-text" style={{ fontWeight: '800', fontSize: '1.1rem', lineHeight: '1.2' }}>Delivery in minutes</div>
-            <div className="location-subtext" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px' }}>
+          {/* Location Block (Right) */}
+          <div onClick={openModal} className="location-block mobile-header-right">
+            <div className="delivery-text" style={{ fontWeight: '800', fontSize: '1.0rem', lineHeight: '1.2', color: 'black', textAlign: 'right' }}>
+              Delivery in minutes
+            </div>
+            <div className="location-subtext" style={{ fontSize: '0.8rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '180px' }}>
+              {location?.address ? location.address.split(',')[0] : "Select Location"} <span style={{ fontSize: '0.6rem' }}>▼</span>
+            </div>
+          </div>
+
+          {/* Desktop Only: Full Location Block (Hidden on Mobile if using above) */}
+          {/* Note: We can reuse the same block for desktop if styled right, but for now keeping mobile-header-right distinct for grid placement if needed, or merging. 
+              Let's use the one block above for Mobile Right and Desktop Right (with adjustments). 
+              Actually, simpler to keep the structure: Logo (Left), Location (Right).
+          */}
+
+          {/* Desktop Logo (Hidden on Mobile) */}
+          <Link to="/" className="header-logo mobile-hidden">
+            <h1 style={{ fontWeight: '900', fontSize: '2rem', color: 'var(--brand-yellow)', letterSpacing: '-1px' }}>Aone Shop</h1>
+          </Link>
+
+          {/* Desktop Location (Hidden on Mobile) */}
+          <div onClick={openModal} className="location-block desktop-only" style={{ cursor: 'pointer', minWidth: '200px' }}>
+            <div style={{ fontWeight: '800', fontSize: '1.1rem', lineHeight: '1.2' }}>Delivery in minutes</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
               {location?.address ? location.address : "Select Location"} <span style={{ fontSize: '0.6rem' }}>▼</span>
             </div>
           </div>
@@ -44,7 +64,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
                 </span>
                 <input
                   type="text"
-                  placeholder='Search "milk"'
+                  placeholder='Search "sugar"'
                   value={searchTerm}
                   onChange={(e) => {
                     onSearch(e.target.value);

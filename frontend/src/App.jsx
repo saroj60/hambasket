@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, Suspense, lazy } from "react";
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from "./components/Layout";
-import HeroSection from "./components/HeroSection";
+
 import ProductCard from "./components/ProductCard";
 import CartSidebar from "./components/CartSidebar";
 import AuthForms from "./components/AuthForms";
@@ -20,6 +20,7 @@ const StoreList = lazy(() => import("./components/StoreList"));
 const StoreDetails = lazy(() => import("./components/StoreDetails"));
 const VerifyEmail = lazy(() => import("./components/VerifyEmail"));
 const ResetPassword = lazy(() => import("./components/ResetPassword"));
+const CategoryProducts = lazy(() => import("./pages/CategoryProducts"));
 
 import CategoryShowcase from "./components/CategoryShowcase";
 import FlashSaleSection from "./components/FlashSaleSection";
@@ -170,75 +171,14 @@ function ShopContent() {
         <Routes>
           <Route path="/" element={
             <>
-              <div className="user-actions-bar">
-                <div>
-                  {user ? (
-                    <button
-                      onClick={() => setIsProfileOpen(true)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem'
-                      }}
-                    >
-                      <div style={{ width: '32px', height: '32px', backgroundColor: 'var(--primary)', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                        {user.name?.charAt(0).toUpperCase() || 'U'}
-                      </div>
-                      <span style={{ fontWeight: '600' }}>Hi, {user.name || 'User'}</span>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setShowAuthModal(true)}
-                      className="btn btn-outline"
-                    >
-                      Login / Sign Up
-                    </button>
-                  )}
-                </div>
-
-
-                {user?.role === 'admin' && (
-                  <button
-                    onClick={() => setIsAdminMode(!isAdminMode)}
-                    className="btn"
-                    style={{
-                      backgroundColor: isAdminMode ? 'var(--primary)' : 'white',
-                      color: isAdminMode ? 'white' : 'var(--border)'
-                    }}
-                  >
-                    {isAdminMode ? 'Exit Admin' : 'Admin Panel'}
-                  </button>
-                )}
-
-                {user?.role === 'vendor' && (
-                  <button
-                    onClick={() => window.location.href = '/vendor/dashboard'}
-                    className="btn"
-                    style={{
-                      backgroundColor: 'var(--accent)',
-                      color: 'var(--primary)',
-                      border: '1px solid var(--primary)'
-                    }}
-                  >
-                    Vendor Dashboard
-                  </button>
-                )}
-              </div>
+              {/* User Actions Bar Removed - Now in Header */}
 
               {isAdminMode && user?.role === 'admin' ? (
                 <AdminPanel />
               ) : (
                 <>
-                  {/* Hero / Banner */}
-                  <HeroSection onShopNow={() => {
-                    const grid = document.getElementById('product-grid');
-                    if (grid) {
-                      grid.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }} />
+                  {/* Hero / Banner Removed */}
+
 
                   {/* Promotional Offers */}
                   <OfferBanners />
@@ -285,6 +225,7 @@ function ShopContent() {
           <Route path="/stores/:id" element={<StoreDetails />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/category/:categoryId" element={<CategoryProducts />} />
         </Routes>
       </Suspense>
 

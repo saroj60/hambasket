@@ -72,18 +72,40 @@ const ProductDetails = ({ product, onClose, onAdd }) => {
     return (
         <div className="modal-overlay" onClick={onClose} style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 105, backdropFilter: 'blur(2px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem'
+            backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 2000, backdropFilter: 'blur(4px)',
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center' // Mobile: align to bottom
         }}>
             <div className="modal-content animate-fade-in product-details-content" onClick={e => e.stopPropagation()} style={{
-                backgroundColor: 'white', borderRadius: 'var(--radius-lg)',
-                width: '100%', maxWidth: '800px', zIndex: 106,
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-                maxHeight: '90vh'
+                backgroundColor: 'white',
+                borderRadius: '24px 24px 0 0', // Rounded top only for mobile sheet look
+                width: '100%',
+                maxWidth: '600px',
+                zIndex: 2001,
+                boxShadow: '0 -4px 20px rgba(0,0,0,0.2)',
+                maxHeight: '85vh',
+                overflowY: 'auto',
+                position: 'relative' // relative for absolute close button
             }}>
 
+                {/* Close Button (Absolute Top Right) */}
+                <button onClick={onClose} style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: '#f3f4f6',
+                    border: 'none',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 10
+                }}>✕</button>
+
                 {/* Image Section */}
-                <div className="product-details-image">
+                <div className="product-details-image" style={{ height: '250px', backgroundColor: '#fff', padding: '1rem' }}>
                     {product.image ? (
                         <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     ) : (
@@ -92,134 +114,90 @@ const ProductDetails = ({ product, onClose, onAdd }) => {
                 </div>
 
                 {/* Details Section */}
-                <div className="product-details-info">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
-                        <div>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--primary)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                {product.category}
-                            </span>
-                            <h2 style={{ fontSize: '2rem', fontWeight: '700', margin: '0.5rem 0' }}>{product.name}</h2>
-                            {product.brand && <span style={{ color: 'var(--text-light)' }}>Brand: {product.brand}</span>}
+                <div className="product-details-info" style={{ padding: '1.5rem' }}>
+
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: '800', lineHeight: '1.2', color: '#1f2937', marginBottom: '0.25rem' }}>{product.name}</h2>
+                    <div style={{ fontSize: '0.9rem', color: '#6b7280', marginBottom: '1rem' }}>{currentWeight}</div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                        <div style={{ fontSize: '1.25rem', fontWeight: '800', color: '#1f2937' }}>
+                            ₹{currentPrice}
                         </div>
-                        <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-light)' }}>×</button>
+                        {product.oldPrice && (
+                            <div style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '0.9rem' }}>₹{product.oldPrice}</div>
+                        )}
                     </div>
-
-                    <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary)', marginBottom: '1rem' }}>
-                        Rs. {currentPrice} <span style={{ fontSize: '1rem', color: 'var(--text-light)', fontWeight: '400' }}>/ {currentWeight}</span>
-                    </div>
-
-                    <p style={{ color: 'var(--text-light)', lineHeight: '1.6', marginBottom: '1.5rem' }}>
-                        {product.description || "Fresh and high-quality product sourced directly from local farmers and trusted suppliers."}
-                    </p>
 
                     {/* Variants */}
                     {product.variants && product.variants.length > 0 && (
+                        /* ... kept variant logic ... */
                         <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Select Size/Weight:</label>
+                            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '700', fontSize: '0.9rem' }}>Select Unit</label>
                             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                                 {product.variants.map((variant, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => setSelectedVariant(variant)}
                                         style={{
-                                            padding: '0.5rem 1rem',
-                                            borderRadius: 'var(--radius-md)',
+                                            padding: '0.4rem 0.8rem',
+                                            borderRadius: '8px',
                                             border: '1px solid',
-                                            borderColor: selectedVariant === variant ? 'var(--primary)' : 'var(--border)',
-                                            backgroundColor: selectedVariant === variant ? 'var(--primary)' : 'white',
-                                            color: selectedVariant === variant ? 'white' : 'var(--text-main)',
-                                            cursor: 'pointer'
+                                            borderColor: selectedVariant === variant ? '#0c831f' : '#e5e7eb',
+                                            backgroundColor: selectedVariant === variant ? '#f0fdf4' : 'white',
+                                            color: selectedVariant === variant ? '#0c831f' : '#374151',
+                                            cursor: 'pointer',
+                                            fontSize: '0.85rem',
+                                            fontWeight: '600'
                                         }}
                                     >
-                                        {variant.weight} - Rs. {variant.price}
+                                        {variant.weight} - ₹{variant.price}
                                     </button>
                                 ))}
                             </div>
                         </div>
                     )}
 
-                    {/* Dietary Info */}
-                    {product.dietaryPreferences && product.dietaryPreferences.length > 0 && (
-                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                            {product.dietaryPreferences.map(tag => (
-                                <span key={tag} style={{ backgroundColor: '#ecfdf5', color: '#059669', padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-full)', fontSize: '0.85rem', fontWeight: '500' }}>
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-
-                    {/* Subscription Option */}
-                    <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#f0f9ff', borderRadius: 'var(--radius-md)', border: '1px solid #bae6fd' }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '600', cursor: 'pointer', marginBottom: isSubscription ? '1rem' : '0' }}>
-                            <input
-                                type="checkbox"
-                                checked={isSubscription}
-                                onChange={(e) => setIsSubscription(e.target.checked)}
-                                style={{ width: '1.2rem', height: '1.2rem' }}
-                            />
-                            Subscribe & Save (Regular Delivery)
-                        </label>
-
-                        {isSubscription && (
-                            <div className="animate-fade-in">
-                                <div style={{ marginBottom: '1rem' }}>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.25rem', color: 'var(--text-muted)' }}>Frequency:</label>
-                                    <select
-                                        value={frequency}
-                                        onChange={(e) => setFrequency(e.target.value)}
-                                        style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
-                                    >
-                                        <option value="daily">Daily</option>
-                                        <option value="weekly">Weekly</option>
-                                        <option value="monthly">Monthly</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '0.25rem', color: 'var(--text-muted)' }}>Delivery Address:</label>
-                                    <input
-                                        type="text"
-                                        value={address}
-                                        onChange={(e) => setAddress(e.target.value)}
-                                        placeholder="Enter delivery address"
-                                        style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
-                                    />
-                                </div>
-                            </div>
-                        )}
-                    </div>
 
                     <div style={{ marginTop: 'auto', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
+                        {/* Quantity Counter */}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            border: '1px solid #0c831f',
+                            borderRadius: '8px',
+                            backgroundColor: '#f0fdf4',
+                            height: '48px',
+                            overflow: 'hidden'
+                        }}>
                             <button
                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                style={{ padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem' }}
+                                style={{ padding: '0 1rem', height: '100%', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: '#0c831f', fontWeight: '700' }}
                             >-</button>
-                            <span style={{ padding: '0 1rem', fontWeight: '600' }}>{quantity}</span>
+                            <span style={{ minWidth: '24px', textAlign: 'center', fontWeight: '700', color: '#0c831f' }}>{quantity}</span>
                             <button
                                 onClick={() => setQuantity(quantity + 1)}
-                                style={{ padding: '0.5rem 1rem', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem' }}
+                                style={{ padding: '0 1rem', height: '100%', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: '#0c831f', fontWeight: '700' }}
                             >+</button>
                         </div>
 
-                        {isSubscription ? (
-                            <button
-                                onClick={handleSubscribe}
-                                className="btn btn-primary"
-                                style={{ flex: 1, padding: '1rem', fontSize: '1.1rem', backgroundColor: '#0ea5e9' }}
-                            >
-                                Subscribe Now
-                            </button>
-                        ) : (
-                            <button
-                                onClick={handleAdd}
-                                className="btn btn-primary"
-                                style={{ flex: 1, padding: '1rem', fontSize: '1.1rem', opacity: isOutOfStock ? 0.5 : 1, cursor: isOutOfStock ? 'not-allowed' : 'pointer' }}
-                                disabled={isOutOfStock}
-                            >
-                                {isOutOfStock ? 'Out of Stock' : `Add to Cart - Rs. ${currentPrice * quantity}`}
-                            </button>
-                        )}
+                        {/* Add Button */}
+                        <button
+                            onClick={handleAdd}
+                            style={{
+                                flex: 1,
+                                height: '48px',
+                                backgroundColor: isOutOfStock ? '#f3f4f6' : '#0c831f',
+                                color: isOutOfStock ? '#9ca3af' : 'white',
+                                border: 'none',
+                                borderRadius: '8px',
+                                fontWeight: '700',
+                                fontSize: '1rem',
+                                cursor: isOutOfStock ? 'not-allowed' : 'pointer'
+                            }}
+                            disabled={isOutOfStock}
+                        >
+                            {isOutOfStock ? 'Out of Stock' : `Add Item - ₹${currentPrice * quantity}`}
+                        </button>
                     </div>
                 </div>
             </div>

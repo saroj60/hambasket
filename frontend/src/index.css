@@ -230,13 +230,37 @@ body {
 }
 
 /* Header & Nav */
-.header-content {
+.header-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
   position: relative;
   padding: 1rem 0;
+}
+
+.mobile-visible {
+  display: none !important;
+  /* Hidden on Desktop */
+}
+
+.mobile-header-right {
+  display: none !important;
+  /* Hidden on Desktop */
+}
+
+.desktop-only {
+  display: block;
+}
+
+.mobile-hidden {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .mobile-hidden {
+    display: flex !important;
+  }
 }
 
 .location-selector {
@@ -252,19 +276,38 @@ body {
 
 .search-bar {
   flex: 1;
+  width: 100%;
   max-width: 600px;
   position: relative;
 }
 
+.search-container {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 2rem;
+}
+
 .search-input {
+  /* Legacy class, use .search-input-field instead */
+  display: none;
+}
+
+.search-input-field {
   width: 100%;
-  padding: 0.8rem 1rem 0.8rem 2.5rem;
+  padding: 0 1rem 0 2.8rem;
+  /* Horizontal padding only */
+  height: 48px;
+  /* Fixed height */
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background-color: #f3f4f6;
   font-family: inherit;
   font-size: 0.95rem;
   transition: all 0.2s;
+  box-sizing: border-box;
+  /* Ensure padding doesn't increase width */
+  display: flex;
+  align-items: center;
 }
 
 .search-input:focus {
@@ -356,17 +399,20 @@ body {
 
 @media (max-width: 768px) {
   .category-grid {
-    grid-template-columns: repeat(2, 1fr);
-    /* 2 Columns on mobile */
-    gap: 0.75rem;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 Columns on mobile for smaller items */
+    gap: 0.5rem;
   }
 
   .category-card {
     border-radius: 12px;
+    padding: 0.5rem;
+    /* Reduced padding */
   }
 
   .category-card-label {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
+    /* Smaller font */
   }
 }
 
@@ -416,6 +462,13 @@ body {
   height: 350px;
 }
 
+/* Header Actions (Desktop) */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
   body {
@@ -428,6 +481,19 @@ body {
   }
 
   .desktop-nav,
+  .user-actions-bar,
+  .desktop-only,
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .mobile-header-right {
+    display: block;
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: end;
+  }
+
   .user-actions-bar {
     display: none !important;
   }
@@ -435,60 +501,83 @@ body {
   /* Mobile Header - Grid System */
   .header-container {
     display: grid !important;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr;
+    /* Logo auto, Location takes space to align right */
     grid-template-rows: auto auto;
-    gap: 0.75rem 0.5rem;
-    padding: 0.75rem 1rem;
+    gap: 0.5rem 1rem;
+    padding: 1rem 1rem;
     height: auto !important;
     align-items: center;
   }
 
-  /* 1. Logo: Top Left */
-  .header-logo {
+  /* 1. App Name (Logo): Top Left */
+  .header-logo.mobile-visible {
+    display: flex !important;
+    /* Force Visible */
     grid-row: 1;
     grid-column: 1;
     justify-self: start;
     z-index: 2;
   }
 
+  .header-logo.mobile-hidden {
+    display: none !important;
+  }
+
   .header-logo h1 {
-    font-size: 1.4rem !important;
-    /* Proper sizing */
+    font-size: 1.6rem !important;
+    /* Good size for mobile */
     white-space: nowrap;
   }
 
-  /* 2. Location: Top Right */
+  /* 2. Location/Delivery: Top Right */
+  /* 2. Location/Delivery: Top Right */
+  .mobile-header-right,
   .location-block {
+    display: flex !important;
     grid-row: 1;
     grid-column: 2;
     justify-self: end;
-    text-align: right;
-    display: flex;
+    text-align: right !important;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-end !important;
     min-width: 0;
-    /* Allow shrinking */
     max-width: 100%;
     cursor: pointer;
   }
 
   .delivery-text {
-    font-size: 0.8rem !important;
+    display: block !important;
+    font-size: 0.9rem !important;
+    font-weight: 800;
     white-space: nowrap;
   }
 
   .location-subtext {
     font-size: 0.75rem !important;
-    max-width: 140px !important;
+    max-width: 160px !important;
+    justify-content: flex-end;
+  }
+
+  /* Desktop/Mobile visibility helpers */
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .mobile-visible {
+    display: flex !important;
+  }
+
+  .desktop-only {
+    display: none !important;
   }
 
   /* 3. Search: Bottom Row (Full Width) */
   .search-container {
     grid-row: 2;
     grid-column: 1 / -1;
-    /* Span all columns */
     width: 100%;
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
     position: relative;
     z-index: 1;
   }
@@ -499,78 +588,134 @@ body {
 
   .search-input-field {
     width: 100% !important;
-    padding: 0.7rem 1rem 0.7rem 2.5rem !important;
-    font-size: 0.95rem !important;
-    height: 44px;
-    /* Touch target size */
+    padding: 0.7rem 1rem 0.7rem 2.8rem !important;
+    font-size: 1rem !important;
+    height: 48px;
+    border-radius: 12px;
+    background-color: #f3f4f6 !important;
+    /* Soft Gray */
+    border: none !important;
+    /* No Border */
+    box-shadow: none !important;
+    /* Flat look */
     box-sizing: border-box;
-    /* Prevent padding overflow */
+    -webkit-appearance: none;
+    /* Remove default styling */
   }
 
   .search-icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     top: 50%;
     left: 0.8rem !important;
     transform: translateY(-50%);
+    color: #6b7280;
+    /* Gray Icon */
   }
 
   .search-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 
-  /* Hide actions */
+  /* Hide actions on mobile */
   .header-actions {
     display: none !important;
   }
 
   .grid-cols-4 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr) !important;
+    /* Revert to 3 cols for products */
     gap: 0.75rem;
   }
 
+  .category-image-container img {
+    max-width: 100% !important;
+    /* Fill container */
+    max-height: 100% !important;
+    filter: none !important;
+    /* Cleaner look */
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    padding: 0 0.5rem;
+  }
+
   .product-card {
-    padding: 0.5rem;
+    padding: 0.4rem;
   }
 
   .product-image {
-    height: 110px;
-    font-size: 3rem;
+    height: 100px;
+    /* Taller image area */
+    font-size: 2rem;
     margin-bottom: 0.5rem;
+    padding: 2px;
+    /* Reduce padding for bigger image */
+  }
+
+  .product-image img {
+    transform: scale(1.1);
+    /* Slight zoom to fill box */
+  }
+
+  .product-title {
+    font-size: 0.8rem;
+    line-height: 1.1;
   }
 
   .add-btn {
-    padding: 0.3rem 0.75rem;
-    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
   }
 
   /* Hero Section Mobile */
   .hero-banner {
-    flex-direction: column;
-    height: auto !important;
-    padding: 2rem !important;
-    text-align: center;
+    flex-direction: row !important;
+    /* Keep side-by-side or compact */
+    height: 160px !important;
+    /* Much smaller fixed height */
+    padding: 1rem !important;
+    text-align: left;
+    overflow: hidden;
+    align-items: center;
   }
 
   .hero-banner .hero-title {
-    font-size: 2rem !important;
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem;
   }
 
   .hero-banner .hero-text {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0;
+    margin-right: 0;
+    font-size: 0.9rem;
+    max-width: 60%;
+    /* Leave room for image */
+  }
+
+  .hero-btn {
+    padding: 0.4rem 1rem !important;
+    font-size: 0.85rem !important;
   }
 
   .hero-image-container {
-    width: 100%;
-    height: 200px !important;
-    margin-top: 1rem;
+    width: 40%;
+    height: 100% !important;
+    margin-top: 0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
   }
 
   .hero-image {
-    height: 100% !important;
-    transform: rotate(-5deg) !important;
+    height: 90% !important;
+    transform: rotate(0deg) !important;
+    object-fit: contain;
   }
 
   .category-showcase-container {

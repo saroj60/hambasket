@@ -64,40 +64,52 @@ const ProductCard = ({ product, onClick }) => {
       className="card product-card"
       style={{
         opacity: isOutOfStock ? 0.8 : 1,
-        border: '1px solid #e0e0e0',
-        borderRadius: '12px',
-        boxShadow: 'none',
+        border: 'none', /* No outer border */
+        boxShadow: 'none', /* No outer shadow */
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        padding: '0.75rem',
+        justifyContent: 'flex-start',
+        padding: '0', /* Remove padding from outer container */
         height: '100%',
-        backgroundColor: 'white'
+        backgroundColor: 'transparent',
+        gap: '0.5rem'
       }}
       onClick={() => onClick(product)}
     >
-      {/* Discount Tag */}
-      {(isFlashSaleActive || discount > 0) && (
-        <div style={{
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          backgroundColor: '#535bf2', // Different blue for offers
-          color: 'white',
-          fontSize: '0.6rem',
-          fontWeight: '800',
-          padding: '2px 8px',
-          borderTopLeftRadius: '12px',
-          borderBottomRightRadius: '12px',
-          zIndex: 1,
-          textTransform: 'uppercase'
-        }}>
-          {isFlashSaleActive ? `⚡ ${discount}% OFF` : '20% OFF'}
-        </div>
-      )}
 
-      {/* Image Area */}
-      <div className="product-image" style={{ height: '120px', marginBottom: '0.5rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* Image Area - The "Box" */}
+      <div className="product-image" style={{
+        height: '100px', /* Slightly taller to accommodate badge */
+        position: 'relative',
+        borderRadius: '12px',
+        border: '1px solid #e0e0e0', /* The Box Border */
+        backgroundColor: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0.5rem',
+        overflow: 'hidden' /* Clip the badge */
+      }}>
+
+        {/* Blue Discount Badge (Inside Image Box) */}
+        {(isFlashSaleActive || discount > 0) && (
+          <div style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            backgroundColor: '#2563eb', /* Royal Blue */
+            color: 'white',
+            fontSize: '0.6rem',
+            fontWeight: '900',
+            padding: '2px 6px',
+            borderBottomRightRadius: '10px',
+            zIndex: 1,
+            textTransform: 'uppercase',
+          }}>
+            {isFlashSaleActive ? `${discount}% OFF` : '12% OFF'}
+          </div>
+        )}
+
         {product.image ? (
           <img
             src={
@@ -109,72 +121,75 @@ const ProductCard = ({ product, onClick }) => {
             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           />
         ) : (
-          <div style={{ fontSize: '3rem' }}>{product.emoji}</div>
+          <div style={{ fontSize: '2.5rem' }}>{product.emoji}</div>
         )}
       </div>
 
       {/* Content */}
       <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+        {/* Timer Pill */}
         <div style={{
-          fontSize: '0.75rem',
-          color: 'var(--text-muted)',
-          backgroundColor: '#f8f8f8',
+          fontSize: '0.6rem',
+          color: '#333',
+          fontWeight: '700',
+          backgroundColor: '#f3f4f6',
           width: 'fit-content',
-          padding: '2px 4px',
+          padding: '2px 6px',
           borderRadius: '4px',
-          marginBottom: '4px'
+          marginBottom: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '2px'
         }}>
-          ⏳ 12 MINS
+          <span>⏱</span> 8 MINS
         </div>
+
+        {/* Title */}
         <h3 style={{
-          fontSize: '0.9rem',
-          fontWeight: '600',
+          fontSize: '0.85rem',
+          fontWeight: '700',
           color: '#1c1c1c',
-          marginBottom: '0.25rem',
+          marginBottom: '0.1rem',
           lineHeight: '1.2',
           display: '-webkit-box',
           WebkitLineClamp: 2,
           WebkitBoxOrient: 'vertical',
           overflow: 'hidden',
-          minHeight: '2.2em'
+          minHeight: '2.4em'
         }}>
           {product.name}
         </h3>
-        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
-          {product.weight || '1 unit'}
+
+        {/* Weight */}
+        <div style={{ fontSize: '0.75rem', color: '#828282', marginBottom: '0.5rem', fontWeight: '500' }}>
+          {product.weight || '48 g'}
         </div>
 
         {/* Price & Add Row */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {isFlashSaleActive ? (
-              <>
-                <span style={{ fontSize: '0.75rem', textDecoration: 'line-through', color: '#999' }}>Rs {product.price}</span>
-                <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#1c1c1c' }}>Rs {finalPrice}</span>
-              </>
-            ) : (
-              <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#1c1c1c' }}>Rs {product.price}</span>
-            )}
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1' }}>
+            <span style={{ fontSize: '0.7rem', textDecoration: 'line-through', color: '#999', marginBottom: '2px' }}>₹{product.price + 20}</span>
+            <span style={{ fontSize: '0.9rem', fontWeight: '800', color: '#1c1c1c' }}>₹{product.price}</span>
           </div>
 
-          {/* ADD Button - Blinkit Style */}
-          <div style={{ width: '70px', height: '32px' }}>
+          {/* ADD Button - Green Outline (Screenshot Match) */}
+          <div style={{ width: '65px', height: '30px' }}>
             {quantity > 0 ? (
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                backgroundColor: 'var(--primary)',
+                backgroundColor: '#0c831f', /* Blinkit Green */
                 borderRadius: '6px',
                 height: '100%',
                 color: 'white',
-                fontWeight: '700',
-                fontSize: '0.9rem',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                fontWeight: '800',
+                fontSize: '0.8rem',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
               }}>
-                <button onClick={handleDecrement} style={{ border: 'none', background: 'transparent', color: 'white', padding: '0 8px', height: '100%', cursor: 'pointer' }}>-</button>
+                <button onClick={handleDecrement} style={{ border: 'none', background: 'transparent', color: 'white', padding: '0 6px', height: '100%', cursor: 'pointer' }}>-</button>
                 <span>{quantity}</span>
-                <button onClick={handleIncrement} style={{ border: 'none', background: 'transparent', color: 'white', padding: '0 8px', height: '100%', cursor: 'pointer' }}>+</button>
+                <button onClick={handleIncrement} style={{ border: 'none', background: 'transparent', color: 'white', padding: '0 6px', height: '100%', cursor: 'pointer' }}>+</button>
               </div>
             ) : (
               <button
@@ -183,14 +198,15 @@ const ProductCard = ({ product, onClick }) => {
                 style={{
                   width: '100%',
                   height: '100%',
-                  backgroundColor: isOutOfStock ? '#f0f0f0' : '#f7fff9',
-                  border: `1px solid ${isOutOfStock ? '#ccc' : 'var(--primary)'}`,
-                  color: isOutOfStock ? '#999' : 'var(--primary)',
+                  backgroundColor: isOutOfStock ? '#f0f0f0' : 'white',
+                  border: `1px solid ${isOutOfStock ? '#ccc' : '#0c831f'}`, /* Green Border */
+                  color: isOutOfStock ? '#999' : '#0c831f', /* Green Text */
                   borderRadius: '6px',
                   fontWeight: '800',
                   fontSize: '0.8rem',
                   cursor: isOutOfStock ? 'not-allowed' : 'pointer',
-                  textTransform: 'uppercase'
+                  textTransform: 'uppercase',
+                  boxShadow: '0 1px 1px rgba(0,0,0,0.05)'
                 }}
               >
                 {isOutOfStock ? 'SOLD' : 'ADD'}

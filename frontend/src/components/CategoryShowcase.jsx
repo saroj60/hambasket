@@ -39,7 +39,10 @@ const CategoryShowcase = ({ activeCategory, onSelectCategory }) => {
                     <div
                         key={index}
                         className={`category-card ${activeCategory === cat.id ? 'active' : ''}`}
-                        onClick={() => onSelectCategory(cat.id)}
+                        onClick={() => {
+                            // Navigate to dedicated category page
+                            window.location.hash = `#/category/${encodeURIComponent(cat.id)}`;
+                        }}
                         style={{ backgroundColor: getPastelColor(index) }}
                     >
                         <div className="category-image-container">
