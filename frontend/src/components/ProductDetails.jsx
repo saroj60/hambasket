@@ -72,12 +72,12 @@ const ProductDetails = ({ product, onClose, onAdd }) => {
     return (
         <div className="modal-overlay" onClick={onClose} style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 105, backdropFilter: 'blur(2px)'
+            backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 105, backdropFilter: 'blur(2px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem'
         }}>
             <div className="modal-content animate-fade-in product-details-content" onClick={e => e.stopPropagation()} style={{
-                position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                 backgroundColor: 'white', borderRadius: 'var(--radius-lg)',
-                width: '90%', maxWidth: '800px', zIndex: 106,
+                width: '100%', maxWidth: '800px', zIndex: 106,
                 boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
                 maxHeight: '90vh'
             }}>
