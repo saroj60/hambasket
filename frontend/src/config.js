@@ -22,8 +22,8 @@ if (isNative) {
     apiUrl = `${baseUrl}/api`;
 } else {
     // 2. Web Environment
-    // Always use Railway in production or if VITE_API_URL is missing
-    baseUrl = import.meta.env.VITE_API_URL || `https://hambasket-production.up.railway.app`;
+    // Always use Render in production or if VITE_API_URL is missing
+    baseUrl = import.meta.env.VITE_API_URL || `https://hambasket-backend.onrender.com`;
 
     // Fallback: If we are on Vercel and VITE_API_URL wasn't set, it might default to relative.
     // Let's force it if it's empty.

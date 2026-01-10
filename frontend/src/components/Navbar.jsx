@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
@@ -14,6 +14,16 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
 
   console.log("Navbar User:", user); // Debugging
   console.log("Navbar Role:", user?.role); // Debugging
+
+  const placeholders = ['Search "milk"', 'Search "bread"', 'Search "potato"', 'Search "egg"', 'Search "rice"', 'Search "beer"'];
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -60,7 +70,7 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
             <div className="search-bar">
               <input
                 type="text"
-                placeholder="Search for products..."
+                placeholder={placeholders[placeholderIndex]}
                 className="search-input"
               />
               <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>🔍</span>
