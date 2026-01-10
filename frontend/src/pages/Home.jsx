@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ProductCard from "../components/ProductCard";
+import ProductDetails from "../components/ProductDetails";
 import { getProducts } from "../services/api";
+import { CartContext } from "../context/CartContext";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -58,6 +62,7 @@ const Home = () => {
             <ProductCard
               key={product._id || product.id}
               product={product}
+              onClick={setSelectedProduct}
             />
           ))}
         </div>
@@ -65,6 +70,17 @@ const Home = () => {
         <div className="text-center text-gray-500 mt-10">
           No products available at the moment.
         </div>
+      )}
+
+      {/* Product Details Modal */}
+      {selectedProduct && (
+        <ProductDetails
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAdd={(item) => {
+            addToCart(item, item.quantity);
+          }}
+        />
       )}
     </div>
   );

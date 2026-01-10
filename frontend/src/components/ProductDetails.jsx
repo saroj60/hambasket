@@ -78,7 +78,8 @@ const ProductDetails = ({ product, onClose, onAdd }) => {
                 position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                 backgroundColor: 'white', borderRadius: 'var(--radius-lg)',
                 width: '90%', maxWidth: '800px', zIndex: 106,
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                maxHeight: '90vh'
             }}>
 
                 {/* Image Section */}
