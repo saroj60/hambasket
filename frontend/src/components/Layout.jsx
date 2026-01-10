@@ -18,7 +18,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       {/* Header */}
       {/* Blinkit-style Header */}
       <header style={{ backgroundColor: 'white', borderBottom: '1px solid #f0f0f0', position: 'sticky', top: 0, zIndex: 1000 }}>
-        <div className="container header-container" style={{ display: 'flex', alignItems: 'center', height: '80px', gap: '2rem' }}>
+        <div className="container header-container">
           {/* Logo */}
           <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             {/* Using text logo for now if image fails, or the brand logo */}
@@ -26,18 +26,18 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           </Link>
 
           {/* Location Block */}
-          <div onClick={openModal} className="location-block" style={{ cursor: 'pointer', minWidth: '200px' }}>
-            <div style={{ fontWeight: '800', fontSize: '1.1rem', lineHeight: '1.2' }}>Delivery in minutes</div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px' }}>
+          <div onClick={openModal} className="location-block">
+            <div className="delivery-text" style={{ fontWeight: '800', fontSize: '1.1rem', lineHeight: '1.2' }}>Delivery in minutes</div>
+            <div className="location-subtext" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '300px' }}>
               {location?.address ? location.address : "Select Location"} <span style={{ fontSize: '0.6rem' }}>▼</span>
             </div>
           </div>
 
           {/* Search Bar - Big & Central */}
-          <div style={{ flex: 1, position: 'relative' }}>
-            <form onSubmit={handleSearch}>
+          <div className="search-container">
+            <form onSubmit={handleSearch} style={{ width: '100%' }}>
               <div style={{ position: 'relative', width: '100%' }}>
-                <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
+                <span className="search-icon" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
@@ -52,16 +52,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
                   }}
                   onFocus={() => setShowSuggestions(true)}
                   onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                  style={{
-                    width: '100%',
-                    padding: '0.9rem 1rem 0.9rem 3rem',
-                    borderRadius: '12px',
-                    border: '1px solid #f0f0f0',
-                    backgroundColor: '#f8f8f8',
-                    fontSize: '1rem',
-                    outline: 'none',
-                    transition: 'all 0.2s'
-                  }}
+                  className="search-input-field"
                 />
               </div>
             </form>
@@ -113,7 +104,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           </div>
 
           {/* Login / Cart Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+          <div className="header-actions">
             <button onClick={onLogin} style={{ background: 'none', border: 'none', fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)', cursor: 'pointer' }}>
               Login
             </button>

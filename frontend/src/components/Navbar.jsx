@@ -39,31 +39,24 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
       }}>
         <div className="container">
           <div className="header-content">
-            {/* Logo & Location */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: 1 }}>
-              <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <img src="/brand_logo.png" alt="Hamket" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
-              </Link>
+            {/* Logo */}
+            <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <img src="/brand_logo.png" alt="Hamket" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
+            </Link>
 
-              <div
-                onClick={openMap}
-                className="location-selector"
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '0.5rem',
-                  backgroundColor: '#f3f4f6', padding: '0.5rem 1rem',
-                  borderRadius: 'var(--radius-full)', cursor: 'pointer',
-                  maxWidth: '200px'
-                }}
-              >
-                <span style={{ fontSize: '1.2rem' }}>📍</span>
-                <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  <span style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Delivering to</span>
-                  <span style={{ fontSize: '0.85rem', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {location?.address?.split(',')[0] || 'Select Location'}
-                  </span>
-                </div>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>▼</span>
+            {/* Location */}
+            <div
+              onClick={openMap}
+              className="location-selector"
+            >
+              <span style={{ fontSize: '1.2rem' }}>📍</span>
+              <div className="location-label-group" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <span className="location-label" style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Delivering to</span>
+                <span className="location-address" style={{ fontSize: '0.85rem', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {location?.address?.split(',')[0] || 'Select Location'}
+                </span>
               </div>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>▼</span>
             </div>
 
             {/* Search Bar */}

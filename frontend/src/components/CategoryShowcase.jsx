@@ -16,21 +16,39 @@ const CATEGORIES_DATA = [
     { id: 'Water & Gas', label: 'Water & Gas', img: '/assets/categories/water_gas.png' }, // Combined category icon
 ];
 
+const getPastelColor = (index) => {
+    const colors = [
+        '#ffe8e8', // Soft Red
+        '#e8f4ff', // Soft Blue
+        '#e8fff4', // Soft Green
+        '#fff8e8', // Soft Orange
+        '#f4e8ff', // Soft Purple
+        '#fff0f5', // Lavender
+        '#e0ffff', // Cyan
+        '#f0e68c', // Khaki
+    ];
+    return colors[index % colors.length];
+};
+
 const CategoryShowcase = ({ activeCategory, onSelectCategory }) => {
     return (
-        <div className="category-showcase-container">
-            {CATEGORIES_DATA.map((cat, index) => (
-                <div
-                    key={index}
-                    className={`category-item ${activeCategory === cat.id ? 'active' : ''}`}
-                    onClick={() => onSelectCategory(cat.id)}
-                >
-                    <div className="category-image-wrapper">
-                        <img src={cat.img} alt={cat.label} />
+        <div className="container" style={{ padding: '1rem 0' }}>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '1rem', paddingLeft: '0.5rem' }}>Shop by category</h2>
+            <div className="category-grid">
+                {CATEGORIES_DATA.map((cat, index) => (
+                    <div
+                        key={index}
+                        className={`category-card ${activeCategory === cat.id ? 'active' : ''}`}
+                        onClick={() => onSelectCategory(cat.id)}
+                        style={{ backgroundColor: getPastelColor(index) }}
+                    >
+                        <div className="category-image-container">
+                            <img src={cat.img} alt={cat.label} loading="lazy" />
+                        </div>
+                        <span className="category-card-label">{cat.label}</span>
                     </div>
-                    <span className="category-label">{cat.label}</span>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
 };
