@@ -1,11 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
+import { getSimilarProducts } from '../services/api';
+import ProductCard from './ProductCard';
 
-const ProductDetails = ({ product, onClose, onAdd }) => {
+const ProductDetails = ({ product, onClose, onAdd, onProductSelect }) => {
     const { user } = useAuth();
     const [quantity, setQuantity] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState(product.variants && product.variants.length > 0 ? product.variants[0] : null);
+
+    // Similar Products State
+    const [similarProducts, setSimilarProducts] = useState([]);
+
+    useEffect(() => {
+        const fetchSimilar = async () => {
+            try {
+                const data = await getSimilarProducts(product._id || product.id);
+                setSimilarProducts(data || []);
+            } catch (err) {
+                console.error("Failed to load similar products", err);
+            }
+        };
+        if (product) fetchSimilar();
+    }, [product]);
 
     // Subscription State
     const [isSubscription, setIsSubscription] = useState(false);
@@ -158,7 +175,7 @@ const ProductDetails = ({ product, onClose, onAdd }) => {
                     )}
 
 
-                    <div style={{ marginTop: 'auto', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <div style={{ marginTop: 'auto', display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '2rem' }}>
                         {/* Quantity Counter */}
                         <div style={{
                             display: 'flex',
@@ -199,6 +216,27 @@ const ProductDetails = ({ product, onClose, onAdd }) => {
                             {isOutOfStock ? 'Out of Stock' : `Add Item - ₹${currentPrice * quantity}`}
                         </button>
                     </div>
+
+                    {/* Similar Products */}
+                    {similarProducts.length > 0 && (
+                        <div style={{ marginTop: '2rem', borderTop: '1px solid #e5e7eb', paddingTop: '1.5rem' }}>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#1f2937', marginBottom: '1rem' }}>You Might Also Like</h3>
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+                                gap: '1rem'
+                            }}>
+                                {similarProducts.map(similar => (
+                                    <div key={similar._id} style={{ height: '280px' }}>
+                                        <ProductCard
+                                            product={similar}
+                                            onClick={onProductSelect || (() => { })}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

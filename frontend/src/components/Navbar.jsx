@@ -65,6 +65,11 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
                 type="text"
                 placeholder={placeholders[placeholderIndex]}
                 className="search-input"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    window.location.href = `/?search=${e.target.value}`;
+                  }
+                }}
               />
               <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>🔍</span>
             </div>

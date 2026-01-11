@@ -30,7 +30,7 @@ const productSchema = new mongoose.Schema({
 
 // Indexes for performance
 productSchema.index({ category: 1 });
-productSchema.index({ name: 'text' });
+productSchema.index({ name: 'text', description: 'text', brand: 'text', subCategory: 'text' });
 productSchema.index({ store: 1 });
 
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);

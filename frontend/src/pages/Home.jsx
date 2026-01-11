@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import ProductCard from "../components/ProductCard";
 import ProductDetails from "../components/ProductDetails";
-import { getProducts } from "../services/api";
+import { getProducts, getPopularProducts } from "../services/api";
 import { CartContext } from "../context/CartContext";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -11,12 +12,23 @@ const Home = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { addToCart } = useContext(CartContext);
 
+  const [popularProducts, setPopularProducts] = useState([]);
+  const location = useLocation();
+
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchAllData = async () => {
       try {
         setLoading(true);
-        const data = await getProducts();
-        setProducts(data || []);
+        const searchParams = new URLSearchParams(location.search);
+        const searchQuery = searchParams.toString();
+
+        const [productsData, popularData] = await Promise.all([
+          getProducts(searchQuery),
+          getPopularProducts()
+        ]);
+
+        setProducts(productsData || []);
+        setPopularProducts(popularData || []);
       } catch (err) {
         setError("Failed to load products. Please try again later.");
       } finally {
@@ -24,8 +36,8 @@ const Home = () => {
       }
     };
 
-    fetchProducts();
-  }, []);
+    fetchAllData();
+  }, [location.search]);
 
   if (loading) {
     return (
@@ -55,7 +67,28 @@ const Home = () => {
         </p>
       </div>
 
+      {/* Popular Products Section */}
+      {!new URLSearchParams(location.search).toString() && popularProducts.length > 0 && (
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <span>🔥</span> Popular Right Now
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {popularProducts.map((product) => (
+              <ProductCard
+                key={`pop-${product._id || product.id}`}
+                product={product}
+                onClick={setSelectedProduct}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Product Grid */}
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        {new URLSearchParams(location.search).get('search') ? `Search Results for "${new URLSearchParams(location.search).get('search')}"` : 'All Products'}
+      </h2>
       {products.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((product) => (
@@ -80,6 +113,7 @@ const Home = () => {
           onAdd={(item) => {
             addToCart(item, item.quantity);
           }}
+          onProductSelect={setSelectedProduct}
         />
       )}
     </div>

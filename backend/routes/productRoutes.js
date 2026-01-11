@@ -35,10 +35,16 @@ const isVendorOrAdmin = (req, res, next) => {
   }
 };
 
-import { getProducts, addProduct, updateProduct, deleteProduct } from "../controllers/productController.js";
+import { getProducts, addProduct, updateProduct, deleteProduct, getPopularProducts, getSimilarProducts } from "../controllers/productController.js";
 
 // Get All Products (with Search & Filters)
 router.get("/", getProducts);
+
+// Get Popular Products
+router.get("/popular", getPopularProducts);
+
+// Get Similar Products
+router.get("/similar/:id", getSimilarProducts);
 
 // Get Low Stock Products (Admin)
 router.get("/low-stock", isAdmin, async (req, res) => {

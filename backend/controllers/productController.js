@@ -8,8 +8,9 @@ export const getProducts = async (req, res) => {
     const { search, category, subCategory, brand, minPrice, maxPrice, dietary, store } = req.query;
     let query = {};
 
+    // Smart Search using text index
     if (search) {
-      query.name = { $regex: search, $options: "i" };
+      query.$text = { $search: search };
     }
 
     if (category && category !== "All") {
@@ -27,12 +28,80 @@ export const getProducts = async (req, res) => {
     }
 
     if (dietary) {
-      const dietaryList = dietary.split(',');
+      // Handle both comma-separated string and array
+      const dietaryList = Array.isArray(dietary) ? dietary : dietary.split(',');
       query.dietaryPreferences = { $in: dietaryList };
     }
 
-    const products = await Product.find(query).populate("store", "name");
+    let products;
+    if (search) {
+      // If searching, sort by score
+      products = await Product.find(query, { score: { $meta: "textScore" } })
+        .sort({ score: { $meta: "textScore" } })
+        .populate("store", "name");
+    } else {
+      products = await Product.find(query).populate("store", "name");
+    }
+
     res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Get Popular Products (Top Selling)
+export const getPopularProducts = async (req, res) => {
+  try {
+    // Aggregation to find most ordered products
+    // Note: This assumes we have an Order model and it has items with product IDs
+    const Order = (await import("../models/Order.js")).default;
+
+    const popular = await Order.aggregate([
+      { $unwind: "$items" },
+      { $group: { _id: "$items.product", count: { $sum: "$items.quantity" } } },
+      { $sort: { count: -1 } },
+      { $limit: 10 },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "product"
+        }
+      },
+      { $unwind: "$product" },
+      { $replaceRoot: { newRoot: "$product" } }
+    ]);
+
+    // If no orders yet, return some default products (e.g., first 10)
+    if (!popular || popular.length === 0) {
+      const defaultPopular = await Product.find().limit(10);
+      return res.json(defaultPopular);
+    }
+
+    res.json(popular);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Get Similar Products
+export const getSimilarProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Find products in same category/subCategory, excluding current product
+    const similar = await Product.find({
+      category: product.category,
+      _id: { $ne: id }
+    }).limit(6);
+
+    res.json(similar);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
