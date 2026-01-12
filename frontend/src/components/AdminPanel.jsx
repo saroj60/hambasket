@@ -364,6 +364,40 @@ const AdminPanel = () => {
                         <p>Loading analytics...</p>
                     )}
 
+
+                    {/* Daily Sales Section */}
+                    {analytics?.salesPerDay && analytics.salesPerDay.length > 0 && (
+                        <div className="card" style={{ padding: '1.5rem', marginTop: '2rem' }}>
+                            <h3 style={{ marginBottom: '1.5rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                📊 Daily Sales Performance (Last 30 Days)
+                            </h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                {analytics.salesPerDay.map((day, index) => {
+                                    const maxSales = Math.max(...analytics.salesPerDay.map(d => d.totalSales));
+                                    const percentage = (day.totalSales / maxSales) * 100;
+                                    return (
+                                        <div key={day._id} style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem' }}>
+                                            <div style={{ width: '100px', flexShrink: 0, color: 'var(--text-muted)' }}>{day._id}</div>
+                                            <div style={{ flex: 1, padding: '0 1rem' }}>
+                                                <div style={{
+                                                    height: '24px',
+                                                    width: `${percentage}%`,
+                                                    backgroundColor: '#10b981',
+                                                    borderRadius: '4px',
+                                                    minWidth: '2px',
+                                                    transition: 'width 0.5s ease-in-out'
+                                                }} />
+                                            </div>
+                                            <div style={{ width: '80px', textAlign: 'right', fontWeight: '600' }}>
+                                                Rs. {day.totalSales.toLocaleString()}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
                     {/* Demand Forecast Section */}
                     <div className="card" style={{ padding: '1.5rem', marginTop: '2rem' }}>
                         <h3 style={{ marginBottom: '1rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

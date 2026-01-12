@@ -151,6 +151,8 @@ router.post("/", async (req, res) => {
     }
 });
 
+
+
 // Analytics (Admin)
 router.get("/analytics", isAdmin, async (req, res) => {
     try {
@@ -163,12 +165,27 @@ router.get("/analytics", isAdmin, async (req, res) => {
         ]);
         const totalSales = salesData.length > 0 ? salesData[0].totalSales : 0;
 
+        // Daily Sales Aggregation
+        const salesPerDay = await Order.aggregate([
+            { $match: { status: { $ne: 'Cancelled' } } },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    totalSales: { $sum: "$totalAmount" },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { _id: -1 } }, // Newest first
+            { $limit: 30 } // Last 30 days
+        ]);
+
         const recentOrders = await Order.find().sort({ createdAt: -1 }).limit(5).populate('user', 'name');
 
         res.json({
             totalOrders,
             totalUsers,
             totalSales,
+            salesPerDay,
             recentOrders
         });
     } catch (error) {
