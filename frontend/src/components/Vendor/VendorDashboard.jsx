@@ -233,10 +233,12 @@ const VendorDashboard = () => {
                                         >
                                             <option value="Fruits & Vegetables">Fruits & Vegetables</option>
                                             <option value="Dairy, Bread & Eggs">Dairy, Bread & Eggs</option>
+                                            <option value="Bakery and Biscuits">Bakery and Biscuits</option>
                                             <option value="Atta, Rice, Oil & Dals">Atta, Rice, Oil & Dals</option>
                                             <option value="Snacks & Beverages">Snacks & Beverages</option>
                                             <option value="Household & Personal Care">Household & Personal Care</option>
-                                            <option value="Pharmacy">Pharmacy</option>
+                                            <option value="Baby Care">Baby Care</option>
+                                            <option value="Organic and Dry Fruits">Organic and Dry Fruits</option>
                                             <option value="Beauty & Self-Care">Beauty & Self-Care</option>
                                         </select>
                                         <div className="col-span-2">

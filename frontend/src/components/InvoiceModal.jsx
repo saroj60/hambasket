@@ -95,9 +95,7 @@ const InvoiceModal = ({ order, isOpen, onClose }) => {
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3rem' }}>
                             <div>
                                 {/* Brand Logo / Name */}
-                                <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#dc2626', marginBottom: '0.5rem', letterSpacing: '-1px' }}>
-                                    HAMBASKET
-                                </h1>
+                                AONE KIRANA
                                 <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>
                                     The Smartest Way to Shop
                                 </p>
@@ -124,7 +122,7 @@ const InvoiceModal = ({ order, isOpen, onClose }) => {
                             </div>
                             <div style={{ width: '45%', textAlign: 'left' }}>
                                 <h3 style={{ fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', color: '#9ca3af', marginBottom: '0.5rem' }}>Shipped From</h3>
-                                <p style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>HamBasket Inc.</p>
+                                <p style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>Aone Kirana</p>
                                 <p style={{ color: '#4b5563', lineHeight: '1.4' }}>
                                     Kathmandu, Nepal<br />
                                     support@hambasket.com<br />
@@ -201,8 +199,8 @@ const InvoiceModal = ({ order, isOpen, onClose }) => {
 
                         {/* FOOTER */}
                         <div style={{ marginTop: '4rem', textAlign: 'center', color: '#9ca3af', fontSize: '0.85rem' }}>
-                            <p>Thank you for shopping with HamBasket!</p>
-                            <p style={{ marginTop: '0.25rem' }}>For any questions, please contact support@hambasket.com</p>
+                            <p>Thank you for shopping with Aone Kirana!</p>
+                            <p style={{ marginTop: '0.25rem' }}>For any questions, please contact support@aonekirana.com</p>
                         </div>
 
                     </div>

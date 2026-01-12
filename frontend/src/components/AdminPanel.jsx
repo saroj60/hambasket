@@ -18,10 +18,12 @@ L.Icon.Default.mergeOptions({
 const CATEGORIES = [
     "Fruits & Vegetables",
     "Dairy, Bread & Eggs",
+    "Bakery and Biscuits",
     "Atta, Rice, Oil & Dals",
     "Snacks & Beverages",
     "Household & Personal Care",
-    "Pharmacy",
+    "Baby Care",
+    "Organic and Dry Fruits",
     "Beauty & Self-Care"
 ];
 

@@ -1,6 +1,6 @@
 {
   "appId": "com.aonestore.app",
-  "appName": "Aone Shop",
+  "appName": "Aone Kirana",
   "webDir": "dist",
   "server": {
     "cleartext": true

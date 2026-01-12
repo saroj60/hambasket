@@ -41,7 +41,7 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
           <div className="header-content">
             {/* Logo */}
             <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <img src="/brand_logo.png" alt="Hamket" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
+              <img src="/brand_logo.png" alt="Aone Kirana" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
             </Link>
 
             {/* Location */}

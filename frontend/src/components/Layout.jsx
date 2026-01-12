@@ -9,6 +9,16 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
   const { location, openModal, mapState, closeMap, updateLocation } = useLocation();
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  const placeholders = ['Search "milk"', 'Search "bread"', 'Search "potato"', 'Search "egg"', 'Search "rice"', 'Search "beer"'];
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleSearch = (e) => {
     e.preventDefault();
   };
@@ -21,7 +31,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
 
           {/* Mobile: App Name (Left) */}
           <Link to="/" className="header-logo mobile-visible" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <h1 style={{ fontWeight: '900', fontSize: '1.8rem', color: 'var(--brand-yellow)', letterSpacing: '-1px' }}>Aone Shop</h1>
+            <h1 style={{ fontWeight: '900', fontSize: '1.8rem', color: 'var(--brand-yellow)', letterSpacing: '-1px' }}>Aone Kirana</h1>
           </Link>
 
           {/* Location Block (Right) */}
@@ -42,7 +52,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
 
           {/* Desktop Logo (Hidden on Mobile) */}
           <Link to="/" className="header-logo mobile-hidden">
-            <h1 style={{ fontWeight: '900', fontSize: '2rem', color: 'var(--brand-yellow)', letterSpacing: '-1px' }}>Aone Shop</h1>
+            <h1 style={{ fontWeight: '900', fontSize: '2rem', color: 'var(--brand-yellow)', letterSpacing: '-1px' }}>Aone Kirana</h1>
           </Link>
 
           {/* Desktop Location (Hidden on Mobile) */}
@@ -64,7 +74,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
                 </span>
                 <input
                   type="text"
-                  placeholder='Search "sugar"'
+                  placeholder={placeholders[placeholderIndex]}
                   value={searchTerm}
                   onChange={(e) => {
                     onSearch(e.target.value);
@@ -160,7 +170,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       <footer style={{ backgroundColor: '#1f2937', color: 'white', padding: '3rem 0', marginTop: 'auto', width: '100%' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>Aone Shop</h3>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--primary)' }}>Aone Kirana</h3>
             <p style={{ color: '#9ca3af', fontSize: '0.9rem', lineHeight: '1.6' }}>
               Fresh groceries delivered to your doorstep in minutes. Quality you can trust.
             </p>
@@ -184,7 +194,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           </div>
         </div>
         <div className="container" style={{ borderTop: '1px solid #374151', marginTop: '2rem', paddingTop: '2rem', textAlign: 'center', color: '#9ca3af', fontSize: '0.875rem' }}>
-          © 2024 Aone Shop. All rights reserved.
+          © 2024 Aone Kirana. All rights reserved.
         </div>
       </footer>
 
