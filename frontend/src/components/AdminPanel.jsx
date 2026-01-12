@@ -21,6 +21,7 @@ const CATEGORIES = [
     "Bakery and Biscuits",
     "Atta, Rice, Oil & Dals",
     "Snacks & Beverages",
+    "Chocolate and Ice Cream",
     "Household & Personal Care",
     "Baby Care",
     "Organic and Dry Fruits",

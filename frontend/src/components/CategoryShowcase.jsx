@@ -14,6 +14,7 @@ const CATEGORIES_DATA = [
     { id: 'Beauty & Self-Care', label: 'Beauty & Self-Care', img: '/assets/categories/beauty_selfcare.png' },
     { id: 'Liquors', label: 'Liquors', img: '/assets/categories/liquors.png' },
     { id: 'Cooking Oil', label: 'Cooking Oil', img: '/assets/categories/cooking_oil.png' },
+    { id: 'Chocolate and Ice Cream', label: 'Chocolate & Ice Cream', img: '/assets/categories/chocolate_icecream.png' },
     { id: 'Water & Gas', label: 'Water & Gas', img: '/assets/categories/water_gas.png' }, // Combined category icon
 ];
 

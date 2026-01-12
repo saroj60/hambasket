@@ -35,7 +35,7 @@ import { CartProvider, CartContext } from "./context/CartContext";
 import { SocketProvider } from "./context/SocketContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery and Biscuits", "Beverages", "Snacks", "Frozen", "Baby Care", "Other"];
+const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery and Biscuits", "Beverages", "Snacks", "Frozen", "Baby Care", "Chocolate and Ice Cream", "Other"];
 
 function ShopContent() {
   const { products, fetchProducts } = useProducts();

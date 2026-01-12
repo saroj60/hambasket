@@ -236,6 +236,7 @@ const VendorDashboard = () => {
                                             <option value="Bakery and Biscuits">Bakery and Biscuits</option>
                                             <option value="Atta, Rice, Oil & Dals">Atta, Rice, Oil & Dals</option>
                                             <option value="Snacks & Beverages">Snacks & Beverages</option>
+                                            <option value="Chocolate and Ice Cream">Chocolate and Ice Cream</option>
                                             <option value="Household & Personal Care">Household & Personal Care</option>
                                             <option value="Baby Care">Baby Care</option>
                                             <option value="Organic and Dry Fruits">Organic and Dry Fruits</option>
