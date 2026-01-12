@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Order from './models/order.js';
+import Order from './models/OrderModel.js';
 import dotenv from 'dotenv';
 import fs from 'fs';
 

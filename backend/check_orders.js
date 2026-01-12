@@ -1,7 +1,7 @@
 
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Order from './models/Order.js'; // Assuming Order model exists, need to verify filename
+import Order from './models/OrderModel.js'; // Assuming Order model exists, need to verify filename
 import path from 'path';
 import { fileURLToPath } from 'url';
 

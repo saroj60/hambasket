@@ -1,6 +1,6 @@
 import express from "express";
 import User from "../models/user.js";
-import Order from "../models/Order.js"; // Correct import for Order model if needed, checking existing code might be good but safely assuming casing
+import Order from "../models/OrderModel.js"; // Correct import for Order model if needed, checking existing code might be good but safely assuming casing
 import jwt from "jsonwebtoken";
 import axios from "axios";
 

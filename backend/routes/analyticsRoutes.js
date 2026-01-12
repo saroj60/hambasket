@@ -1,5 +1,5 @@
 import express from "express";
-import Order from "../models/Order.js";
+import Order from "../models/OrderModel.js";
 import Product from "../models/product.js";
 import jwt from "jsonwebtoken";
 

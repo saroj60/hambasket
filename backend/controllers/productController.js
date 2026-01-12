@@ -54,7 +54,7 @@ export const getPopularProducts = async (req, res) => {
   try {
     // Aggregation to find most ordered products
     // Note: This assumes we have an Order model and it has items with product IDs
-    const Order = (await import("../models/Order.js")).default;
+    const Order = (await import("../models/OrderModel.js")).default;
 
     const popular = await Order.aggregate([
       { $unwind: "$items" },

@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Imports for seeding
 import Product from '../models/product.js';
-import Order from '../models/Order.js';
+import Order from '../models/OrderModel.js';
 
 router.get('/seed-data', async (req, res) => {
     try {
