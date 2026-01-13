@@ -15,18 +15,7 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const CATEGORIES = [
-    "Fruits & Vegetables",
-    "Dairy, Bread & Eggs",
-    "Bakery and Biscuits",
-    "Atta, Rice, Oil & Dals",
-    "Snacks & Beverages",
-    "Chocolate and Ice Cream",
-    "Household & Personal Care",
-    "Baby Care",
-    "Organic and Dry Fruits",
-    "Beauty & Self-Care"
-];
+const { CATEGORY_HIERARCHY, MAIN_CATEGORIES } = require('../data/CategoryStructure');
 
 const AdminPanel = () => {
     const { products, addProduct, updateProduct, deleteProduct } = useProducts();
@@ -40,6 +29,7 @@ const AdminPanel = () => {
         price: '',
         emoji: '',
         category: 'Fruits & Vegetables',
+        subCategory: 'All', // Added
         time: '10 mins',
         weight: '1 kg',
         stock: 100,
@@ -265,7 +255,39 @@ const AdminPanel = () => {
         } else {
             await addProduct(data);
         }
-        setFormData({ name: '', price: '', emoji: '', category: 'Fruits & Vegetables', time: '10 mins', weight: '1 kg', stock: 100, description: '', image: '', imageFile: null });
+        setFormData({ name: '', price: '', emoji: '', category: 'Fruits & Vegetables', subCategory: 'All', time: '10 mins', weight: '1 kg', stock: 100, description: '', image: '', imageFile: null });
+    };
+
+    const handleSetOutOfStock = async (product) => {
+        if (!window.confirm(`Mark "${product.name}" as Out of Stock?`)) return;
+
+        // Setup data with stock 0
+        const data = new FormData();
+        data.append('stock', 0);
+
+        // We need to preserve other fields to avoid validation errors if backend requires them, 
+        // but typically a PATCH or careful PUT is handled by updateProduct. 
+        // Assuming updateProduct handles partial or we need to send full. 
+        // To be safe, let's just use the product data but override stock.
+
+        // Ideally updateProduct should handle partial updates, but if it expects a FormData with all fields for a PUT, 
+        // we might strictly need to construct it. However, let's try sending just the updated stock if the backend supports it,
+        // or re-construct from the product object.
+
+        // Safest approach with current context:
+        const fullData = new FormData();
+        fullData.append('name', product.name);
+        fullData.append('price', product.price);
+        fullData.append('category', product.category);
+        fullData.append('subCategory', product.subCategory || 'All');
+        fullData.append('stock', 0); // The change
+        fullData.append('description', product.description || '');
+        fullData.append('time', product.time || '');
+        fullData.append('weight', product.weight || '');
+        fullData.append('emoji', product.emoji || '');
+        if (product.image) fullData.append('image', product.image);
+
+        await updateProduct(product._id, fullData);
     };
 
     const handleEdit = (product) => {
@@ -597,11 +619,25 @@ const AdminPanel = () => {
                             </div>
                             <select
                                 value={formData.category}
-                                onChange={e => setFormData({ ...formData, category: e.target.value })}
+                                onChange={e => {
+                                    setFormData({ ...formData, category: e.target.value, subCategory: 'All' }); // Reset subcat
+                                }}
                                 style={{ padding: '0.5rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}
                             >
-                                {CATEGORIES.map(cat => (
+                                {MAIN_CATEGORIES.map(cat => (
                                     <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                            </select>
+
+                            {/* Sub-Category Select */}
+                            <select
+                                value={formData.subCategory || 'All'}
+                                onChange={e => setFormData({ ...formData, subCategory: e.target.value })}
+                                style={{ padding: '0.5rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}
+                            >
+                                <option value="All">Select Sub-Category (Optional)</option>
+                                {(CATEGORY_HIERARCHY[formData.category] || []).filter(s => s.name !== 'All').map(sub => (
+                                    <option key={sub.name} value={sub.name}>{sub.name}</option>
                                 ))}
                             </select>
                             <div style={{ display: 'flex', gap: '1rem' }}>
@@ -653,7 +689,7 @@ const AdminPanel = () => {
                                 {editingId ? 'Update Product' : 'Add Product'}
                             </button>
                             {editingId && (
-                                <button type="button" onClick={() => { setEditingId(null); setFormData({ name: '', price: '', emoji: '', category: 'Fruits & Vegetables', time: '10 mins', weight: '1 kg', stock: 100, description: '', image: '', imageFile: null }); }} className="btn btn-outline">
+                                <button type="button" onClick={() => { setEditingId(null); setFormData({ name: '', price: '', emoji: '', category: 'Fruits & Vegetables', subCategory: 'All', time: '10 mins', weight: '1 kg', stock: 100, description: '', image: '', imageFile: null }); }} className="btn btn-outline">
                                     Cancel
                                 </button>
                             )}
@@ -680,6 +716,7 @@ const AdminPanel = () => {
                                         </div>
                                     </div>
                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <button onClick={() => handleSetOutOfStock(product)} className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', color: '#b45309', borderColor: '#b45309' }}>No Stock</button>
                                         <button onClick={() => handleEdit(product)} className="btn btn-outline" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}>Edit</button>
                                         <button onClick={() => deleteProduct(product._id)} className="btn" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', backgroundColor: '#fee2e2', color: '#ef4444' }}>Delete</button>
                                     </div>

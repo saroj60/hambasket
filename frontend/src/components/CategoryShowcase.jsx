@@ -13,8 +13,9 @@ const CATEGORIES_DATA = [
     { id: 'Baby Care', label: 'Baby Care', img: '/assets/categories/baby_care.png' },
     { id: 'Beauty & Self-Care', label: 'Beauty & Self-Care', img: '/assets/categories/beauty_selfcare.png' },
     { id: 'Liquors', label: 'Liquors', img: '/assets/categories/liquors.png' },
-    { id: 'Cooking Oil', label: 'Cooking Oil', img: '/assets/categories/cooking_oil.png' },
-    { id: 'Chocolate and Ice Cream', label: 'Chocolate & Ice Cream', img: '/assets/categories/chocolate_icecream.png' },
+    { id: 'Cooking Oil, Masala and more', label: 'Cooking Oil, Masala and more', img: '/assets/categories/cooking_oil.png' },
+    { id: 'Chocolate and Ice Cream', label: 'Chocolate & Ice Cream', img: '/assets/categories/chocolate_icecream_new.jpg' },
+    { id: 'Candies & Gums', label: 'Candies & Gums', img: '/assets/categories/candies_gums.png' }, // Added category
     { id: 'Water & Gas', label: 'Water & Gas', img: '/assets/categories/water_gas.png' }, // Combined category icon
 ];
 

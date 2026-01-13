@@ -23,6 +23,7 @@ const ResetPassword = lazy(() => import("./components/ResetPassword"));
 const CategoryProducts = lazy(() => import("./pages/CategoryProducts"));
 
 import CategoryShowcase from "./components/CategoryShowcase";
+import CategorySection from "./components/CategorySection";
 import FlashSaleSection from "./components/FlashSaleSection";
 import BottomNavigation from "./components/BottomNavigation";
 import NearbyOffers from "./components/NearbyOffers";
@@ -35,7 +36,7 @@ import { CartProvider, CartContext } from "./context/CartContext";
 import { SocketProvider } from "./context/SocketContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery and Biscuits", "Beverages", "Snacks", "Frozen", "Baby Care", "Chocolate and Ice Cream", "Other"];
+const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery and Biscuits", "Beverages", "Snacks", "Frozen", "Baby Care", "Chocolate and Ice Cream", "Cooking Oil, Masala and more", "Other"];
 
 function ShopContent() {
   const { products, fetchProducts } = useProducts();
@@ -191,6 +192,8 @@ function ShopContent() {
                     activeCategory={filters.category}
                     onSelectCategory={(cat) => handleFilterChange({ category: cat })}
                   />
+
+                  <CategorySection category="Candies & Gums" />
 
                   <FlashSaleSection
                     products={products}

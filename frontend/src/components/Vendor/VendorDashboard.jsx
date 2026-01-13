@@ -240,6 +240,7 @@ const VendorDashboard = () => {
                                             <option value="Household & Personal Care">Household & Personal Care</option>
                                             <option value="Baby Care">Baby Care</option>
                                             <option value="Organic and Dry Fruits">Organic and Dry Fruits</option>
+                                            <option value="Cooking Oil, Masala and more">Cooking Oil, Masala and more</option>
                                             <option value="Beauty & Self-Care">Beauty & Self-Care</option>
                                         </select>
                                         <div className="col-span-2">
