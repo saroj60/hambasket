@@ -42,6 +42,10 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
             {/* Logo */}
             <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <img src="/brand_logo.png" alt="Aone Kirana" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
+              <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
+                <span style={{ fontSize: '1.3rem', fontWeight: '800', color: 'white', letterSpacing: '-0.5px' }}>Aone Kirana</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#ffdf00', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Delivery in minutes ⚡</span>
+              </div>
             </Link>
 
             {/* Location */}
