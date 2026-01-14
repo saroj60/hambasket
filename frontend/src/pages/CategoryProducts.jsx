@@ -81,41 +81,7 @@ const CategoryProducts = () => {
                         }
                     `}</style>
 
-                    {/* "All" Option */}
-                    <div
-                        onClick={() => setActiveSubCategory("All")}
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '1rem 0.25rem',
-                            cursor: 'pointer',
-                            backgroundColor: activeSubCategory === "All" ? '#f0fdf4' : 'transparent',
-                            position: 'relative',
-                            borderBottom: '1px solid #f3f4f6',
-                            height: '90px'
-                        }}
-                        className="sidebar-item"
-                    >
-                        {/* Highlight Bar */}
-                        {activeSubCategory === "All" && (
-                            <div style={{
-                                position: 'absolute',
-                                left: 0,
-                                top: 0,
-                                bottom: 0,
-                                width: '4px',
-                                backgroundColor: '#0c831f',
-                                borderTopRightRadius: '4px',
-                                borderBottomRightRadius: '4px'
-                            }} />
-                        )}
-                        <div style={{ fontSize: '1.8rem', marginBottom: '0.25rem', lineHeight: '1' }} className="sidebar-icon">🧺</div>
-                        <div style={{ fontSize: '0.7rem', fontWeight: '700', color: activeSubCategory === "All" ? '#0c831f' : '#4b5563', textAlign: 'center', lineHeight: '1.1' }} className="sidebar-text">All</div>
-                    </div>
-
-                    {subCategories.filter(s => s.name !== "All").map((sub, index) => (
+                    {subCategories.map((sub, index) => (
                         <div
                             key={sub.name}
                             onClick={() => setActiveSubCategory(sub.name)}
