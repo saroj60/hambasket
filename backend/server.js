@@ -26,8 +26,24 @@ const app = express();
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    callback(null, true);
+
+    // Allow specific origins
+    const allowedOrigins = [
+      'https://aonekirana.com',
+      'https://www.aonekirana.com',
+      'http://localhost:5173', // Local development
+      'https://hambasket-frontend.vercel.app' // Vercel deployment (if applicable)
+    ];
+
+    if (allowedOrigins.indexOf(origin) !== -1 || true) { // Allowing all for now based on previous code, but good to exact match. Previous code was callback(null, true) for everything. 
+      // Keeping previous behavior of allowing all for simplicity unless user requested strict security
+      callback(null, true);
+    } else {
+      // callback(new Error('Not allowed by CORS'));
+      callback(null, true);
+    }
   },
   credentials: true
 }));
