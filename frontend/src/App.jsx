@@ -193,7 +193,7 @@ function ShopContent() {
                     onSelectCategory={(cat) => handleFilterChange({ category: cat })}
                   />
 
-                  <CategorySection category="Candies & Gums" />
+
 
                   <FlashSaleSection
                     products={products}

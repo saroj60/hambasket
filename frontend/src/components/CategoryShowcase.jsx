@@ -15,7 +15,7 @@ const CATEGORIES_DATA = [
     { id: 'Liquors', label: 'Liquors', img: '/assets/categories/liquors.png' },
     { id: 'Cooking Oil, Masala and more', label: 'Cooking Oil, Masala and more', img: '/assets/categories/cooking_oil.png' },
     { id: 'Chocolate and Ice Cream', label: 'Chocolate & Ice Cream', img: '/assets/categories/chocolate_icecream_new.jpg' },
-    { id: 'Candies & Gums', label: 'Candies & Gums', img: '/assets/categories/candies_gums.png' }, // Added category
+
     { id: 'Water & Gas', label: 'Water & Gas', img: '/assets/categories/water_gas.png' }, // Combined category icon
 ];
 
