@@ -106,13 +106,7 @@ export const CATEGORY_HIERARCHY = {
         { name: "Ice Creams", image: "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=100&q=80" },
         { name: "Dessert Mixes", image: "https://images.unsplash.com/photo-1598346762372-e56570c91557?auto=format&fit=crop&w=100&q=80" }
     ],
-    "Candies & Gums": [
-        { name: "All", image: "https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&w=100&q=80" },
-        { name: "Hard Candy", image: "https://images.unsplash.com/photo-1536638067825-78e878519656?auto=format&fit=crop&w=100&q=80" },
-        { name: "Chewing Gum", image: "https://images.unsplash.com/photo-1565451994806-258169956424?auto=format&fit=crop&w=100&q=80" },
-        { name: "Jellies", image: "https://images.unsplash.com/photo-1592317997931-4c12bbd60882?auto=format&fit=crop&w=100&q=80" },
-        { name: "Mints", image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=100&q=80" }
-    ],
+
     "Water & Gas": [
         { name: "All", image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=100&q=80" },
         { name: "Water Cans", image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=100&q=80" },
