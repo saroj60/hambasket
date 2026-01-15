@@ -18,7 +18,7 @@ const CATEGORY_METADATA = {
     "Liquors": { label: "Liquors", img: "/images/liquor/all.png" },
     "Cooking Oil, Masala and more": { label: "Cooking Oil & Masala", img: "/images/cooking/all.png" },
     "Chocolate and Ice Cream": { label: "Chocolates & Ice Cream", img: "/assets/categories/chocolate_icecream_new.jpg" },
-    "Water & Gas": { label: "Water & Gas", img: "/assets/categories/water_gas.png" }
+    "Water & Gas": { label: "Water & Gas", img: "/images/water_gas/all.png" }
 };
 
 const getPastelColor = (index) => {

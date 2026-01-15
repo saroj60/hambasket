@@ -91,6 +91,7 @@ export const CATEGORY_HIERARCHY = {
     ],
     "Cooking Oil, Masala and more": [
         { name: "All", image: "/images/cooking/all.png" },
+        { name: "Cooking Oil", image: "/images/cooking/cooking_oil.png" },
         { name: "Masala", image: "/images/cooking/masala.png" },
         { name: "Cooking Pastes", image: "/images/cooking/cooking_pastes.png" },
         { name: "Salt & Sugar", image: "/images/cooking/salt_sugar.png" },
@@ -98,14 +99,14 @@ export const CATEGORY_HIERARCHY = {
     ],
     "Chocolate and Ice Cream": [
         { name: "All", image: "https://images.unsplash.com/photo-1549395156-e8c1e9f43ad7?auto=format&fit=crop&w=100&q=80" },
-        { name: "Chocolates", image: "https://images.unsplash.com/photo-1511381971704-50b571343716?auto=format&fit=crop&w=100&q=80" },
-        { name: "Ice Creams", image: "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?auto=format&fit=crop&w=100&q=80" },
-        { name: "Dessert Mixes", image: "https://images.unsplash.com/photo-1598346762372-e56570c91557?auto=format&fit=crop&w=100&q=80" }
+        { name: "Chocolates", image: "/images/chocolate/chocolates.png" },
+        { name: "Ice Creams", image: "/images/chocolate/ice_creams.png" },
+        { name: "Dessert Mixes", image: "/images/chocolate/dessert_mixes.png" }
     ],
 
     "Water & Gas": [
-        { name: "All", image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=100&q=80" },
-        { name: "Water Cans", image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=100&q=80" },
+        { name: "All", image: "/images/water_gas/all.png" },
+        { name: "Water Cans", image: "/images/water_gas/water_can.png" },
         { name: "Gas Cylinders", image: "https://img.icons8.com/fluency/48/gas-bottle.png" } // Fallback to icon for Gas
     ]
 };
