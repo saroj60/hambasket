@@ -18,48 +18,44 @@ export const CATEGORY_HIERARCHY = {
     ],
     "Atta, Rice, Oil & Dals": [
         { name: "All", image: "/assets/categories/staples.png" }, // Grains
-        { name: "Atta & Flours", image: "https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=100&q=80" }, // Flour
-        { name: "Rice & Rice Products", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=100&q=80" }, // Rice
-        { name: "Dals & Pulses", image: "https://images.unsplash.com/photo-1515543904379-3d757afe72e3?auto=format&fit=crop&w=100&q=80" }, // Lentils
-        { name: "Edible Oils", image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=100&q=80" }, // Oil
-        { name: "Ghee & Vanaspati", image: "https://images.unsplash.com/photo-1631452180519-c01b97951d3b?auto=format&fit=crop&w=100&q=80" }  // Ghee/Butter
+        { name: "Atta & Flours", image: "/images/staples/atta.png" }, // Flour
+        { name: "Rice", image: "/images/staples/rice.png" }, // Rice
+        { name: "Dals & Pulses", image: "/images/staples/dal.png" }, // Lentils
+        { name: "Edible Oils", image: "/images/staples/oil.png" }, // Oil
+        { name: "Ghee & Vanaspati", image: "/images/staples/ghee.png" }  // Ghee/Butter
     ],
     "Bakery and Biscuits": [
-        { name: "All", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=100&q=80" }, // Bakery
-        { name: "Cookies & Biscuits", image: "https://images.unsplash.com/photo-1499636138143-bd649025e812?auto=format&fit=crop&w=100&q=80" }, // Cookies
-        { name: "Breads & Buns", image: "https://images.unsplash.com/photo-1598373182133-52452f7691ef?auto=format&fit=crop&w=100&q=80" }, // Bread
-        { name: "Cakes & Pastries", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=100&q=80" }, // Cake
-        { name: "Rusks & Khari", image: "https://images.unsplash.com/photo-1598373182133-52452f7691ef?auto=format&fit=crop&w=100&q=80" }, // Rusk (Bread fallback)
-        { name: "Toast", image: "https://images.unsplash.com/photo-1525351424102-16313974c952?auto=format&fit=crop&w=100&q=80" }  // Toast
+        { name: "All", image: "/images/bakery/all.png" }, // Bakery
+        { name: "Cookies & Biscuits", image: "/images/bakery/cookies.png" }, // Cookies
+        { name: "Breads & Buns", image: "/images/bakery/breads.png" }, // Bread
+        { name: "Cakes & Pastries", image: "/images/bakery/cakes.png" }, // Cake
+        { name: "Rusks & Khari", image: "/images/bakery/rusk.png" } // Rusk (Bread fallback)
     ],
     "Snacks & Beverages": [
-        { name: "All", image: "https://images.unsplash.com/photo-1621939514649-28b12e81658b?auto=format&fit=crop&w=100&q=80" }, // Snacks
-        { name: "Chips & Namkeen", image: "https://images.unsplash.com/photo-1621939514649-28b12e81658b?auto=format&fit=crop&w=100&q=80" }, // Chips
-        { name: "Soft Drinks", image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=100&q=80" }, // Coke
-        { name: "Juices", image: "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=100&q=80" }, // Juice
-        { name: "Tea & Coffee", image: "https://images.unsplash.com/photo-1563911302283-d2bc129e7c1f?auto=format&fit=crop&w=100&q=80" }, // Tea Cup
-        { name: "Health Drinks", image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=100&q=80" }  // Energy
+        { name: "All", image: "/assets/categories/snacks_beverages.jpg" }, // Snacks
+        { name: "Chips & Namkeen", image: "/images/snacks/chips.png" }, // Chips
+        { name: "Soft Drinks", image: "/images/snacks/soft_drinks.png" }, // Coke
+        { name: "Juices", image: "/images/snacks/juices.png" }, // Juice
+        { name: "Cold Coffee", image: "/images/snacks/cold_coffee.png" } // Tea Cup
     ],
     "Tea and coffee": [
-        { name: "All", image: "https://images.unsplash.com/photo-1563911302283-d2bc129e7c1f?auto=format&fit=crop&w=100&q=80" },
-        { name: "Tea", image: "https://images.unsplash.com/photo-1563911302283-d2bc129e7c1f?auto=format&fit=crop&w=100&q=80" },
-        { name: "Coffee", image: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=100&q=80" },
-        { name: "Green Tea", image: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?auto=format&fit=crop&w=100&q=80" },
-        { name: "Premix", image: "https://images.unsplash.com/photo-1587049352847-81a56d773cae?auto=format&fit=crop&w=100&q=80" }
+        { name: "All", image: "/images/beverages/all.png" },
+        { name: "Tea", image: "/images/beverages/tea.png" },
+        { name: "Coffee", image: "/images/beverages/coffee.png" },
+        { name: "Green Tea", image: "/images/beverages/green_tea.png" }
     ],
     "Organic and Dry Fruits": [
-        { name: "All", image: "https://images.unsplash.com/photo-1596711584620-1e5f29d2f2d9?auto=format&fit=crop&w=100&q=80" },
-        { name: "Dry Fruits", image: "https://images.unsplash.com/photo-1596711584620-1e5f29d2f2d9?auto=format&fit=crop&w=100&q=80" },
-        { name: "Organic Staples", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=100&q=80" },
-        { name: "Nuts & Seeds", image: "https://images.unsplash.com/photo-1533230699213-9b935560a6df?auto=format&fit=crop&w=100&q=80" },
-        { name: "Dates", image: "https://images.unsplash.com/photo-1589123048842-140da5aee879?auto=format&fit=crop&w=100&q=80" }
+        { name: "All", image: "/images/organic/all.png" },
+        { name: "Dry Fruits", image: "/images/organic/dry_fruits.png" },
+        { name: "Nuts & Seeds", image: "/images/organic/nuts.png" },
+        { name: "Dates", image: "/images/organic/dates.png" }
     ],
     "Breakfast and sauce": [
-        { name: "All", image: "https://images.unsplash.com/photo-1525351424102-16313974c952?auto=format&fit=crop&w=100&q=80" },
-        { name: "Breakfast Cereals", image: "https://images.unsplash.com/photo-1588698944583-10acba5c9b68?auto=format&fit=crop&w=100&q=80" },
-        { name: "Jams & Honey", image: "https://images.unsplash.com/photo-1584961726005-728b7e28319f?auto=format&fit=crop&w=100&q=80" },
-        { name: "Sauces & Spreads", image: "https://images.unsplash.com/photo-1607301406259-8b315b80a2b5?auto=format&fit=crop&w=100&q=80" },
-        { name: "Pickles & Chutneys", image: "https://images.unsplash.com/photo-1620215757753-488b3940c315?auto=format&fit=crop&w=100&q=80" }
+        { name: "All", image: "/images/breakfast/all.jpg" },
+        { name: "Breakfast Cereals", image: "/images/breakfast/cereals.png" },
+        { name: "Jams & Honey", image: "/images/breakfast/jams_honey.png" },
+        { name: "Sauces & Spreads", image: "/images/breakfast/sauces.png" },
+        { name: "Pickles & Chutneys", image: "/images/breakfast/pickles.png" }
     ],
     "Household & Personal Care": [
         { name: "All", image: "https://images.unsplash.com/photo-1583947581924-860bda6a26df?auto=format&fit=crop&w=100&q=80" }, // Cleaning
