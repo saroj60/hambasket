@@ -12,11 +12,11 @@ const CATEGORY_METADATA = {
     "Tea and coffee": { label: "Tea & Coffee", img: "/images/beverages/all.png" },
     "Organic and Dry Fruits": { label: "Organic & Dry Fruits", img: "/images/organic/all.png" },
     "Breakfast and sauce": { label: "Breakfast & Sauces", img: "/images/breakfast/all.jpg" },
-    "Household & Personal Care": { label: "Cleaning Essential", img: "/assets/categories/household_care.png" },
-    "Baby Care": { label: "Baby Care", img: "/assets/categories/baby_care.png" },
-    "Beauty & Self-Care": { label: "Beauty & Self-Care", img: "/assets/categories/beauty_selfcare.png" },
-    "Liquors": { label: "Liquors", img: "/assets/categories/liquors.png" },
-    "Cooking Oil, Masala and more": { label: "Cooking Oil & Masala", img: "/assets/categories/cooking_oil.png" },
+    "Household & Personal Care": { label: "Cleaning Essential", img: "/images/household/cleaning.jpg" },
+    "Baby Care": { label: "Baby Care", img: "/images/baby_care/all.png" },
+    "Beauty & Self-Care": { label: "Beauty & Self-Care", img: "/images/beauty/all.png" },
+    "Liquors": { label: "Liquors", img: "/images/liquor/all.png" },
+    "Cooking Oil, Masala and more": { label: "Cooking Oil & Masala", img: "/images/cooking/all.png" },
     "Chocolate and Ice Cream": { label: "Chocolates & Ice Cream", img: "/assets/categories/chocolate_icecream_new.jpg" },
     "Water & Gas": { label: "Water & Gas", img: "/assets/categories/water_gas.png" }
 };

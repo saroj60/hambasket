@@ -58,41 +58,43 @@ export const CATEGORY_HIERARCHY = {
         { name: "Pickles & Chutneys", image: "/images/breakfast/pickles.png" }
     ],
     "Household & Personal Care": [
-        { name: "All", image: "https://images.unsplash.com/photo-1583947581924-860bda6a26df?auto=format&fit=crop&w=100&q=80" }, // Cleaning
-        { name: "Detergents", image: "https://images.unsplash.com/photo-1583947581924-860bda6a26df?auto=format&fit=crop&w=100&q=80" },
-        { name: "Cleaners", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=100&q=80" },
-        { name: "Personal Hygiene", image: "https://images.unsplash.com/photo-1556228720-1957be83f70e?auto=format&fit=crop&w=100&q=80" },
-        { name: "Oral Care", image: "https://images.unsplash.com/photo-1609172292723-cd8e7855b550?auto=format&fit=crop&w=100&q=80" },
-        { name: "Bath & Body", image: "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&w=100&q=80" }
+        { name: "All", image: "/images/household/cleaning.jpg" }, // Cleaning
+        { name: "Detergents", image: "/images/household/detergents.png" },
+        { name: "Cleaners", image: "/images/household/cleaners.png" },
+        { name: "Oral Care", image: "/images/household/oral_care.png" },
+        { name: "Bath & Body", image: "/images/household/bath_body.png" }
     ],
     "Baby Care": [
-        { name: "All", image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=100&q=80" },
-        { name: "Diapers & Wipes", image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=100&q=80" },
-        { name: "Baby Food", image: "https://images.unsplash.com/photo-1584278432313-059873d32847?auto=format&fit=crop&w=100&q=80" },
-        { name: "Baby Skin Care", image: "https://images.unsplash.com/photo-1556228722-dca88997a30c?auto=format&fit=crop&w=100&q=80" },
-        { name: "Baby Accessories", image: "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=100&q=80" }
+        { name: "All", image: "/images/baby_care/all.png" },
+        { name: "Diapers & Wipes", image: "/images/baby_care/diapers.png" },
+        { name: "Baby Food", image: "/images/baby_care/baby_food.png" },
+        { name: "Baby Skin Care", image: "/images/baby_care/baby_skin_care.png" }
     ],
     "Beauty & Self-Care": [
-        { name: "All", image: "https://images.unsplash.com/photo-1571781535469-f195d97f2563?auto=format&fit=crop&w=100&q=80" },
-        { name: "Skin Care", image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=100&q=80" },
-        { name: "Hair Care", image: "https://images.unsplash.com/photo-1519735777090-ec97162dc453?auto=format&fit=crop&w=100&q=80" },
-        { name: "Makeup", image: "https://images.unsplash.com/photo-1487412947132-28a5d9dd990d?auto=format&fit=crop&w=100&q=80" },
-        { name: "Fragrances", image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=100&q=80" },
-        { name: "Men's Grooming", image: "https://images.unsplash.com/photo-1518118238717-8c5e13dbfbd2?auto=format&fit=crop&w=100&q=80" }
+        { name: "All", image: "/images/beauty/all.png" },
+        { name: "Skin Care", image: "/images/beauty/skin_care.png" },
+        { name: "Hair Care", image: "/images/beauty/hair_care.png" },
+        { name: "Makeup", image: "/images/beauty/makeup.png" },
+        { name: "Fragrances", image: "/images/beauty/fragrances.png" },
+        { name: "Men's Grooming", image: "/images/beauty/mens_grooming.png" }
     ],
     "Liquors": [
-        { name: "All", image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=100&q=80" },
-        { name: "Beer", image: "https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&w=100&q=80" },
-        { name: "Wine", image: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=100&q=80" },
-        { name: "Spirits", image: "https://images.unsplash.com/photo-1569529465841-872719460010?auto=format&fit=crop&w=100&q=80" },
+        { name: "All", image: "/images/liquor/all.png" },
+        { name: "Beer", image: "/images/liquor/beer.png" },
+        { name: "Wine", image: "/images/liquor/wine.png" },
+        { name: "Vodka", image: "/images/liquor/vodka.png" },
+        { name: "Rum", image: "/images/liquor/rum.png" },
+        { name: "Whiskey", image: "/images/liquor/whiskey.png" },
+        { name: "Tequila", image: "/images/liquor/tequila.png" },
+        { name: "Brandy", image: "/images/liquor/brandy.png" },
         { name: "Mixers", image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=100&q=80" }
     ],
     "Cooking Oil, Masala and more": [
-        { name: "All", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=100&q=80" },
-        { name: "Spices & Masalas", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=100&q=80" },
-        { name: "Cooking Pastes", image: "https://images.unsplash.com/photo-1620215757753-488b3940c315?auto=format&fit=crop&w=100&q=80" },
-        { name: "Salt & Sugar", image: "https://images.unsplash.com/photo-1612185202685-6f6eb85e0541?auto=format&fit=crop&w=100&q=80" },
-        { name: "Whole Spices", image: "https://images.unsplash.com/photo-1532336414038-cf19250c5757?auto=format&fit=crop&w=100&q=80" }
+        { name: "All", image: "/images/cooking/all.png" },
+        { name: "Masala", image: "/images/cooking/masala.png" },
+        { name: "Cooking Pastes", image: "/images/cooking/cooking_pastes.png" },
+        { name: "Salt & Sugar", image: "/images/cooking/salt_sugar.png" },
+        { name: "Whole Spices", image: "/images/cooking/whole_spices.png" }
     ],
     "Chocolate and Ice Cream": [
         { name: "All", image: "https://images.unsplash.com/photo-1549395156-e8c1e9f43ad7?auto=format&fit=crop&w=100&q=80" },
