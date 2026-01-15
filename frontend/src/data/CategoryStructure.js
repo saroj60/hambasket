@@ -1,25 +1,23 @@
 export const CATEGORY_HIERARCHY = {
     "All": [{ name: "All", image: "https://img.icons8.com/fluency/48/shopping-basket-2.png" }],
-    "Fruits & Vegetables": [
-        { name: "All", image: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=100&q=80" }, // Fruit Mix
-        { name: "Fresh Vegetables", image: "https://images.unsplash.com/photo-1597362925123-77861d3fbac7?auto=format&fit=crop&w=100&q=80" }, // Veg Mix
-        { name: "Fresh Fruits", image: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=100&q=80" }, // Fruits
-        { name: "Leafy Vegetables", image: "https://images.unsplash.com/photo-1576045057995-568f588f8d37?auto=format&fit=crop&w=100&q=80" }, // Spinach/Leafy
-        { name: "Herbs & Seasoning", image: "https://images.unsplash.com/photo-1615485932150-1cae618df268?auto=format&fit=crop&w=100&q=80" }, // Herbs
-        { name: "Exotics", image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=100&q=80" }, // Dragonfruit
-        { name: "Seasonal", image: "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=100&q=80" }  // Seasonal
+    "Fresh Produce": [
+        { name: "All", image: "/images/fresh-produce/fresh_produce.png" },
+        { name: "Vegetables", image: "/images/fresh-produce/vegetables.jpg" },
+        { name: "Fruits", image: "/images/fresh-produce/fruit.jpg" },
+        { name: "Leafy", image: "/images/fresh-produce/leafy.jpg" },
+        { name: "Seasonal", image: "/images/fresh-produce/seasonal.jpg" }
     ],
     "Dairy, Bread & Eggs": [
-        { name: "All", image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=100&q=80" }, // Dairy Mix
-        { name: "Milk", image: "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=100&q=80" }, // Milk Bottle
-        { name: "Bread", image: "https://images.unsplash.com/photo-1598373182133-52452f7691ef?auto=format&fit=crop&w=100&q=80" }, // Bread
+        { name: "All", image: "/images/dairy/all.png" }, // Dairy Mix
+        { name: "Milk", image: "/images/dairy/milk.jpg" }, // Milk Bottle
+        { name: "Bread", image: "/images/dairy/bread.jpg" }, // Bread
         { name: "Eggs", image: "https://images.unsplash.com/photo-1587486913049-53fc88980cfc?auto=format&fit=crop&w=100&q=80" }, // Eggs
-        { name: "Butter & Cheese", image: "https://images.unsplash.com/photo-1624806992066-5ffcf7ca186b?auto=format&fit=crop&w=100&q=80" }, // Cheese
-        { name: "Curd & Yogurt", image: "https://images.unsplash.com/photo-1563575314-4347c15bc482?auto=format&fit=crop&w=100&q=80" }, // Yogurt
-        { name: "Paneer & Cream", image: "https://images.unsplash.com/photo-1631452180519-c01b97951d3b?auto=format&fit=crop&w=100&q=80" }  // Paneer/Cheese
+        { name: "Butter & Cheese", image: "/images/dairy/butter_cheese.jpg" }, // Cheese
+        { name: "Curd & Yogurt", image: "/images/dairy/curd.jpg" }, // Yogurt
+        { name: "Paneer & Cream", image: "/images/dairy/paneer.jpg" }  // Paneer/Cheese
     ],
     "Atta, Rice, Oil & Dals": [
-        { name: "All", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=100&q=80" }, // Grains
+        { name: "All", image: "/assets/categories/staples.png" }, // Grains
         { name: "Atta & Flours", image: "https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&w=100&q=80" }, // Flour
         { name: "Rice & Rice Products", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=100&q=80" }, // Rice
         { name: "Dals & Pulses", image: "https://images.unsplash.com/photo-1515543904379-3d757afe72e3?auto=format&fit=crop&w=100&q=80" }, // Lentils
