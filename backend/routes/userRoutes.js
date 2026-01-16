@@ -75,7 +75,7 @@ router.delete("/wishlist/:productId", isAuth, async (req, res) => {
 // Add Address
 router.post("/address", isAuth, async (req, res) => {
     try {
-        const { label, address, coordinates, isDefault } = req.body;
+        const { label, address, coordinates, isDefault, receiverName, receiverPhone } = req.body;
         const user = await User.findById(req.user.id);
 
         if (!user) return res.status(404).json({ message: "User not found" });
@@ -85,7 +85,7 @@ router.post("/address", isAuth, async (req, res) => {
             user.addresses.forEach(addr => addr.isDefault = false);
         }
 
-        user.addresses.push({ label, address, coordinates, isDefault });
+        user.addresses.push({ label, address, coordinates, isDefault, receiverName, receiverPhone });
         await user.save();
 
         res.json(user.addresses);

@@ -52,10 +52,19 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
     }
   }, [user]);
 
-  // Update custom address if global location changes
+  // Update custom address and guest info if global location changes
   useEffect(() => {
-    if (location && location.address) {
-      setCustomAddress(location.address);
+    console.log("CartSidebar Location Update:", location);
+    if (location) {
+      if (location.address) setCustomAddress(location.address);
+      if (location.receiverName) {
+        console.log("Setting Guest Name:", location.receiverName);
+        setGuestName(location.receiverName);
+      }
+      if (location.receiverPhone) {
+        console.log("Setting Guest Phone:", location.receiverPhone);
+        setGuestPhone(location.receiverPhone);
+      }
     }
   }, [location]);
 

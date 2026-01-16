@@ -35,27 +35,35 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
     const [step, setStep] = useState('map'); // 'map' or 'details'
 
     // Form States
-    const [houseNo, setHouseNo] = useState('');
+    const [receiverName, setReceiverName] = useState(user?.name || '');
+    const [receiverPhone, setReceiverPhone] = useState(user?.phone || '');
     const [landmark, setLandmark] = useState('');
     const [label, setLabel] = useState('Home'); // Home, Work, Other
     const [customLabel, setCustomLabel] = useState('');
 
     const autocompleteRef = useRef(null);
     const mapRef = useRef(null);
+    const timerRef = useRef(null); // For debouncing
 
-    // Fetch address when map stops moving
+    // Fetch address when map stops moving (Debounced)
     const onIdle = useCallback(() => {
         if (map && step === 'map') {
             const newCenter = map.getCenter();
             const lat = newCenter.lat();
             const lng = newCenter.lng();
             setCenter({ lat, lng });
-            fetchAddress(lat, lng);
+
+            // Debounce fetch
+            if (timerRef.current) clearTimeout(timerRef.current);
+            setLoading(true);
+
+            timerRef.current = setTimeout(() => {
+                fetchAddress(lat, lng);
+            }, 800); // 800ms delay to ensure user stopped panning
         }
     }, [map, step]);
 
     const fetchAddress = async (lat, lng) => {
-        setLoading(true);
         if (!window.google || !window.google.maps) {
             setAddress("Map API not loaded");
             setLoading(false);
@@ -66,9 +74,22 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
             const geocoder = new window.google.maps.Geocoder();
             geocoder.geocode({ location: { lat, lng } }, (results, status) => {
                 if (status === 'OK' && results[0]) {
-                    setAddress(results[0].formatted_address);
+                    // Filter out Plus Codes if a better address exists
+                    // Plus codes usually have type 'plus_code' or contain a '+' in the short name/address
+                    const bestResult = results.find(r =>
+                        !r.types.includes('plus_code') &&
+                        !r.formatted_address.match(/^[A-Z0-9]{4}\+[A-Z0-9]{2,}/) // Regex to avoid basic plus codes
+                    );
+
+                    if (bestResult) {
+                        setAddress(bestResult.formatted_address);
+                    } else {
+                        // Fallback to first result if only plus code exists, but maybe strip the code?
+                        // Usually results[0] is best, so we default to it if no better option.
+                        setAddress(results[0].formatted_address);
+                    }
                 } else {
-                    setAddress(`Error: ${status}`);
+                    setAddress(`Location not found`);
                 }
                 setLoading(false);
             });
@@ -81,7 +102,14 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
     const onLoad = useCallback(function callback(map) {
         setMap(map);
         mapRef.current = map;
-    }, []);
+        // Trigger resize to prevent gray map
+        setTimeout(() => {
+            window.google.maps.event.trigger(map, 'resize');
+            if (defaultCenter) {
+                map.panTo(defaultCenter);
+            }
+        }, 200);
+    }, [defaultCenter]);
 
     const onUnmount = useCallback(function callback(map) {
         setMap(null);
@@ -122,7 +150,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                             resolve();
                         },
                         (err) => reject(err),
-                        { timeout: 10000 }
+                        { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
                     );
                 });
             } else {
@@ -153,13 +181,24 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
     };
 
     const handleSaveAddress = async () => {
+        if (!receiverName || !receiverPhone) {
+            alert("Please enter Name and Phone Number");
+            return;
+        }
+
         setLoading(true);
         const finalLabel = label === 'Other' ? customLabel : label;
+        // Construct full address string for display/older compatibility if needed
+        // But mainly we send structured data now
+        const displayAddress = `${landmark ? landmark + ', ' : ''}${address}`;
+
         const fullAddressData = {
-            address: `${houseNo ? houseNo + ', ' : ''}${landmark ? landmark + ', ' : ''}${address}`,
+            address: displayAddress,
             coordinates: center,
             label: finalLabel,
-            isDefault: false // Logic can be added to make first address default
+            receiverName,
+            receiverPhone,
+            isDefault: false
         };
 
         // If user is logged in, save to backend
@@ -171,15 +210,14 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                     credentials: 'include',
                     body: JSON.stringify({
                         label: finalLabel,
-                        address: fullAddressData.address,
-                        coordinates: center
+                        address: displayAddress,
+                        coordinates: center,
+                        receiverName,
+                        receiverPhone
                     })
                 });
             } catch (error) {
                 console.error("Failed to save address to backend", error);
-                // We typically continue even if backend save fails for guest flow, 
-                // but since we checked (user), implies we want to sync. 
-                // For now, we'll alert but proceed locally.
             }
         }
 
@@ -289,7 +327,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                         <div style={{ marginTop: '4px' }}>📍</div>
                         <div>
                             <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#1f2937', marginBottom: '0.25rem' }}>
-                                {step === 'map' ? 'Select Location' : 'Confirm Location'}
+                                {step === 'map' ? 'Select Location' : 'Confirm Address Details'}
                             </h3>
                             <p style={{ fontSize: '0.9rem', color: '#6b7280', lineHeight: '1.4' }}>
                                 {loading ? 'Fetching address...' : address}
@@ -332,25 +370,36 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                 <input
                                     type="text"
-                                    placeholder="House / Flat No."
-                                    value={houseNo}
-                                    onChange={(e) => setHouseNo(e.target.value)}
+                                    placeholder="Receiver Name"
+                                    value={receiverName}
+                                    onChange={(e) => setReceiverName(e.target.value)}
                                     style={{
                                         padding: '0.8rem', borderRadius: '8px', border: '1px solid #e5e7eb',
                                         fontSize: '0.95rem', outline: 'none'
                                     }}
                                 />
                                 <input
-                                    type="text"
-                                    placeholder="Landmark (Optional)"
-                                    value={landmark}
-                                    onChange={(e) => setLandmark(e.target.value)}
+                                    type="tel"
+                                    placeholder="Mobile Number"
+                                    value={receiverPhone}
+                                    onChange={(e) => setReceiverPhone(e.target.value)}
                                     style={{
                                         padding: '0.8rem', borderRadius: '8px', border: '1px solid #e5e7eb',
                                         fontSize: '0.95rem', outline: 'none'
                                     }}
                                 />
                             </div>
+
+                            <input
+                                type="text"
+                                placeholder="Nearby Landmark (Optional)"
+                                value={landmark}
+                                onChange={(e) => setLandmark(e.target.value)}
+                                style={{
+                                    padding: '0.8rem', borderRadius: '8px', border: '1px solid #e5e7eb',
+                                    fontSize: '0.95rem', outline: 'none'
+                                }}
+                            />
 
                             <div>
                                 <p style={{ fontSize: '0.85rem', fontWeight: '600', color: '#6b7280', marginBottom: '0.5rem' }}>SAVE AS</p>
@@ -393,7 +442,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                                 style={{ width: '100%', padding: '1rem', fontSize: '1rem', marginTop: '0.5rem' }}
                                 disabled={loading}
                             >
-                                {loading ? 'Saving Address...' : 'Save Address'}
+                                {loading ? 'Saving details...' : 'Save details'}
                             </button>
                         </div>
                     )}

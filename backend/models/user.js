@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
     addresses: [{
         label: String,
         address: String,
+        receiverName: String,
+        receiverPhone: String,
         coordinates: {
             lat: Number,
             lng: Number

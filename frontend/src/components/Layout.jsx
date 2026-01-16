@@ -200,7 +200,10 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       {mapState.isOpen && (
         <MapAddressSelector
           initialLocation={mapState.initialCoordinates}
-          onConfirm={(data) => updateLocation(data.address, data.coordinates)}
+          onConfirm={(data) => updateLocation(data.address, data.coordinates, {
+            receiverName: data.receiverName,
+            receiverPhone: data.receiverPhone
+          })}
           onCancel={closeMap}
         />
       )}

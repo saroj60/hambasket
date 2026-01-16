@@ -85,8 +85,12 @@ export const LocationProvider = ({ children }) => {
         }
     };
 
-    const updateLocation = (address, coordinates = null) => {
-        setLocation({ address, coordinates });
+    const updateLocation = (address, coordinates = null, extraData = {}) => {
+        setLocation({
+            address,
+            coordinates,
+            ...extraData
+        });
         setIsModalOpen(false);
         setMapState({ isOpen: false, initialCoordinates: null });
     };
