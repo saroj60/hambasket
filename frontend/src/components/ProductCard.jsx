@@ -79,7 +79,8 @@ const ProductCard = ({ product, onClick }) => {
 
       {/* Image Area - The "Box" */}
       <div className="product-image" style={{
-        height: '100px', /* Slightly taller to accommodate badge */
+        width: '100%',
+        aspectRatio: '1/1', /* Square Image */
         position: 'relative',
         borderRadius: '12px',
         border: '1px solid #e0e0e0', /* The Box Border */

@@ -182,30 +182,56 @@ function ShopContent() {
 
 
                   {/* Promotional Offers */}
-                  <OfferBanners />
+                  {!filters.search && <OfferBanners />}
 
                   {/* Nearby Offers */}
-                  <NearbyOffers />
+                  {!filters.search && <NearbyOffers />}
 
                   {/* Category Filter */}
-                  <CategoryShowcase
-                    activeCategory={filters.category}
-                    onSelectCategory={(cat) => handleFilterChange({ category: cat })}
-                  />
+                  {!filters.search && (
+                    <CategoryShowcase
+                      activeCategory={filters.category}
+                      onSelectCategory={(cat) => handleFilterChange({ category: cat })}
+                    />
+                  )}
 
-
-
-                  <FlashSaleSection
-                    products={products}
-                    onAdd={(p) => addToCart(p, 1)}
-                    onClick={setSelectedProduct}
-                  />
+                  {!filters.search && (
+                    <FlashSaleSection
+                      products={products}
+                      onAdd={(p) => addToCart(p, 1)}
+                      onClick={setSelectedProduct}
+                    />
+                  )}
 
                   <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }} id="product-grid">
                     {/* Sidebar Removed */}
 
                     {/* Product Grid */}
-                    <div className="grid grid-cols-4" style={{ flex: 1 }}>
+                    <style>
+                      {`
+                        .responsive-product-grid {
+                          display: grid;
+                          grid-template-columns: repeat(2, 1fr);
+                          gap: 0.75rem;
+                        }
+                        @media (min-width: 640px) {
+                          .responsive-product-grid {
+                             grid-template-columns: repeat(3, 1fr);
+                          }
+                        }
+                        @media (min-width: 1024px) {
+                          .responsive-product-grid {
+                             grid-template-columns: repeat(4, 1fr);
+                          }
+                        }
+                      `}
+                    </style>
+                    <div className="responsive-product-grid" style={{ flex: 1 }}>
+                      {filters.search && (
+                        <h2 className="text-xl font-bold mb-4 col-span-full" style={{ gridColumn: '1 / -1' }}>
+                          Search Results for "{filters.search}"
+                        </h2>
+                      )}
                       {products.map((product) => (
                         <ProductCard
                           key={product._id}
