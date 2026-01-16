@@ -53,6 +53,10 @@ const AdminPanel = () => {
     const [stores, setStores] = useState([]);
     const [storeForm, setStoreForm] = useState({ name: '', address: '', description: '', lat: '', lng: '' });
 
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(20);
+
     // Fetch Data based on tab
     useEffect(() => {
         if (activeTab === 'orders') fetchOrders();
@@ -228,35 +232,54 @@ const AdminPanel = () => {
         }
     };
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // ... (existing code)
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
 
-        const data = new FormData();
-        Object.keys(formData).forEach(key => {
-            if (key === 'imageFile') {
-                if (formData[key]) {
-                    data.append('image', formData[key]);
+        setIsSubmitting(true);
+        try {
+            const data = new FormData();
+            Object.keys(formData).forEach(key => {
+                if (key === 'imageFile') {
+                    if (formData[key]) {
+                        data.append('image', formData[key]);
+                    }
+                } else if (key === 'image') {
+                    // Only append image URL if no file is selected
+                    if (!formData.imageFile && formData[key]) {
+                        data.append('image', formData[key]);
+                    }
+                } else if (key === 'flashSale') {
+                    data.append('flashSale', JSON.stringify(formData[key]));
+                } else {
+                    data.append(key, formData[key]);
                 }
-            } else if (key === 'image') {
-                // Only append image URL if no file is selected
-                if (!formData.imageFile && formData[key]) {
-                    data.append('image', formData[key]);
-                }
-            } else if (key === 'flashSale') {
-                data.append('flashSale', JSON.stringify(formData[key]));
+            });
+
+            if (editingId) {
+                await updateProduct(editingId, data);
+                setEditingId(null);
             } else {
-                data.append(key, formData[key]);
+                await addProduct(data);
             }
-        });
-
-        if (editingId) {
-            await updateProduct(editingId, data);
-            setEditingId(null);
-        } else {
-            await addProduct(data);
+            setFormData({ name: '', price: '', emoji: '', category: 'Fruits & Vegetables', subCategory: 'All', time: '10 mins', weight: '1 kg', stock: 100, description: '', image: '', imageFile: null });
+        } catch (error) {
+            console.error("Error submitting product:", error);
+            alert("Failed to save product.");
+        } finally {
+            setIsSubmitting(false);
         }
-        setFormData({ name: '', price: '', emoji: '', category: 'Fruits & Vegetables', subCategory: 'All', time: '10 mins', weight: '1 kg', stock: 100, description: '', image: '', imageFile: null });
     };
+
+    // ... (inside return)
+
+    <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+        {isSubmitting ? 'Processing...' : (editingId ? 'Update Product' : 'Add Product')}
+    </button>
 
     const handleSetOutOfStock = async (product) => {
         if (!window.confirm(`Mark "${product.name}" as Out of Stock?`)) return;
@@ -696,11 +719,11 @@ const AdminPanel = () => {
                         </form>
                     </div>
 
-                    {/* Product List */}
+                    {/* Product List with Pagination */}
                     <div className="card" style={{ padding: '1.5rem' }}>
                         <h3 style={{ marginBottom: '1rem', fontWeight: '600' }}>Product List ({products.length})</h3>
                         <div style={{ maxHeight: '500px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {products.map(product => (
+                            {products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(product => (
                                 <div key={product._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                         {product.image ? (
@@ -723,6 +746,30 @@ const AdminPanel = () => {
                                 </div>
                             ))}
                         </div>
+                        {/* Pagination Controls */}
+                        {products.length > itemsPerPage && (
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem', alignItems: 'center' }}>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    className="btn btn-outline"
+                                    style={{ padding: '0.25rem 0.75rem', fontSize: '0.875rem' }}
+                                >
+                                    Previous
+                                </button>
+                                <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                                    Page {currentPage} of {Math.ceil(products.length / itemsPerPage)}
+                                </span>
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(products.length / itemsPerPage)))}
+                                    disabled={currentPage === Math.ceil(products.length / itemsPerPage)}
+                                    className="btn btn-outline"
+                                    style={{ padding: '0.25rem 0.75rem', fontSize: '0.875rem' }}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : activeTab === 'orders' ? (

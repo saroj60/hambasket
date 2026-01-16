@@ -104,7 +104,7 @@ export const CATEGORY_HIERARCHY = {
         { name: "Dessert Mixes", image: "/images/chocolate/dessert_mixes.png" }
     ],
     "Birthday items": [
-        { name: "All", image: "/images/birthday/all.png" }, // Birthday Cake
+        { name: "All", image: "/images/birthday/birthday_logo_v2.png" }, // Birthday Cake
         { name: "Cakes", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=100&q=80" },
         { name: "Candles", image: "/images/birthday/candles.png" },
         { name: "Decorations", image: "/images/birthday/decorations.png" },
