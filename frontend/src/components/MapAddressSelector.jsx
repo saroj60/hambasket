@@ -56,6 +56,12 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
     const fetchAddress = async (lat, lng) => {
         setLoading(true);
+        if (!window.google || !window.google.maps) {
+            setAddress("Map API not loaded");
+            setLoading(false);
+            return;
+        }
+
         try {
             const geocoder = new window.google.maps.Geocoder();
             geocoder.geocode({ location: { lat, lng } }, (results, status) => {
@@ -230,7 +236,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
                     <GoogleMap
                         mapContainerStyle={containerStyle}
-                        center={center}
+                        defaultCenter={defaultCenter}
                         zoom={17}
                         onLoad={onLoad}
                         onUnmount={onUnmount}
