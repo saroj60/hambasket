@@ -211,24 +211,24 @@ function ShopContent() {
                       {`
                         .responsive-product-grid {
                           display: grid;
-                          grid-template-columns: repeat(2, 1fr);
-                          gap: 0.75rem;
+                          grid-template-columns: repeat(3, 1fr);
+                          gap: 0.5rem;
                         }
                         @media (min-width: 640px) {
                           .responsive-product-grid {
-                             grid-template-columns: repeat(3, 1fr);
+                             grid-template-columns: repeat(4, 1fr);
                           }
                         }
                         @media (min-width: 1024px) {
                           .responsive-product-grid {
-                             grid-template-columns: repeat(4, 1fr);
+                             grid-template-columns: repeat(5, 1fr);
                           }
                         }
                       `}
                     </style>
                     <div className="responsive-product-grid" style={{ flex: 1 }}>
                       {filters.search && (
-                        <h2 className="text-xl font-bold mb-4 col-span-full" style={{ gridColumn: '1 / -1' }}>
+                        <h2 className="text-base font-bold mb-3 col-span-full" style={{ gridColumn: '1 / -1' }}>
                           Search Results for "{filters.search}"
                         </h2>
                       )}
