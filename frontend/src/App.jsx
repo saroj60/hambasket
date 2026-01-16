@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext, Suspense, lazy } from "react";
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState, useEffect, useContext, Suspense, lazy, useRef } from "react";
+import { HashRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Layout from "./components/Layout";
 
 import ProductCard from "./components/ProductCard";
@@ -36,9 +36,11 @@ import { CartProvider, CartContext } from "./context/CartContext";
 import { SocketProvider } from "./context/SocketContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery and Biscuits", "Beverages", "Snacks", "Frozen", "Baby Care", "Chocolate and Ice Cream", "Cooking Oil, Masala and more", "Other"];
+const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery and Biscuits", "Beverages", "Snacks", "Frozen", "Baby Care", "Chocolate and Ice Cream", "Cooking Oil, Masala and more", "Birthday items", "Other"];
 
 function ShopContent() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { products, fetchProducts } = useProducts();
   const { user, logout } = useAuth();
   const { cartItems, addToCart, removeFromCart, clearCart } = useContext(CartContext);
@@ -49,6 +51,35 @@ function ShopContent() {
   const [filters, setFilters] = useState({ category: "All", search: "" });
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const [shouldScrollToCategories, setShouldScrollToCategories] = useState(false);
+
+  const categorySectionRef = useRef(null);
+
+  useEffect(() => {
+    if (shouldScrollToCategories && location.pathname === '/' && categorySectionRef.current) {
+      // Find the element and scroll
+      setTimeout(() => {
+        if (categorySectionRef.current) {
+          categorySectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        setShouldScrollToCategories(false);
+      }, 100);
+    }
+  }, [location.pathname, shouldScrollToCategories]);
+
+
+  const handleOpenCategories = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+    }
+    setShouldScrollToCategories(true);
+    // Also try immediate scroll if already on page
+    if (location.pathname === '/' && categorySectionRef.current) {
+      categorySectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setShouldScrollToCategories(false);
+    }
+  };
 
   useEffect(() => {
     fetchProducts(filters);
@@ -68,6 +99,8 @@ function ShopContent() {
       setIsAdminMode(false);
     }
   }, [user]);
+
+
 
   const handleCheckout = () => {
     clearCart();
@@ -96,6 +129,7 @@ function ShopContent() {
             }}
             isAdminMode={isAdminMode}
             setIsAdminMode={setIsAdminMode}
+            onOpenCategories={handleOpenCategories}
           />
         </div>
       }
@@ -189,10 +223,12 @@ function ShopContent() {
 
                   {/* Category Filter */}
                   {!filters.search && (
-                    <CategoryShowcase
-                      activeCategory={filters.category}
-                      onSelectCategory={(cat) => handleFilterChange({ category: cat })}
-                    />
+                    <div ref={categorySectionRef}>
+                      <CategoryShowcase
+                        activeCategory={filters.category}
+                        onSelectCategory={(cat) => handleFilterChange({ category: cat })}
+                      />
+                    </div>
                   )}
 
                   {!filters.search && (

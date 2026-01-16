@@ -103,6 +103,13 @@ export const CATEGORY_HIERARCHY = {
         { name: "Ice Creams", image: "/images/chocolate/ice_creams.png" },
         { name: "Dessert Mixes", image: "/images/chocolate/dessert_mixes.png" }
     ],
+    "Birthday items": [
+        { name: "All", image: "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=100&q=80" }, // Birthday Cake
+        { name: "Cakes", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=100&q=80" },
+        { name: "Candles", image: "https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?auto=format&fit=crop&w=100&q=80" },
+        { name: "Decorations", image: "https://images.unsplash.com/photo-1530103862676-de3c9da59af7?auto=format&fit=crop&w=100&q=80" },
+        { name: "Gifts", image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=100&q=80" }
+    ],
 
     "Water & Gas": [
         { name: "All", image: "/images/water_gas/all.png" },

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const BottomNavigation = ({ cartCount, onOpenCart, onOpenProfile, isAdminMode, setIsAdminMode }) => {
+const BottomNavigation = ({ cartCount, onOpenCart, onOpenProfile, isAdminMode, setIsAdminMode, onOpenCategories }) => {
     const location = useLocation();
     const { user } = useAuth();
 
@@ -31,6 +31,11 @@ const BottomNavigation = ({ cartCount, onOpenCart, onOpenProfile, isAdminMode, s
                 <span style={{ fontSize: '1.5rem', marginBottom: '2px' }}>🏠</span>
                 <span>Home</span>
             </Link>
+
+            <div onClick={() => { handleHomeClick(); if (onOpenCategories) onOpenCategories(); }} style={{ cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                <span style={{ fontSize: '1.5rem', marginBottom: '2px' }}>🍱</span>
+                <span>Category</span>
+            </div>
 
             <div onClick={() => { handleHomeClick(); onOpenCart(); }} style={{ cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem', position: 'relative' }}>
                 <span style={{ fontSize: '1.5rem', marginBottom: '2px' }}>🛒</span>
