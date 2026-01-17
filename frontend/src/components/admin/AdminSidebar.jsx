@@ -31,11 +31,11 @@ const AdminSidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, is
                 {/* Logo Area */}
                 <div className={`p-6 border-b border-gray-50 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
                     {!isCollapsed ? (
-                        <h2 className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent truncate">
-                            Admin Panel
+                        <h2 className="text-2xl font-black text-gray-800 tracking-tight flex items-center gap-2">
+                            <span className="text-primary text-3xl">🛡️</span> Admin
                         </h2>
                     ) : (
-                        <span className="text-xl font-bold text-primary">HB</span>
+                        <span className="text-2xl font-black text-primary">A</span>
                     )}
 
                     {/* Mobile Close Button */}
@@ -43,30 +43,30 @@ const AdminSidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, is
                         ✕
                     </button>
 
-                    {/* Desktop Collapse Toggle - Only visible on desktop */}
+                    {/* Desktop Collapse Toggle */}
                     <button
                         onClick={() => setIsCollapsed(!isCollapsed)}
-                        className="hidden lg:flex absolute -right-3 top-8 bg-white border border-gray-100 p-1 rounded-full shadow-sm text-gray-400 hover:text-primary transition-colors hover:shadow-md"
+                        className="hidden lg:flex absolute -right-3 top-8 bg-white border border-gray-100 p-1.5 rounded-full shadow-sm text-gray-400 hover:text-primary transition-colors hover:shadow-md z-50"
                     >
                         {isCollapsed ? '▶' : '◀'}
                     </button>
                 </div>
 
                 {/* Menu Items */}
-                <nav className="flex-1 overflow-y-auto py-4 space-y-2 px-3 custom-scrollbar">
+                <nav className="flex-1 overflow-y-auto py-6 space-y-1 px-4 custom-scrollbar">
                     {menuItems.map(item => (
                         <button
                             key={item.id}
                             onClick={() => {
                                 setActiveTab(item.id);
-                                setIsOpen(false); // Close on mobile after selection
+                                setIsOpen(false);
                             }}
                             title={isCollapsed ? item.label : ''}
                             className={`
-                                w-full flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 px-4'} 
-                                py-3 rounded-xl transition-all duration-200 group relative
+                                w-full flex items-center ${isCollapsed ? 'justify-center' : 'gap-4 px-4'} 
+                                py-3.5 rounded-xl transition-all duration-200 group relative font-medium
                                 ${activeTab === item.id
-                                    ? 'bg-primary/10 text-primary font-semibold shadow-sm'
+                                    ? 'bg-primary text-white shadow-lg shadow-primary/25'
                                     : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                                 }
                             `}
@@ -76,16 +76,12 @@ const AdminSidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, is
                             </span>
 
                             {!isCollapsed && (
-                                <span className="truncate">{item.label}</span>
-                            )}
-
-                            {activeTab === item.id && !isCollapsed && (
-                                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
+                                <span className="truncate tracking-wide">{item.label}</span>
                             )}
 
                             {/* Tooltip for collapsed state */}
                             {isCollapsed && (
-                                <div className="absolute left-full ml-4 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                                <div className="absolute left-full ml-4 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-xl font-medium">
                                     {item.label}
                                 </div>
                             )}

@@ -89,108 +89,110 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           </div>
 
           {/* Row 2: Search Bar */}
-          <div className="search-container" style={{ padding: '0 16px 12px 16px' }}>
-            <form onSubmit={handleSearch} style={{ width: '100%' }}>
-              <div style={{ position: 'relative', width: '100%' }}>
+          {!isAdminMode && (
+            <div className="search-container" style={{ padding: '0 16px 12px 16px' }}>
+              <form onSubmit={handleSearch} style={{ width: '100%' }}>
+                <div style={{ position: 'relative', width: '100%' }}>
 
-                {/* Icons inside Search */}
-                <div style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }}>
-                  {routeLocation.pathname !== '/' ? (
-                    <div onClick={() => navigate(-1)} style={{ cursor: 'pointer', padding: '4px' }}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 12H5M12 19l-7-7 7-7" />
+                  {/* Icons inside Search */}
+                  <div style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }}>
+                    {routeLocation.pathname !== '/' ? (
+                      <div onClick={() => navigate(-1)} style={{ cursor: 'pointer', padding: '4px' }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M19 12H5M12 19l-7-7 7-7" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    )}
+                  </div>
+
+                  <input
+                    type="text"
+                    placeholder={placeholders[placeholderIndex]}
+                    value={searchTerm}
+                    onChange={(e) => {
+                      onSearch(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    onFocus={() => setShowSuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                    style={{
+                      width: '100%',
+                      padding: '12px 12px 12px 44px',
+                      backgroundColor: '#f3f4f6',
+                      border: '1px solid transparent',
+                      borderRadius: '12px',
+                      fontSize: '0.95rem',
+                      color: '#1f2937',
+                      outline: 'none',
+                      transition: 'all 0.2s',
+                      boxShadow: 'none'
+                    }}
+                    onKeyDown={(e) => {
+                      // Add focus style manually or handle via class if possible
+                    }}
+                  />
+
+                  {/* Clear Button */}
+                  {searchTerm && (
+                    <div
+                      onClick={() => onSearch("")}
+                      style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', padding: '4px' }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
                       </svg>
                     </div>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
                   )}
                 </div>
+              </form>
 
-                <input
-                  type="text"
-                  placeholder={placeholders[placeholderIndex]}
-                  value={searchTerm}
-                  onChange={(e) => {
-                    onSearch(e.target.value);
-                    setShowSuggestions(true);
-                  }}
-                  onFocus={() => setShowSuggestions(true)}
-                  onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 12px 12px 44px',
-                    backgroundColor: '#f3f4f6',
-                    border: '1px solid transparent',
-                    borderRadius: '12px',
-                    fontSize: '0.95rem',
-                    color: '#1f2937',
-                    outline: 'none',
-                    transition: 'all 0.2s',
-                    boxShadow: 'none'
-                  }}
-                  onKeyDown={(e) => {
-                    // Add focus style manually or handle via class if possible
-                  }}
-                />
-
-                {/* Clear Button */}
-                {searchTerm && (
-                  <div
-                    onClick={() => onSearch("")}
-                    style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', padding: '4px' }}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                  </div>
-                )}
-              </div>
-            </form>
-
-            {/* Suggestions Dropdown */}
-            {showSuggestions && searchTerm && suggestions.length > 0 && (
-              <div style={{
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                right: 0,
-                backgroundColor: 'white',
-                borderBottomLeftRadius: '12px',
-                borderBottomRightRadius: '12px',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                zIndex: 100,
-                maxHeight: '300px',
-                overflowY: 'auto'
-              }}>
-                {suggestions.slice(0, 5).map(product => (
-                  <div
-                    key={product._id}
-                    onClick={() => {
-                      onSearch(product.name);
-                      setShowSuggestions(false);
-                    }}
-                    style={{
-                      padding: '12px 16px',
-                      cursor: 'pointer',
-                      borderTop: '1px solid #f3f4f6',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px'
-                    }}
-                  >
-                    <span style={{ fontSize: '1.2rem' }}>{product.emoji}</span>
-                    <div>
-                      <div style={{ fontWeight: '500', color: '#374151' }}>{product.name}</div>
-                      <div style={{ fontSize: '0.8rem', color: '#9ca3af' }}>{product.category}</div>
+              {/* Suggestions Dropdown */}
+              {showSuggestions && searchTerm && suggestions.length > 0 && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  backgroundColor: 'white',
+                  borderBottomLeftRadius: '12px',
+                  borderBottomRightRadius: '12px',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                  zIndex: 100,
+                  maxHeight: '300px',
+                  overflowY: 'auto'
+                }}>
+                  {suggestions.slice(0, 5).map(product => (
+                    <div
+                      key={product._id}
+                      onClick={() => {
+                        onSearch(product.name);
+                        setShowSuggestions(false);
+                      }}
+                      style={{
+                        padding: '12px 16px',
+                        cursor: 'pointer',
+                        borderTop: '1px solid #f3f4f6',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px'
+                      }}
+                    >
+                      <span style={{ fontSize: '1.2rem' }}>{product.emoji}</span>
+                      <div>
+                        <div style={{ fontWeight: '500', color: '#374151' }}>{product.name}</div>
+                        <div style={{ fontSize: '0.8rem', color: '#9ca3af' }}>{product.category}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </header>
 
