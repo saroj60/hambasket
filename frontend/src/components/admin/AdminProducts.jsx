@@ -122,9 +122,13 @@ const AdminProducts = () => {
     };
 
     // Filter Logic
-    const filteredProducts = products.filter(product => {
-        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = filterCategory === 'All' || product.category === filterCategory;
+    const filteredProducts = (products || []).filter(product => {
+        if (!product) return false;
+        const name = product.name || '';
+        const category = product.category || '';
+
+        const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = filterCategory === 'All' || category === filterCategory;
         return matchesSearch && matchesCategory;
     });
 
