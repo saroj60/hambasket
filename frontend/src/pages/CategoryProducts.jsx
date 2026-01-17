@@ -44,10 +44,13 @@ const CategoryProducts = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col pt-[60px]">
-            <div className="flex flex-1 container mx-auto max-w-[1600px] px-0">
+            <div className="flex flex-1 container mx-auto max-w-[1600px] px-0" style={{ display: 'flex', flexDirection: 'row' }}>
 
                 {/* SIDEBAR - SUB-CATEGORIES */}
-                <div className="w-[85px] md:w-64 flex-shrink-0 bg-white border-r border-gray-100 h-[calc(100vh-60px)] sticky top-[60px] overflow-y-auto custom-scrollbar">
+                <div
+                    className="w-[85px] md:w-64 flex-shrink-0 bg-white border-r border-gray-100 h-[calc(100vh-60px)] sticky top-[60px] overflow-y-auto custom-scrollbar"
+                    style={{ width: '85px', minWidth: '85px', flexShrink: 0 }} // Force width
+                >
                     {subCategories.map((sub, index) => (
                         <div
                             key={sub.name}
@@ -63,13 +66,13 @@ const CategoryProducts = () => {
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-md" />
                             )}
 
-                            <div className="mb-1 md:mb-0 md:mr-3 w-8 h-8 flex items-center justify-center">
+                            <div className="mb-1 md:mb-0 md:mr-3 w-8 h-8 flex items-center justify-center" style={{ width: '32px', height: '32px' }}>
                                 {sub.image ? (
                                     <img
                                         src={sub.image}
                                         alt={sub.name}
                                         className="w-full h-full object-contain"
-                                        style={{ maxWidth: '32px', maxHeight: '32px' }} // Inline safety
+                                        style={{ width: '100%', height: '100%', maxWidth: '32px', maxHeight: '32px', objectFit: 'contain' }}
                                     />
                                 ) : (
                                     <span className="text-xl">{['🥦', '🍎', '🥕', '🥔', '🥬', '🥗', '🌽'][index % 7]}</span>
