@@ -22,6 +22,7 @@ import setupRoutes from "./routes/setupRoutes.js";
 
 dotenv.config();
 const app = express();
+app.set('trust proxy', 1); // Enable proxy trust for Render/Vercel to ensure cookies work
 
 app.use(cors({
   origin: (origin, callback) => {
