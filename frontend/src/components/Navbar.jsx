@@ -135,58 +135,62 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
       </header>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="mobile-bottom-nav">
-        <Link to="/" className={`nav-item ${isActive('/') ? 'active' : ''}`}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <nav style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'white',
+        borderTop: '1px solid #f0f0f0',
+        zIndex: 1000,
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        padding: '8px 0',
+        paddingBottom: 'max(8px, env(safe-area-inset-bottom))'
+      }}>
+        <Link to="/" style={{ textDecoration: 'none', color: isActive('/') ? '#7c3aed' : '#9ca3af', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
-          <span>Home</span>
+          <span style={{ fontSize: '0.7rem', fontWeight: isActive('/') ? '600' : '500' }}>Home</span>
         </Link>
 
-        <div className="nav-item" onClick={() => { }}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        {/* Categories - linking to generic category or keeping dummy */}
+        <div style={{ cursor: 'pointer', color: '#9ca3af', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }} onClick={() => window.location.href = '#/category/Fresh%20Produce'}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
             <rect x="14" y="14" width="7" height="7"></rect>
             <rect x="3" y="14" width="7" height="7"></rect>
           </svg>
-          <span>Categories</span>
+          <span style={{ fontSize: '0.7rem', fontWeight: '500' }}>Categories</span>
         </div>
 
-        <div className="nav-item" onClick={onCartClick} style={{ position: 'relative' }}>
+        <div onClick={onCartClick} style={{ cursor: 'pointer', position: 'relative', color: '#9ca3af', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
           <div style={{
-            position: 'absolute', top: '-8px', right: '0',
-            backgroundColor: 'var(--danger)', color: 'white',
-            fontSize: '0.6rem', padding: '2px 5px', borderRadius: '10px',
-            fontWeight: 'bold'
+            position: 'absolute', top: '-4px', right: '30%',
+            backgroundColor: '#ef4444', color: 'white',
+            fontSize: '10px', padding: '0px 4px', borderRadius: '10px',
+            fontWeight: 'bold', minWidth: '14px', textAlign: 'center'
           }}>
-            {cartItems.length}
+            {cartItems.length > 0 ? cartItems.length : ''}
           </div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
           </svg>
-          <span>Cart</span>
+          <span style={{ fontSize: '0.7rem', fontWeight: '500' }}>Cart</span>
         </div>
 
-        <div className="nav-item" onClick={user ? () => { } : onLoginClick}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <div onClick={user ? () => { } : onLoginClick} style={{ cursor: 'pointer', color: user ? '#7c3aed' : '#9ca3af', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
-          <span>{user ? 'Profile' : 'Login'}</span>
+          <span style={{ fontSize: '0.7rem', fontWeight: user ? '600' : '500' }}>{user ? 'Profile' : 'Login'}</span>
         </div>
-
-        {user && user.role === 'admin' && (
-          <Link to="/admin" className={`nav-item ${isActive('/admin') ? 'active' : ''}`}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-            <span>Admin</span>
-          </Link>
-        )}
       </nav>
     </>
   );

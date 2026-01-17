@@ -56,7 +56,8 @@ const CategoryProducts = () => {
                         paddingBottom: '80px', /* Space for bottom nav */
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        paddingTop: '0'
                     }}
                 >
                     {subCategories.map((sub, index) => {
@@ -68,32 +69,32 @@ const CategoryProducts = () => {
                                 className={`
                                     cursor-pointer transition-all relative w-full
                                     flex flex-col items-center justify-center
-                                    py-4 px-1
+                                    py-3 px-1
                                 `}
                                 style={{
-                                    borderLeft: isActive ? '4px solid #7c3aed' : '4px solid transparent', /* Active Indicator */
+                                    borderLeft: isActive ? '4px solid #9333ea' : '4px solid transparent',
                                     backgroundColor: isActive ? '#f3e8ff' : 'transparent',
-                                    opacity: (activeSubCategory !== 'All' && !isActive) ? 0.7 : 1
+                                    opacity: 1
                                 }}
                             >
-                                {/* Icon Container (Circle/Rounded) */}
+                                {/* Icon Container */}
                                 <div style={{
-                                    width: '45px',
-                                    height: '45px',
-                                    borderRadius: '50%',
+                                    width: '48px',
+                                    height: '48px',
+                                    borderRadius: '12px', /* Squircle shape */
                                     backgroundColor: isActive ? 'white' : '#f9fafb',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    marginBottom: '6px',
-                                    boxShadow: isActive ? '0 2px 5px rgba(0,0,0,0.05)' : 'none',
-                                    border: isActive ? '1px solid #e9d5ff' : '1px solid transparent'
+                                    marginBottom: '4px',
+                                    boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                                    border: isActive ? '1px solid #d8b4fe' : '1px solid transparent'
                                 }}>
                                     {sub.image ? (
                                         <img
                                             src={sub.image}
                                             alt={sub.name}
-                                            style={{ width: '30px', height: '30px', objectFit: 'contain' }}
+                                            style={{ width: '32px', height: '32px', objectFit: 'contain' }}
                                         />
                                     ) : (
                                         <span className="text-xl">{['🥦', '🍎', '🥕', '🥔', '🥬', '🥗', '🌽'][index % 7]}</span>
@@ -102,11 +103,11 @@ const CategoryProducts = () => {
 
                                 {/* Label */}
                                 <div style={{
-                                    fontSize: '11px', /* Slightly larger than before (10px -> 11px/xs) */
+                                    fontSize: '10px',
                                     lineHeight: '1.2',
                                     textAlign: 'center',
                                     fontWeight: isActive ? '700' : '500',
-                                    color: isActive ? '#5b21b6' : '#6b7280',
+                                    color: isActive ? '#6b21a8' : '#4b5563',
                                     padding: '0 2px',
                                     maxWidth: '100%'
                                 }}>
@@ -119,15 +120,18 @@ const CategoryProducts = () => {
 
                 {/* MAIN CONTENT AREA */}
                 <div className="flex-1 bg-gray-50 h-full flex flex-col overflow-hidden">
-                    {/* Scrollable Product Grid - Header Removed */}
+                    {/* Content */}
                     <div className="flex-1 overflow-y-auto p-3 pb-24" style={{ WebkitOverflowScrolling: 'touch' }}>
-                        {/* Optional: Small Title if needed, otherwise clean grid */}
-                        <div className="mb-2 px-1">
-                            <h2 className="text-xs font-bold uppercase tracking-wide text-gray-800">
-                                {activeSubCategory !== 'All' ? activeSubCategory : currentCategory}
-                                <span className="text-[10px] font-normal text-gray-500 ml-1">({filteredProducts.length})</span>
-                            </h2>
-                        </div>
+                        {/* Category Title within Content */}
+                        {filteredProducts.length > 0 && (
+                            <div className="mb-3 px-1 flex items-center justify-between">
+                                <h2 className="text-xs font-bold uppercase tracking-wider text-gray-700">
+                                    {activeSubCategory !== 'All' ? activeSubCategory : currentCategory}
+                                    <span className="ml-1 text-gray-400 font-normal">({filteredProducts.length})</span>
+                                </h2>
+                            </div>
+                        )}
+
                         {filteredProducts.length > 0 ? (
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                                 {filteredProducts.map((product) => (
@@ -139,9 +143,13 @@ const CategoryProducts = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center h-[60%] text-gray-400">
-                                <span className="text-5xl mb-3 grayscale opacity-50">🍃</span>
-                                <p className="text-sm font-medium">No products found here.</p>
+                            /* Empty State - Centered properly */
+                            <div className="flex flex-col items-center justify-center h-full text-center p-8 text-gray-400" style={{ minHeight: '60vh' }}>
+                                <div className="bg-gray-100 p-6 rounded-full mb-4">
+                                    <span className="text-4xl grayscale opacity-50">🍃</span>
+                                </div>
+                                <h3 className="text-lg font-bold text-gray-600 mb-1">No products found</h3>
+                                <p className="text-sm">Try selecting a different category or check back later.</p>
                             </div>
                         )}
                     </div>
