@@ -29,7 +29,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
   };
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column', backgroundColor: 'var(--background)', overflow: 'hidden' }}>
       {/* Header */}
       <header style={{ backgroundColor: 'white', borderBottom: '1px solid #f0f0f0', position: 'sticky', top: 0, zIndex: 1000 }}>
         <div style={{ maxWidth: '100%', margin: '0 auto' }}>
