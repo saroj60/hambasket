@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation as useRouteLocation, useNavigate } from 'react-router-dom';
 import { useLocation } from '../context/LocationContext';
 import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
@@ -11,8 +11,13 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
   const { user } = useAuth();
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  const routeLocation = useRouteLocation();
+  const navigate = useNavigate();
+
   const placeholders = ['Search "milk"', 'Search "bread"', 'Search "potato"', 'Search "egg"', 'Search "rice"', 'Search "beer"'];
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
+
+  // ... (keep useEffect and handleSearch)
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -29,14 +34,14 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
       {/* Header */}
       <header style={{ backgroundColor: 'white', borderBottom: '1px solid #f0f0f0', position: 'sticky', top: 0, zIndex: 1000 }}>
+        {/* ... (keep branding and location) */}
         <div className="container header-container">
 
-          {/* Mobile: App Name (Left) */}
+          {/* ... (keep mobile and desktop logo/location) */}
           <Link to="/" className="header-logo mobile-visible" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             <h1 style={{ fontWeight: '900', fontSize: '1.8rem', color: 'var(--brand-yellow)', letterSpacing: '-1px' }}>Aone Kirana</h1>
           </Link>
 
-          {/* Location Block (Right) */}
           <div onClick={openModal} className="location-block mobile-header-right">
             <div className="delivery-text" style={{ fontWeight: '800', fontSize: '1.0rem', lineHeight: '1.2', color: 'black', textAlign: 'right' }}>
               Delivery in minutes
@@ -46,18 +51,10 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
             </div>
           </div>
 
-          {/* Desktop Only: Full Location Block (Hidden on Mobile if using above) */}
-          {/* Note: We can reuse the same block for desktop if styled right, but for now keeping mobile-header-right distinct for grid placement if needed, or merging. 
-              Let's use the one block above for Mobile Right and Desktop Right (with adjustments). 
-              Actually, simpler to keep the structure: Logo (Left), Location (Right).
-          */}
-
-          {/* Desktop Logo (Hidden on Mobile) */}
           <Link to="/" className="header-logo mobile-hidden" style={{ textDecoration: 'none' }}>
             <h1 style={{ fontWeight: '900', fontSize: '2rem', color: 'var(--brand-yellow)', letterSpacing: '-1px' }}>Aone Kirana</h1>
           </Link>
 
-          {/* Desktop Location (Hidden on Mobile) */}
           <div onClick={openModal} className="location-block desktop-only" style={{ cursor: 'pointer', minWidth: '200px' }}>
             <div style={{ fontWeight: '800', fontSize: '1.1rem', lineHeight: '1.2' }}>Delivery in minutes</div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
@@ -69,7 +66,28 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           <div className="search-container">
             <form onSubmit={handleSearch} style={{ width: '100%' }}>
               <div style={{ position: 'relative', width: '100%' }}>
-                {searchTerm ? (
+                {/* Back Button Logic */}
+                {routeLocation.pathname !== '/' ? (
+                  <div
+                    onClick={() => navigate(-1)}
+                    className="search-icon"
+                    style={{
+                      position: 'absolute',
+                      left: '1rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: 'var(--text-main)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      zIndex: 10
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg>
+                  </div>
+                ) : searchTerm ? (
                   <div
                     onClick={() => {
                       onSearch("");
@@ -89,7 +107,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
                     }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </div>
                 ) : (
