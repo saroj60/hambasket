@@ -50,90 +50,40 @@ const CategoryProducts = () => {
     }, [currentCategory, activeSubCategory, products]);
 
     return (
-        <div className="container" style={{ padding: '0', maxWidth: '100%' }}>
-            <div style={{ display: 'flex', minHeight: 'calc(100vh - 60px)' }}>
+        <div className="min-h-screen bg-gray-50 flex flex-col pt-[60px]">
+            <div className="flex flex-1 container mx-auto max-w-[1600px] px-0">
 
                 {/* SIDEBAR - SUB-CATEGORIES */}
-                <div style={{
-                    minWidth: '75px',
-                    width: '75px',
-                    flexShrink: 0,
-                    borderRight: '1px solid #e5e7eb',
-                    backgroundColor: '#fff',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    position: 'sticky',
-                    top: '60px',
-                    height: 'calc(100vh - 60px)',
-                    overflowY: 'auto'
-                }} className="mobile-sidebar md:desktop-sidebar">
-                    <style>{`
-                        @media (min-width: 768px) {
-                            .mobile-sidebar { min-width: 240px !important; width: 240px !important; }
-                            .sidebar-item { flex-direction: row !important; text-align: left !important; padding: 0.75rem 1rem !important; height: auto !important; }
-                            .sidebar-icon { margin-right: 0.75rem !important; margin-bottom: 0 !important; width: 20px !important; height: 20px !important; font-size: 1.2rem !important; }
-                            .sidebar-text { font-size: 0.95rem !important; white-space: normal !important; }
-                        }
-                        /* Add responsive padding for main content */
-                        .product-grid-container { padding: 0.5rem !important; }
-                        @media (min-width: 768px) {
-                            .product-grid-container { padding: 1.5rem !important; }
-                        }
-                    `}</style>
-
+                <div className="w-[85px] md:w-64 flex-shrink-0 bg-white border-r border-gray-100 h-[calc(100vh-60px)] sticky top-[60px] overflow-y-auto custom-scrollbar">
                     {subCategories.map((sub, index) => (
                         <div
                             key={sub.name}
                             onClick={() => setActiveSubCategory(sub.name)}
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                padding: '1rem 0.25rem',
-                                cursor: 'pointer',
-                                backgroundColor: activeSubCategory === sub.name ? '#f0fdf4' : 'transparent',
-                                position: 'relative',
-                                borderBottom: '1px solid #f3f4f6',
-                                height: '90px'
-                            }}
-                            className="sidebar-item"
+                            className={`
+                                group flex flex-col md:flex-row items-center md:items-center justify-center md:justify-start 
+                                py-3 md:py-3 px-2 md:px-4 cursor-pointer transition-all border-b border-gray-50
+                                ${activeSubCategory === sub.name ? 'bg-green-50/50' : 'hover:bg-gray-50'}
+                                relative
+                            `}
                         >
                             {/* Highlight Bar */}
                             {activeSubCategory === sub.name && (
-                                <div style={{
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 0,
-                                    bottom: 0,
-                                    width: '4px',
-                                    backgroundColor: '#0c831f',
-                                    borderTopRightRadius: '4px',
-                                    borderBottomRightRadius: '4px'
-                                }} />
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-md" />
                             )}
 
                             {/* Icon / Image */}
-                            <div style={{ fontSize: '1.8rem', marginBottom: '0.25rem', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="sidebar-icon">
+                            <div className="mb-1 md:mb-0 md:mr-3 text-2xl md:text-xl w-8 h-8 flex items-center justify-center">
                                 {sub.image ? (
-                                    <img src={sub.image} alt={sub.name} style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
+                                    <img src={sub.image} alt={sub.name} className="w-full h-full object-contain" />
                                 ) : (
                                     <span>{['🥦', '🍎', '🥕', '🥔', '🥬', '🥗', '🌽'][index % 7]}</span>
                                 )}
                             </div>
 
-                            <div style={{
-                                fontSize: '0.7rem',
-                                fontWeight: activeSubCategory === sub.name ? '700' : '500',
-                                color: activeSubCategory === sub.name ? '#0c831f' : '#4b5563',
-                                textAlign: 'center',
-                                lineHeight: '1.1',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                display: '-webkit-box',
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical'
-                            }} className="sidebar-text">
+                            <div className={`
+                                text-[10px] md:text-sm font-medium text-center md:text-left leading-tight
+                                ${activeSubCategory === sub.name ? 'text-primary font-bold' : 'text-gray-600 group-hover:text-gray-900'}
+                            `}>
                                 {sub.name}
                             </div>
                         </div>
@@ -141,73 +91,49 @@ const CategoryProducts = () => {
                 </div>
 
                 {/* MAIN CONTENT */}
-                <div style={{ flex: 1, backgroundColor: '#f9fafb' }}>
+                <div className="flex-1 bg-gray-50/50 min-h-full flex flex-col">
 
-                    {/* Header for Mobile/Desktop */}
-                    <div style={{ padding: '1rem', borderBottom: '1px solid #e5e7eb', backgroundColor: 'white', display: 'flex', alignItems: 'center', gap: '1rem', position: 'sticky', top: '60px', zIndex: 10 }}>
+                    {/* Header */}
+                    <div className="sticky top-[60px] z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 flex items-center gap-4 shadow-sm">
                         <button
                             onClick={() => navigate(-1)}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                fontSize: '1.5rem',
-                                cursor: 'pointer',
-                                padding: '0.25rem'
-                            }}
+                            className="p-1 rounded-full hover:bg-gray-100 transition-colors"
                         >
-                            ←
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
+                            </svg>
                         </button>
                         <div>
-                            <h1 style={{ fontSize: '1.2rem', fontWeight: '800', textTransform: 'capitalize' }}>
+                            <h1 className="text-lg md:text-xl font-bold text-gray-800 capitalize leading-tight">
                                 {activeSubCategory !== 'All' ? activeSubCategory : currentCategory}
                             </h1>
-                            <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>
-                                {filteredProducts.length} Products
-                            </div>
-                        </div>
-
-                        {/* Mobile Filter Tabs (Optional backup if sidebar is hidden) */}
-                        <div className="md:hidden" style={{ marginLeft: 'auto', overflowX: 'auto', maxWidth: '50%', whiteSpace: 'nowrap' }}>
-                            {/* Simple dropdown or scroll could go here for mobile subcategories */}
+                            <p className="text-xs text-gray-500">
+                                {filteredProducts.length} Products Found
+                            </p>
                         </div>
                     </div>
 
                     {/* Products Grid */}
-                    <div style={{ padding: '0.5rem' }} className="product-grid-container">
+                    <div className="p-2 md:p-6 flex-1">
                         {filteredProducts.length > 0 ? (
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
-                                gap: '0.5rem',
-                                width: '100%'
-                            }}>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
                                 {filteredProducts.map((product) => (
-                                    <div key={product._id} style={{ height: 'auto', minHeight: '260px' }}>
-                                        <ProductCard
-                                            product={product}
-                                            onClick={(p) => console.log('Clicked', p)}
-                                        />
-                                    </div>
+                                    <ProductCard
+                                        key={product._id}
+                                        product={product}
+                                        onClick={(p) => console.log('Clicked', p)}
+                                    />
                                 ))}
                             </div>
                         ) : (
-                            <div style={{ textAlign: 'center', padding: '4rem 2rem', color: 'var(--text-muted)' }}>
-                                <span style={{ fontSize: '3rem', display: 'block', marginBottom: '1rem' }}>🍃</span>
-                                <p>No products found in this category.</p>
+                            <div className="flex flex-col items-center justify-center h-[50vh] text-gray-400">
+                                <span className="text-6xl mb-4">🍃</span>
+                                <p className="text-lg font-medium">No products found in this category.</p>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
-
-            {/* CSS Helper */}
-            <style>{`
-                @media (max-width: 768px) {
-                    .hidden { display: none !important; }
-                    .md\\:flex { display: flex !important; }
-                    .md\\:hidden { display: block !important; }
-                }
-            `}</style>
         </div>
     );
 };
