@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { API_URL, IS_VIRTUAL } from '../config';
 
 const AuthForms = ({ onClose }) => {
-    const [authMethod, setAuthMethod] = useState('phone'); // 'phone' or 'email'
+    const [authMethod, setAuthMethod] = useState('email'); // 'phone' or 'email'
     const [isLogin, setIsLogin] = useState(true); // For email only
     const [showForgot, setShowForgot] = useState(false);
     const { login, register, sendOtp, verifyOtp, forgotPassword } = useAuth();
@@ -278,14 +278,7 @@ const AuthForms = ({ onClose }) => {
 
                     <div style={{ borderTop: '1px solid var(--border)', margin: '0.5rem 0' }}></div>
 
-                    {isLogin && (
-                        <button
-                            onClick={() => { setAuthMethod(authMethod === 'email' ? 'phone' : 'email'); setError(''); setShowForgot(false); }}
-                            style={{ color: 'var(--text-main)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}
-                        >
-                            {authMethod === 'email' ? 'Login with Phone' : 'Login with Email'}
-                        </button>
-                    )}
+
 
 
                 </div>

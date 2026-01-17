@@ -4,7 +4,13 @@ import { API_URL } from '../../config';
 import { CATEGORY_HIERARCHY, MAIN_CATEGORIES } from '../../data/CategoryStructure';
 
 const AdminProducts = () => {
-    const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+    const productContext = useProducts();
+    const { products, addProduct, updateProduct, deleteProduct } = productContext || {};
+
+    // Safety check if context is not yet waiting or failed
+    if (!productContext) {
+        console.warn("ProductContext is undefined in AdminProducts");
+    }
     const [lowStockProducts, setLowStockProducts] = useState([]);
 
     // UI State
@@ -22,7 +28,7 @@ const AdminProducts = () => {
     const [showForm, setShowForm] = useState(false);
 
     const initialFormState = {
-        name: '', price: '', emoji: '', category: 'Fruits & Vegetables', subCategory: 'All',
+        name: '', price: '', emoji: '', category: 'Fresh Produce', subCategory: 'All', // Updated default category
         time: '10 mins', weight: '1 kg', stock: 100, description: '', image: '', imageFile: null,
         flashSale: { active: false, discount: 0, endTime: '' }
     };
@@ -144,7 +150,14 @@ const AdminProducts = () => {
                 </div>
                 <div className="flex gap-3 w-full md:w-auto">
                     <button
-                        onClick={() => { resetForm(); setShowForm(!showForm); }}
+                        onClick={() => {
+                            if (showForm) {
+                                resetForm();
+                            } else {
+                                resetForm();
+                                setShowForm(true);
+                            }
+                        }}
                         className="btn btn-primary flex items-center justify-center gap-2 px-6 py-2.5 w-full md:w-auto shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all font-medium"
                     >
                         <span>{showForm ? 'Cancel' : '+ Add Product'}</span>
@@ -237,7 +250,7 @@ const AdminProducts = () => {
                                             onChange={e => setFormData({ ...formData, category: e.target.value, subCategory: 'All' })}
                                             className="input-field bg-white"
                                         >
-                                            {MAIN_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                                            {(MAIN_CATEGORIES || []).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                                         </select>
                                     </div>
                                     <div className="flex-1">
@@ -248,7 +261,7 @@ const AdminProducts = () => {
                                             className="input-field bg-white"
                                         >
                                             <option value="All">None</option>
-                                            {(CATEGORY_HIERARCHY[formData.category] || []).filter(s => s.name !== 'All').map(sub => (
+                                            {((CATEGORY_HIERARCHY && CATEGORY_HIERARCHY[formData.category]) || []).filter(s => s.name !== 'All').map(sub => (
                                                 <option key={sub.name} value={sub.name}>{sub.name}</option>
                                             ))}
                                         </select>
@@ -353,7 +366,7 @@ const AdminProducts = () => {
                     className="input-field md:w-64 bg-white"
                 >
                     <option value="All">All Categories</option>
-                    {MAIN_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    {(MAIN_CATEGORIES || []).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                 </select>
             </div>
 

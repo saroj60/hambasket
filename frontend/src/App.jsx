@@ -97,6 +97,12 @@ function ShopContent() {
     // Reset admin mode if user is not admin
     if (!user || user.role !== 'admin') {
       setIsAdminMode(false);
+    } else {
+      // Auto-enable admin mode if on an admin hash section
+      const adminHashes = ['#dashboard', '#orders', '#products', '#customers', '#settings'];
+      if (adminHashes.includes(window.location.hash)) {
+        setIsAdminMode(true);
+      }
     }
   }, [user]);
 

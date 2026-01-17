@@ -27,7 +27,7 @@ const AdminLayout = ({ children, activeTab, setActiveTab }) => {
             />
 
             {/* Main Content Area */}
-            <div className={`flex-1 flex flex-col h-full overflow-hidden relative transition-all duration-300 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-0'}`}>
+            <div className="flex-1 flex flex-col h-full overflow-hidden relative transition-all duration-300">
 
                 {/* Mobile Header */}
                 <header className="bg-white border-b border-gray-100 p-4 lg:hidden flex items-center justify-between z-10">
