@@ -230,7 +230,7 @@ function ShopContent() {
                   <AdminPanel />
                 </Suspense>
               ) : (
-                <div className="flex-1 w-full overflow-y-auto custom-scrollbar pb-40">
+                <div className="absolute inset-0 w-full overflow-y-auto custom-scrollbar pb-40">
                   {/* Hero / Banner Removed */}
 
 
