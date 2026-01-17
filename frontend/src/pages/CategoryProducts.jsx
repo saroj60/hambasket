@@ -120,19 +120,15 @@ const CategoryProducts = () => {
 
                 {/* MAIN CONTENT AREA */}
                 <div className="flex-1 bg-gray-50 h-full flex flex-col overflow-hidden">
-                    {/* Content */}
-                    <div className="flex-1 overflow-y-auto p-3 pb-24" style={{ WebkitOverflowScrolling: 'touch' }}>
-                        {/* Category Title within Content */}
-                        {filteredProducts.length > 0 && (
+                    {filteredProducts.length > 0 ? (
+                        /* Scrollable Product Grid */
+                        <div className="flex-1 overflow-y-auto p-3 pb-24" style={{ WebkitOverflowScrolling: 'touch' }}>
                             <div className="mb-3 px-1 flex items-center justify-between">
                                 <h2 className="text-xs font-bold uppercase tracking-wider text-gray-700">
                                     {activeSubCategory !== 'All' ? activeSubCategory : currentCategory}
                                     <span className="ml-1 text-gray-400 font-normal">({filteredProducts.length})</span>
                                 </h2>
                             </div>
-                        )}
-
-                        {filteredProducts.length > 0 ? (
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                                 {filteredProducts.map((product) => (
                                     <ProductCard
@@ -142,17 +138,17 @@ const CategoryProducts = () => {
                                     />
                                 ))}
                             </div>
-                        ) : (
-                            /* Empty State - Centered properly */
-                            <div className="flex flex-col items-center justify-center h-full text-center p-8 text-gray-400" style={{ minHeight: '60vh' }}>
-                                <div className="bg-gray-100 p-6 rounded-full mb-4">
-                                    <span className="text-4xl grayscale opacity-50">🍃</span>
-                                </div>
-                                <h3 className="text-lg font-bold text-gray-600 mb-1">No products found</h3>
-                                <p className="text-sm">Try selecting a different category or check back later.</p>
+                        </div>
+                    ) : (
+                        /* Fixed Empty State - No Scroll */
+                        <div className="flex-1 flex flex-col items-center justify-center p-8 text-gray-400">
+                            <div className="bg-gray-100 p-6 rounded-full mb-4">
+                                <span className="text-4xl grayscale opacity-50">🍃</span>
                             </div>
-                        )}
-                    </div>
+                            <h3 className="text-lg font-bold text-gray-600 mb-1">No products found</h3>
+                            <p className="text-sm">Try selecting a different category or check back later.</p>
+                        </div>
+                    )}
                 </div>
             </div>
 
