@@ -291,9 +291,7 @@ const AuthForms = ({ onClose }) => {
                 </div>
             </div>
             {/* Debug Info */}
-            <div style={{ position: 'absolute', bottom: 5, left: 5, fontSize: '10px', color: 'gray', opacity: 0.7 }}>
-                API: {API_URL} | Virtual: {IS_VIRTUAL ? 'Yes' : 'No'}
-            </div>
+
         </div>
     );
 };
