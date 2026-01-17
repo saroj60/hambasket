@@ -46,8 +46,8 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
 
             {/* Location / Delivery Info */}
             <div onClick={openModal} style={{ textAlign: 'right', cursor: 'pointer' }}>
-              <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#1f2937', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Delivery in 8 mins
+              <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#1f2937', letterSpacing: '0.5px' }}>
+                Delivery in minutes
               </div>
               <div style={{ fontSize: '0.9rem', color: '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px', maxWidth: '160px' }}>
                 <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
