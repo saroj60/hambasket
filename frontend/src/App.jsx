@@ -172,7 +172,7 @@ function ShopContent() {
       )}
 
       {/* Profile Sidebar */}
-      {isProfileOpen && (
+      {isProfileOpen && !isAdminMode && (
         <Suspense fallback={<div className="fixed inset-0 z-50 flex items-center justify-center bg-white/50"><div className="w-10 h-10 border-4 border-primary rounded-full animate-spin border-t-transparent"></div></div>}>
           <Profile
             onClose={() => setIsProfileOpen(false)}
