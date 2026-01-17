@@ -115,6 +115,8 @@ function ShopContent() {
 
       suggestions={products}
       onLogin={() => setShowAuthModal(true)}
+      onAdminClick={() => setIsAdminMode(true)}
+      isAdminMode={isAdminMode}
       bottomNav={
         <div className="mobile-bottom-nav">
           <BottomNavigation

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from '../context/LocationContext';
+import { useAuth } from '../context/AuthContext';
 import NotificationBell from './NotificationBell';
 import LocationModal from './LocationModal';
 import MapAddressSelector from './MapAddressSelector';
 
-const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggestions = [], bottomNav, onLogin }) => {
+const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggestions = [], bottomNav, onLogin, onAdminClick, isAdminMode }) => {
   const { location, openModal, mapState, closeMap, updateLocation } = useLocation();
+  const { user } = useAuth();
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const placeholders = ['Search "milk"', 'Search "bread"', 'Search "potato"', 'Search "egg"', 'Search "rice"', 'Search "beer"'];
@@ -160,8 +162,17 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
 
           {/* Login / Cart Actions */}
           <div className="header-actions">
+            {user && user.role === 'admin' && (
+              <button
+                onClick={onAdminClick}
+                className={`btn ${isAdminMode ? 'btn-primary' : 'btn-outline'}`}
+                style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}
+              >
+                🛡️ Admin Panel
+              </button>
+            )}
             <button onClick={onLogin} style={{ background: 'none', border: 'none', fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)', cursor: 'pointer' }}>
-              Login
+              {user ? `Hi, ${user.name.split(' ')[0]}` : 'Login'}
             </button>
             <button
               onClick={onOpenCart}
