@@ -43,7 +43,7 @@ const CategoryProducts = () => {
     }, [currentCategory, activeSubCategory, products]);
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col pt-[60px]">
+        <div className="min-h-screen bg-gray-50 flex flex-col pt-0">
             <div className="flex flex-1 container mx-auto max-w-[1600px] px-0" style={{ display: 'flex', flexDirection: 'row', height: 'calc(100vh - 60px)' }}>
 
                 {/* ZEPTO-STYLE SIDEBAR (Left Navigation Rail) */}
@@ -102,7 +102,7 @@ const CategoryProducts = () => {
 
                                 {/* Label */}
                                 <div style={{
-                                    fontSize: '10px',
+                                    fontSize: '11px', /* Slightly larger than before (10px -> 11px/xs) */
                                     lineHeight: '1.2',
                                     textAlign: 'center',
                                     fontWeight: isActive ? '700' : '500',
@@ -122,10 +122,10 @@ const CategoryProducts = () => {
                     {/* Scrollable Product Grid - Header Removed */}
                     <div className="flex-1 overflow-y-auto p-3 pb-24" style={{ WebkitOverflowScrolling: 'touch' }}>
                         {/* Optional: Small Title if needed, otherwise clean grid */}
-                        <div className="mb-3 px-1">
-                            <h2 className="text-sm font-bold text-gray-800">
+                        <div className="mb-2 px-1">
+                            <h2 className="text-xs font-bold uppercase tracking-wide text-gray-800">
                                 {activeSubCategory !== 'All' ? activeSubCategory : currentCategory}
-                                <span className="text-xs font-normal text-gray-500 ml-2">({filteredProducts.length})</span>
+                                <span className="text-[10px] font-normal text-gray-500 ml-1">({filteredProducts.length})</span>
                             </h2>
                         </div>
                         {filteredProducts.length > 0 ? (
