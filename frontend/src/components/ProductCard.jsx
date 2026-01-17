@@ -50,7 +50,7 @@ const ProductCard = ({ product, onClick }) => {
       )}
 
       {/* 1. Image Container */}
-      <div className="w-full aspect-square bg-white flex items-center justify-center p-3 relative">
+      <div className="w-full h-[120px] bg-white flex items-center justify-center p-4 relative">
         {/* Timer Tag floating inside image area */}
         <div className="absolute bottom-1 left-1 bg-gray-50/90 backdrop-blur-[2px] border border-gray-100 px-1.5 py-0.5 rounded-[6px] text-[8px] font-bold text-gray-500 flex items-center gap-0.5">
           <span>⏱</span> 8M
