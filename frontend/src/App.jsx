@@ -171,13 +171,15 @@ function ShopContent() {
 
       {/* Profile Sidebar */}
       {isProfileOpen && (
-        <Profile
-          onClose={() => setIsProfileOpen(false)}
-          onTrackOrder={(order) => {
-            setIsProfileOpen(false);
-            setTrackingOrder(order);
-          }}
-        />
+        <Suspense fallback={<div className="fixed inset-0 z-50 flex items-center justify-center bg-white/50"><div className="w-10 h-10 border-4 border-primary rounded-full animate-spin border-t-transparent"></div></div>}>
+          <Profile
+            onClose={() => setIsProfileOpen(false)}
+            onTrackOrder={(order) => {
+              setIsProfileOpen(false);
+              setTrackingOrder(order);
+            }}
+          />
+        </Suspense>
       )}
 
       {/* Product Details Modal */}
@@ -197,10 +199,13 @@ function ShopContent() {
         />
       )}
 
-      {/* Main Routes */}
+      {/* Main Routes - Wrapped in Global Suspense */}
       <Suspense fallback={
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: 'var(--primary)' }}>
-          <h2>Loading...</h2>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%', color: 'var(--primary)' }}>
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 border-4 border-primary rounded-full animate-spin border-t-transparent"></div>
+            <h2 className="font-bold text-xl">Loading...</h2>
+          </div>
         </div>
       }>
         <Routes>
