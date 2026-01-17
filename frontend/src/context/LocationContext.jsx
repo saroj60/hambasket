@@ -41,7 +41,8 @@ export const LocationProvider = ({ children }) => {
             if (Capacitor.isNativePlatform()) {
                 const position = await Geolocation.getCurrentPosition({
                     enableHighAccuracy: true,
-                    timeout: 10000
+                    timeout: 10000,
+                    maximumAge: 0
                 });
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
@@ -54,7 +55,7 @@ export const LocationProvider = ({ children }) => {
                             resolve();
                         },
                         (error) => reject(error),
-                        { timeout: 10000 }
+                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
                     );
                 });
             } else {

@@ -126,7 +126,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
                 if (map) {
                     map.panTo(newPos);
-                    map.setZoom(17);
+                    map.setZoom(19); // High precision zoom
                 }
             }
         }
@@ -150,7 +150,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                             resolve();
                         },
                         (err) => reject(err),
-                        { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
                     );
                 });
             } else {
@@ -159,7 +159,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
             if (map && pos) {
                 map.panTo(pos);
-                map.setZoom(17);
+                map.setZoom(19); // High precision zoom
             }
         } catch (error) {
             alert("Could not detect location. Please ensure GPS is enabled.");
