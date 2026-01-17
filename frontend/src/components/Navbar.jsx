@@ -164,7 +164,7 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
             <rect x="14" y="14" width="7" height="7"></rect>
             <rect x="3" y="14" width="7" height="7"></rect>
           </svg>
-          <span style={{ fontSize: '0.7rem', fontWeight: '500' }}>Categories</span>
+          <span style={{ fontSize: '0.7rem', fontWeight: '500' }}>Category</span>
         </div>
 
         <div onClick={onCartClick} style={{ cursor: 'pointer', position: 'relative', color: '#9ca3af', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
