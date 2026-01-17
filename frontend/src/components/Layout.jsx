@@ -53,7 +53,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           */}
 
           {/* Desktop Logo (Hidden on Mobile) */}
-          <Link to="/" className="header-logo mobile-hidden">
+          <Link to="/" className="header-logo mobile-hidden" style={{ textDecoration: 'none' }}>
             <h1 style={{ fontWeight: '900', fontSize: '2rem', color: 'var(--brand-yellow)', letterSpacing: '-1px' }}>Aone Kirana</h1>
           </Link>
 
