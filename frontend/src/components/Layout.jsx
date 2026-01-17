@@ -44,16 +44,32 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
               </h1>
             </Link>
 
-            {/* Location / Delivery Info */}
-            <div onClick={openModal} style={{ textAlign: 'right', cursor: 'pointer' }}>
-              <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#1f2937', letterSpacing: '0.5px' }}>
-                Delivery in minutes
+            {/* Right Actions */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              {/* Location / Delivery Info */}
+              <div onClick={openModal} style={{ textAlign: 'right', cursor: 'pointer' }}>
+                <div style={{ fontWeight: '800', fontSize: '0.85rem', color: '#1f2937', letterSpacing: '0.5px' }}>
+                  Delivery in minutes
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px', maxWidth: '160px' }}>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {location?.address ? location.address.split(',')[0] : "Select Location"}
+                  </span>
+                  <span style={{ fontSize: '0.7rem' }}>▼</span>
+                </div>
               </div>
-              <div style={{ fontSize: '0.9rem', color: '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px', maxWidth: '160px' }}>
-                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {location?.address ? location.address.split(',')[0] : "Select Location"}
-                </span>
-                <span style={{ fontSize: '0.7rem' }}>▼</span>
+
+              {/* Login Button - Visible on Desktop */}
+              <div
+                onClick={user ? () => navigate('/profile') : onLogin}
+                className="hidden md:flex"
+                style={{ cursor: 'pointer', flexDirection: 'column', alignItems: 'center', gap: '2px' }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span style={{ fontSize: '0.7rem', fontWeight: '600', color: '#374151' }}>{user ? 'Profile' : 'Login'}</span>
               </div>
             </div>
           </div>
