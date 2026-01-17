@@ -66,9 +66,9 @@ const ProductCard = ({ product, onClick }) => {
       </div>
 
       {/* 2. Content Section */}
-      <div className="flex flex-col flex-1 gap-1">
-        {/* Timer Tag - Below Image */}
-        <div className="w-fit bg-gray-100 px-1.5 py-0.5 rounded-[4px] text-[9px] font-bold text-gray-600 flex items-center gap-1">
+      <div className="flex flex-col flex-1 gap-1 px-1 pb-1">
+        {/* Timer Tag */}
+        <div className="w-fit bg-gray-100 px-1.5 py-0.5 rounded-[4px] text-[9px] font-bold text-gray-600 flex items-center gap-1 mb-1">
           <span>⏱</span> 8 MINS
         </div>
 
@@ -78,12 +78,12 @@ const ProductCard = ({ product, onClick }) => {
         </h3>
 
         {/* Weight */}
-        <div className="text-[11px] text-gray-400 font-medium">
+        <div className="text-[11px] text-gray-400 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
           {product.weight || '500 g'}
         </div>
 
         {/* Footer: Price & Add Button */}
-        <div className="mt-auto flex items-end justify-between pt-1">
+        <div className="mt-auto flex items-end justify-between pt-2 min-h-[32px]">
           {/* Price Stack */}
           <div className="flex flex-col leading-none">
             <span className="text-[10px] text-gray-400 line-through mb-0.5">₹{price + 20}</span>
@@ -103,10 +103,10 @@ const ProductCard = ({ product, onClick }) => {
                 onClick={handleAdd}
                 disabled={isOutOfStock}
                 className={`
-                  w-full h-full rounded-lg text-[12px] font-bold uppercase transition-all active:scale-95 flex items-center justify-center
+                  w-full h-full rounded-lg text-[12px] font-bold uppercase transition-all active:scale-95 flex items-center justify-center border
                   ${isOutOfStock
-                    ? 'border border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-                    : 'border border-[#16a34a] bg-white text-[#16a34a] shadow-sm'
+                    ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
+                    : 'border-[#16a34a] bg-white text-[#16a34a] shadow-sm'
                   }
                 `}
               >
