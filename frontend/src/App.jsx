@@ -224,7 +224,7 @@ function ShopContent() {
                   <AdminPanel />
                 </Suspense>
               ) : (
-                <>
+                <div className="flex-1 h-full w-full overflow-y-auto custom-scrollbar pb-24">
                   {/* Hero / Banner Removed */}
 
 
@@ -252,7 +252,7 @@ function ShopContent() {
                     />
                   )}
 
-                  <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }} id="product-grid">
+                  <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', padding: '0 1rem' }} id="product-grid">
                     {/* Sidebar Removed */}
 
                     {/* Product Grid */}
@@ -260,17 +260,18 @@ function ShopContent() {
                       {`
                         .responsive-product-grid {
                           display: grid;
-                          grid-template-columns: repeat(3, 1fr);
-                          gap: 0.5rem;
+                          grid-template-columns: repeat(2, 1fr);
+                          gap: 1rem;
+                          width: 100%;
                         }
                         @media (min-width: 640px) {
                           .responsive-product-grid {
-                             grid-template-columns: repeat(4, 1fr);
+                             grid-template-columns: repeat(3, 1fr);
                           }
                         }
                         @media (min-width: 1024px) {
                           .responsive-product-grid {
-                             grid-template-columns: repeat(5, 1fr);
+                             grid-template-columns: repeat(4, 1fr);
                           }
                         }
                       `}
@@ -290,7 +291,7 @@ function ShopContent() {
                       ))}
                     </div>
                   </div>
-                </>
+                </div>
               )}
             </>
           } />
