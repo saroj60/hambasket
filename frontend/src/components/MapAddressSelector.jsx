@@ -1,13 +1,33 @@
 
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { GoogleMap, useJsApiLoader, Autocomplete } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Autocomplete, Circle } from '@react-google-maps/api';
 import { Geolocation } from '@capacitor/geolocation';
 import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 
 const VITE_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+// Store Location: 27°39'59.1"N 85°21'17.1"E -> Decimal: 27.666417, 85.354750
+const STORE_LOCATION = { lat: 27.666417, lng: 85.354750 };
+const DELIVERY_RADIUS_METERS = 3000; // 3 KM
+
+const haversineDistance = (coords1, coords2) => {
+    const toRad = (x) => (x * Math.PI) / 180;
+    const R = 6371e3; // Earth radius in meters
+
+    const dLat = toRad(coords2.lat - coords1.lat);
+    const dLon = toRad(coords2.lng - coords1.lng);
+    const lat1 = toRad(coords1.lat);
+    const lat2 = toRad(coords2.lat);
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
+};
 
 const containerStyle = {
     width: '100%',
@@ -25,7 +45,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
     });
 
     const defaultCenter = useMemo(() => {
-        return initialLocation || { lat: 27.7172, lng: 85.3240 };
+        return initialLocation || STORE_LOCATION;
     }, [initialLocation]);
 
     const [map, setMap] = useState(null);
@@ -33,6 +53,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
     const [address, setAddress] = useState('');
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState('map'); // 'map' or 'details'
+    const [isInRange, setIsInRange] = useState(true);
 
     // Form States
     const [receiverName, setReceiverName] = useState(user?.name || '');
@@ -51,11 +72,23 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
             const newCenter = map.getCenter();
             const lat = newCenter.lat();
             const lng = newCenter.lng();
-            setCenter({ lat, lng });
+            const newPos = { lat, lng };
+            setCenter(newPos);
+
+            // Check Radius
+            const distance = haversineDistance(newPos, STORE_LOCATION);
+            const inRange = distance <= DELIVERY_RADIUS_METERS;
+            setIsInRange(inRange);
 
             // Debounce fetch
             if (timerRef.current) clearTimeout(timerRef.current);
-            setLoading(true);
+            setLoading(true); // show loading immediately for better feedback
+
+            if (!inRange) {
+                setAddress("Currently not delivering in this area");
+                setLoading(false);
+                return;
+            }
 
             timerRef.current = setTimeout(() => {
                 fetchAddress(lat, lng);
@@ -284,7 +317,21 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                             zoomControl: false,
                             gestureHandling: step === 'map' ? 'greedy' : 'none', // Disable interaction in details step
                         }}
-                    />
+                    >
+                        {/* Delivery Radius Circle */}
+                        <Circle
+                            center={STORE_LOCATION}
+                            radius={DELIVERY_RADIUS_METERS}
+                            options={{
+                                strokeColor: "#10b981", // Primary Green
+                                strokeOpacity: 0.8,
+                                strokeWeight: 2,
+                                fillColor: "#10b981",
+                                fillOpacity: 0.1,
+                                clickable: false,
+                            }}
+                        />
+                    </GoogleMap>
 
                     {/* Fixed Center Pin (Only in Map Step or Static in Details) */}
                     <div style={{
@@ -324,14 +371,23 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
                     {/* Address Header */}
                     <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                        <div style={{ marginTop: '4px' }}>📍</div>
+                        <div style={{ marginTop: '4px' }}>
+                            {isInRange ? '📍' : '🚫'}
+                        </div>
                         <div>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#1f2937', marginBottom: '0.25rem' }}>
-                                {step === 'map' ? 'Select Location' : 'Confirm Address Details'}
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: isInRange ? '#1f2937' : '#ef4444', marginBottom: '0.25rem' }}>
+                                {step === 'map'
+                                    ? (isInRange ? 'Select Location' : 'Out of Delivery Area')
+                                    : 'Confirm Address Details'}
                             </h3>
-                            <p style={{ fontSize: '0.9rem', color: '#6b7280', lineHeight: '1.4' }}>
-                                {loading ? 'Fetching address...' : address}
+                            <p style={{ fontSize: '0.9rem', color: isInRange ? '#6b7280' : '#ef4444', lineHeight: '1.4' }}>
+                                {loading ? 'Checking location...' : address}
                             </p>
+                            {!isInRange && (
+                                <p style={{ fontSize: '0.8rem', color: '#ef4444', marginTop: '0.25rem' }}>
+                                    We currently only deliver within 3km of our store.
+                                </p>
+                            )}
                         </div>
                         {step === 'details' && (
                             <button
@@ -352,9 +408,9 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                                 onClick={handleConfirmLocation}
                                 className="btn btn-primary"
                                 style={{ width: '100%', padding: '1rem', fontSize: '1rem' }}
-                                disabled={loading || !address || address.startsWith('Error')}
+                                disabled={loading || !isInRange || !address || address.startsWith('Error')}
                             >
-                                Confirm Location
+                                {isInRange ? 'Confirm Location' : 'Location Not Available'}
                             </button>
                             <button
                                 onClick={onCancel}
