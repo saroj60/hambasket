@@ -119,23 +119,15 @@ const CategoryProducts = () => {
 
                 {/* MAIN CONTENT AREA */}
                 <div className="flex-1 bg-gray-50 h-full flex flex-col overflow-hidden">
-                    {/* Header showing current category/subcategory */}
-                    <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-3 sticky top-0 z-10 shadow-sm">
-                        <button onClick={() => navigate(-1)} className="p-1.5 -ml-2 rounded-full hover:bg-gray-100 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700">
-                                <path d="M15 18l-6-6 6-6" />
-                            </svg>
-                        </button>
-                        <div>
-                            <h1 className="text-base font-bold text-gray-900 leading-none">
-                                {activeSubCategory !== 'All' ? activeSubCategory : currentCategory}
-                            </h1>
-                            <p className="text-[10px] text-gray-500 font-medium mt-0.5">{filteredProducts.length} items</p>
-                        </div>
-                    </div>
-
-                    {/* Scrollable Product Grid */}
+                    {/* Scrollable Product Grid - Header Removed */}
                     <div className="flex-1 overflow-y-auto p-3 pb-24" style={{ WebkitOverflowScrolling: 'touch' }}>
+                        {/* Optional: Small Title if needed, otherwise clean grid */}
+                        <div className="mb-3 px-1">
+                            <h2 className="text-sm font-bold text-gray-800">
+                                {activeSubCategory !== 'All' ? activeSubCategory : currentCategory}
+                                <span className="text-xs font-normal text-gray-500 ml-2">({filteredProducts.length})</span>
+                            </h2>
+                        </div>
                         {filteredProducts.length > 0 ? (
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                                 {filteredProducts.map((product) => (

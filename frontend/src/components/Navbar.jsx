@@ -75,7 +75,27 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
                   }
                 }}
               />
-              <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>🔍</span>
+              {/* Back Button or Search Icon */}
+              {routeLocation.pathname !== '/' ? (
+                <span
+                  onClick={() => window.history.back()}
+                  style={{
+                    position: 'absolute',
+                    left: '1rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--text-main)',
+                    fontSize: '1.2rem',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    zIndex: 10
+                  }}
+                >
+                  ←
+                </span>
+              ) : (
+                <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>🔍</span>
+              )}
             </div>
 
             {/* Actions */}
