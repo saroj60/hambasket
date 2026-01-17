@@ -29,7 +29,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
       {/* Header */}
       <header style={{ backgroundColor: 'white', borderBottom: '1px solid #f0f0f0', position: 'sticky', top: 0, zIndex: 1000 }}>
         <div style={{ maxWidth: '100%', margin: '0 auto' }}>
@@ -165,7 +165,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       </header>
 
       {/* Main Content */}
-      <main className="container" style={{ flex: 1, padding: '0', width: '100%' }}>
+      <main className="container" style={{ flex: 1, padding: '0', width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         {children}
       </main>
 

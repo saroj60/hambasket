@@ -43,8 +43,8 @@ const CategoryProducts = () => {
     }, [currentCategory, activeSubCategory, products]);
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col pt-0">
-            <div className="flex flex-1 container mx-auto max-w-[1600px] px-0" style={{ display: 'flex', flexDirection: 'row', height: 'calc(100vh - 60px)' }}>
+        <div className="h-full bg-gray-50 flex flex-col pt-0">
+            <div className="flex flex-1 container mx-auto max-w-[1600px] px-0" style={{ display: 'flex', flexDirection: 'row', height: '100%' }}>
 
                 {/* ZEPTO-STYLE SIDEBAR (Left Navigation Rail) */}
                 <div
@@ -141,7 +141,7 @@ const CategoryProducts = () => {
                         </div>
                     ) : (
                         /* Fixed Empty State - No Scroll */
-                        <div className="flex-1 flex flex-col items-center justify-center p-8 text-gray-400">
+                        <div className="flex-1 flex flex-col items-center justify-center p-8 text-gray-400 h-full w-full overflow-hidden">
                             <div className="bg-gray-100 p-6 rounded-full mb-4">
                                 <span className="text-4xl grayscale opacity-50">🍃</span>
                             </div>
