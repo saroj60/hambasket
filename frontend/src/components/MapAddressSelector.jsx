@@ -367,7 +367,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                     ) : (
                         /* Address Form */
                         <div className="location-form-details" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
                                 <input
                                     type="text"
                                     placeholder="Receiver Name"
