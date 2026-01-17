@@ -86,8 +86,7 @@ export const CATEGORY_HIERARCHY = {
         { name: "Rum", image: "/images/liquor/rum.png" },
         { name: "Whiskey", image: "/images/liquor/whiskey.png" },
         { name: "Tequila", image: "/images/liquor/tequila.png" },
-        { name: "Brandy", image: "/images/liquor/brandy.png" },
-        { name: "Mixers", image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=100&q=80" }
+        { name: "Brandy", image: "/images/liquor/brandy.png" }
     ],
     "Cooking Oil, Masala and more": [
         { name: "All", image: "/images/cooking/all.png" },
