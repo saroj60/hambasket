@@ -6,9 +6,6 @@ const AdminSidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, is
         { id: 'orders', label: 'Orders', icon: '🛍️' },
         { id: 'products', label: 'Products', icon: '📦' },
         { id: 'customers', label: 'Customers', icon: '👥' },
-        { id: 'delivery', label: 'Delivery', icon: '🚚' },
-        { id: 'stores', label: 'Stores', icon: '🏪' },
-        { id: 'promo', label: 'Marketing', icon: '📢' },
         { id: 'settings', label: 'Settings', icon: '⚙️' },
     ];
 
