@@ -107,7 +107,7 @@ router.get('/seed-data', async (req, res) => {
 router.get('/seed-admin', async (req, res) => {
     try {
         const email = "admin@gmail.com";
-        const password = "password";
+        const password = "admin123";
 
         let user = await User.findOne({ email });
 
