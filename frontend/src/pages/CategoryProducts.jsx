@@ -80,8 +80,8 @@ const CategoryProducts = () => {
                             >
                                 {/* Icon Container */}
                                 <div style={{
-                                    width: '56px',
-                                    height: '56px',
+                                    width: '64px',
+                                    height: '64px',
                                     borderRadius: '16px',
                                     backgroundColor: isActive ? 'white' : '#f9fafb',
                                     display: 'flex',
@@ -95,7 +95,7 @@ const CategoryProducts = () => {
                                         <img
                                             src={sub.image}
                                             alt={sub.name}
-                                            style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+                                            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
                                         />
                                     ) : (
                                         <span className="text-2xl">{['🥦', '🍎', '🥕', '🥔', '🥬', '🥗', '🌽'][index % 7]}</span>
