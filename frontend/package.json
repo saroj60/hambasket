@@ -16,6 +16,7 @@
     "@capacitor/geolocation": "^6.0.0",
     "@capacitor/ios": "^6.2.1",
     "@react-google-maps/api": "^2.20.8",
+    "@tailwindcss/postcss": "^4.1.18",
     "axios": "^1.12.2",
     "html2pdf.js": "^0.12.1",
     "leaflet": "^1.9.4",
