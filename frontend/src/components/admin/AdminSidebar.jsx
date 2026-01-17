@@ -23,7 +23,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, onLogout, isOpen, setIsOpen, is
             {/* Sidebar */}
             <div
                 className={`
-                fixed lg:relative top-0 left-0 h-full bg-white border-r border-gray-100 shadow-xl lg:shadow-none z-30 
+                fixed lg:relative top-0 left-0 h-full bg-white border-r border-gray-100 shadow-xl lg:shadow-none z-30 lg:z-0
                 transition-all duration-300 ease-in-out flex flex-col
                 ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
                 ${isCollapsed ? 'lg:w-20' : 'lg:w-64'}

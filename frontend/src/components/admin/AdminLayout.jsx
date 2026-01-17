@@ -14,7 +14,7 @@ const AdminLayout = ({ children, activeTab, setActiveTab }) => {
     };
 
     return (
-        <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+        <div className="flex h-full bg-gray-50 overflow-hidden font-sans relative">
             {/* Sidebar */}
             <AdminSidebar
                 activeTab={activeTab}
