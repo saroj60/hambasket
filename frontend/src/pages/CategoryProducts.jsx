@@ -1,8 +1,8 @@
-
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
 import ProductCard from '../components/ProductCard';
+import ProductDetails from '../components/ProductDetails';
 import { CartContext } from '../context/CartContext';
 import { CATEGORY_HIERARCHY } from '../data/CategoryStructure';
 
@@ -15,10 +15,10 @@ const CategoryProducts = () => {
     // State
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [activeSubCategory, setActiveSubCategory] = useState("All");
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
     // Derived values
     const currentCategory = categoryId ? decodeURIComponent(categoryId) : "All";
-    // Now returns an array of objects { name, image }
     const subCategories = CATEGORY_HIERARCHY[currentCategory] || [{ name: "All", image: "" }];
 
     useEffect(() => {
@@ -28,24 +28,17 @@ const CategoryProducts = () => {
     }, [products.length, fetchProducts]);
 
     useEffect(() => {
-        // Reset subcategory when main category changes
         setActiveSubCategory("All");
     }, [categoryId]);
 
     useEffect(() => {
-        // Filter products based on Category and SubCategory
         let result = products;
-
-        // 1. Filter by Main Category
         if (currentCategory !== "All") {
             result = result.filter(p => p.category === currentCategory);
         }
-
-        // 2. Filter by SubCategory (if not "All")
         if (activeSubCategory !== "All") {
             result = result.filter(p => p.subCategory === activeSubCategory);
         }
-
         setFilteredProducts(result);
     }, [currentCategory, activeSubCategory, products]);
 
@@ -66,17 +59,20 @@ const CategoryProducts = () => {
                                 relative
                             `}
                         >
-                            {/* Highlight Bar */}
                             {activeSubCategory === sub.name && (
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-md" />
                             )}
 
-                            {/* Icon / Image */}
-                            <div className="mb-1 md:mb-0 md:mr-3 text-2xl md:text-xl w-8 h-8 flex items-center justify-center">
+                            <div className="mb-1 md:mb-0 md:mr-3 w-8 h-8 flex items-center justify-center">
                                 {sub.image ? (
-                                    <img src={sub.image} alt={sub.name} className="w-full h-full object-contain" />
+                                    <img
+                                        src={sub.image}
+                                        alt={sub.name}
+                                        className="w-full h-full object-contain"
+                                        style={{ maxWidth: '32px', maxHeight: '32px' }} // Inline safety
+                                    />
                                 ) : (
-                                    <span>{['🥦', '🍎', '🥕', '🥔', '🥬', '🥗', '🌽'][index % 7]}</span>
+                                    <span className="text-xl">{['🥦', '🍎', '🥕', '🥔', '🥬', '🥗', '🌽'][index % 7]}</span>
                                 )}
                             </div>
 
@@ -92,13 +88,8 @@ const CategoryProducts = () => {
 
                 {/* MAIN CONTENT */}
                 <div className="flex-1 bg-gray-50/50 min-h-full flex flex-col">
-
-                    {/* Header */}
                     <div className="sticky top-[60px] z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 flex items-center gap-4 shadow-sm">
-                        <button
-                            onClick={() => navigate(-1)}
-                            className="p-1 rounded-full hover:bg-gray-100 transition-colors"
-                        >
+                        <button onClick={() => navigate(-1)} className="p-1 rounded-full hover:bg-gray-100 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600">
                                 <path d="M19 12H5M12 19l-7-7 7-7" />
                             </svg>
@@ -107,13 +98,10 @@ const CategoryProducts = () => {
                             <h1 className="text-lg md:text-xl font-bold text-gray-800 capitalize leading-tight">
                                 {activeSubCategory !== 'All' ? activeSubCategory : currentCategory}
                             </h1>
-                            <p className="text-xs text-gray-500">
-                                {filteredProducts.length} Products Found
-                            </p>
+                            <p className="text-xs text-gray-500">{filteredProducts.length} Products Found</p>
                         </div>
                     </div>
 
-                    {/* Products Grid */}
                     <div className="p-2 md:p-6 flex-1">
                         {filteredProducts.length > 0 ? (
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
@@ -121,7 +109,7 @@ const CategoryProducts = () => {
                                     <ProductCard
                                         key={product._id}
                                         product={product}
-                                        onClick={(p) => console.log('Clicked', p)}
+                                        onClick={(p) => setSelectedProduct(p)}
                                     />
                                 ))}
                             </div>
@@ -134,6 +122,18 @@ const CategoryProducts = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Product Details Modal */}
+            {selectedProduct && (
+                <ProductDetails
+                    product={selectedProduct}
+                    onClose={() => setSelectedProduct(null)}
+                    onAdd={(item) => {
+                        addToCart(item, item.quantity);
+                        setSelectedProduct(null);
+                    }}
+                />
+            )}
         </div>
     );
 };
