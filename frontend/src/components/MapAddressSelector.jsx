@@ -417,7 +417,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                                                 cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem'
                                             }}
                                         >
-                                            {l === 'Home' && '🏠'} {l === 'Work' && '🏢'} {l === 'Other' && '📍'} {l}
+                                            {l === 'Home' && '🏡'} {l === 'Work' && '💼'} {l === 'Other' && '📍'} {l}
                                         </button>
                                     ))}
                                 </div>

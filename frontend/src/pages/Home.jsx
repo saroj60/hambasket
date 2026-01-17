@@ -29,6 +29,14 @@ const Home = () => {
           getPopularProducts()
         ]);
 
+        // Shuffle products for random appearance on home screen (if not searching)
+        if (!searchQuery && productsData) {
+          for (let i = productsData.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [productsData[i], productsData[j]] = [productsData[j], productsData[i]];
+          }
+        }
+
         setProducts(productsData || []);
         setPopularProducts(popularData || []);
       } catch (err) {

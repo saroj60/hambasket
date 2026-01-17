@@ -73,9 +73,9 @@ export const getPopularProducts = async (req, res) => {
       { $replaceRoot: { newRoot: "$product" } }
     ]);
 
-    // If no orders yet, return some default products (e.g., first 10)
+    // If no orders yet, return random products to keep it interesting
     if (!popular || popular.length === 0) {
-      const defaultPopular = await Product.find().limit(10);
+      const defaultPopular = await Product.aggregate([{ $sample: { size: 10 } }]);
       return res.json(defaultPopular);
     }
 
