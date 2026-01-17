@@ -97,7 +97,7 @@ export const CATEGORY_HIERARCHY = {
         { name: "Whole Spices", image: "/images/cooking/whole_spices.png" }
     ],
     "Chocolate and Ice Cream": [
-        { name: "All", image: "https://images.unsplash.com/photo-1549395156-e8c1e9f43ad7?auto=format&fit=crop&w=100&q=80" },
+        { name: "All", image: "/images/chocolate/all.jpg" },
         { name: "Chocolates", image: "/images/chocolate/chocolates.png" },
         { name: "Ice Creams", image: "/images/chocolate/ice_creams.png" },
         { name: "Dessert Mixes", image: "/images/chocolate/dessert_mixes.png" }
