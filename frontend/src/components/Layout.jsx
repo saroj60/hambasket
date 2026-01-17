@@ -59,6 +59,20 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
                 </div>
               </div>
 
+              {/* Admin Button - Visible if Admin */}
+              {user?.role === 'admin' && (
+                <div
+                  onClick={onAdminClick}
+                  className="hidden md:flex"
+                  style={{ cursor: 'pointer', flexDirection: 'column', alignItems: 'center', gap: '2px' }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                  <span style={{ fontSize: '0.7rem', fontWeight: '600', color: '#ef4444' }}>Admin</span>
+                </div>
+              )}
+
               {/* Login Button - Visible on Desktop */}
               <div
                 onClick={user ? () => navigate('/profile') : onLogin}
