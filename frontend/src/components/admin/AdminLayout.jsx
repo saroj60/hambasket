@@ -4,7 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 
 const AdminLayout = ({ children, activeTab, setActiveTab }) => {
     const { logout } = useAuth();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile toggle
+    const [isCollapsed, setIsCollapsed] = useState(false); // Desktop collapse
 
     const handleLogout = () => {
         if (window.confirm("Are you sure you want to logout?")) {
@@ -21,10 +22,12 @@ const AdminLayout = ({ children, activeTab, setActiveTab }) => {
                 onLogout={handleLogout}
                 isOpen={isSidebarOpen}
                 setIsOpen={setIsSidebarOpen}
+                isCollapsed={isCollapsed}
+                setIsCollapsed={setIsCollapsed}
             />
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+            <div className={`flex-1 flex flex-col h-full overflow-hidden relative transition-all duration-300 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-0'}`}>
 
                 {/* Mobile Header */}
                 <header className="bg-white border-b border-gray-100 p-4 lg:hidden flex items-center justify-between z-10">
