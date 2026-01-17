@@ -22,13 +22,19 @@ if (isNative) {
     apiUrl = `${baseUrl}/api`;
 } else {
     // 2. Web Environment
-    // Always use Render in production or if VITE_API_URL is missing
-    baseUrl = import.meta.env.VITE_API_URL || `https://hambasket-backend.onrender.com`;
+    const hostname = window.location.hostname;
 
-    // Fallback: If we are on Vercel and VITE_API_URL wasn't set, it might default to relative.
-    // Let's force it if it's empty.
-    if (!baseUrl || baseUrl === '/' || baseUrl.includes('vercel.app')) {
-        baseUrl = `https://hambasket-backend.onrender.com`;
+    // Smart Local Dev Detection: If serving from localhost or local IP, look for backend on same IP:5000
+    if (hostname === 'localhost' || hostname.startsWith('192.168.') || hostname.startsWith('10.')) {
+        baseUrl = `http://${hostname}:5000`;
+    } else {
+        // Production / Vercel
+        baseUrl = import.meta.env.VITE_API_URL || `https://hambasket-backend.onrender.com`;
+
+        // Fallback safety
+        if (!baseUrl || baseUrl === '/' || baseUrl.includes('vercel.app')) {
+            baseUrl = `https://hambasket-backend.onrender.com`;
+        }
     }
     apiUrl = `${baseUrl}/api`;
 }
