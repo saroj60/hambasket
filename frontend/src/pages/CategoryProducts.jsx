@@ -50,14 +50,15 @@ const CategoryProducts = () => {
                 <div
                     className="flex-shrink-0 bg-white border-r border-gray-100 overflow-y-auto custom-scrollbar hide-scrollbar"
                     style={{
-                        width: '85px',
-                        minWidth: '85px',
+                        width: '100px',
+                        minWidth: '100px',
                         height: '100%',
-                        paddingBottom: '80px', /* Space for bottom nav */
+                        paddingBottom: '80px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        paddingTop: '0'
+                        justifyContent: 'flex-start',
+                        paddingTop: '1rem'
                     }}
                 >
                     {subCategories.map((sub, index) => {
@@ -69,7 +70,7 @@ const CategoryProducts = () => {
                                 className={`
                                     cursor-pointer transition-all relative w-full
                                     flex flex-col items-center justify-center
-                                    py-3 px-1
+                                    py-4 mb-2
                                 `}
                                 style={{
                                     borderLeft: isActive ? '4px solid #9333ea' : '4px solid transparent',
@@ -79,14 +80,14 @@ const CategoryProducts = () => {
                             >
                                 {/* Icon Container */}
                                 <div style={{
-                                    width: '48px',
-                                    height: '48px',
-                                    borderRadius: '12px', /* Squircle shape */
+                                    width: '56px',
+                                    height: '56px',
+                                    borderRadius: '16px',
                                     backgroundColor: isActive ? 'white' : '#f9fafb',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    marginBottom: '4px',
+                                    marginBottom: '8px',
                                     boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                                     border: isActive ? '1px solid #d8b4fe' : '1px solid transparent'
                                 }}>
@@ -94,22 +95,23 @@ const CategoryProducts = () => {
                                         <img
                                             src={sub.image}
                                             alt={sub.name}
-                                            style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+                                            style={{ width: '40px', height: '40px', objectFit: 'contain' }}
                                         />
                                     ) : (
-                                        <span className="text-xl">{['🥦', '🍎', '🥕', '🥔', '🥬', '🥗', '🌽'][index % 7]}</span>
+                                        <span className="text-2xl">{['🥦', '🍎', '🥕', '🥔', '🥬', '🥗', '🌽'][index % 7]}</span>
                                     )}
                                 </div>
 
                                 {/* Label */}
                                 <div style={{
-                                    fontSize: '10px',
+                                    fontSize: '12px',
                                     lineHeight: '1.2',
                                     textAlign: 'center',
                                     fontWeight: isActive ? '700' : '500',
                                     color: isActive ? '#6b21a8' : '#4b5563',
-                                    padding: '0 2px',
-                                    maxWidth: '100%'
+                                    padding: '0 4px',
+                                    maxWidth: '100%',
+                                    wordBreak: 'break-word'
                                 }}>
                                     {sub.name}
                                 </div>
