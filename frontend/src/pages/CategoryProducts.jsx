@@ -70,7 +70,7 @@ const CategoryProducts = () => {
                                 className={`
                                     cursor-pointer transition-all relative w-full
                                     flex flex-col items-center justify-center
-                                    py-4 mb-2
+                                    py-4 mb-6
                                 `}
                                 style={{
                                     borderLeft: isActive ? '4px solid #9333ea' : '4px solid transparent',
