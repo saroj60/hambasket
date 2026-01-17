@@ -209,7 +209,13 @@ function ShopContent() {
               {/* User Actions Bar Removed - Now in Header */}
 
               {isAdminMode && user?.role === 'admin' ? (
-                <AdminPanel />
+                <Suspense fallback={
+                  <div className="flex items-center justify-center h-screen bg-gray-50">
+                    <div className="text-primary font-bold text-xl">Loading Admin...</div>
+                  </div>
+                }>
+                  <AdminPanel />
+                </Suspense>
               ) : (
                 <>
                   {/* Hero / Banner Removed */}
