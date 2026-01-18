@@ -113,20 +113,18 @@ router.post("/login", async (req, res) => {
             return res.status(500).json({ message: "Database Save Error", error: saveError.message });
         }
 
-        // Set Cookies
-        const isProduction = process.env.NODE_ENV === 'production';
-
+        // Set Cookies - Always use secure/none for cross-site compatibility
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? "none" : "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? "none" : "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
@@ -182,8 +180,8 @@ router.post("/logout", async (req, res) => {
             }
         }
 
-        res.clearCookie("accessToken");
-        res.clearCookie("refreshToken");
+        res.clearCookie("accessToken", { httpOnly: true, secure: true, sameSite: "none" });
+        res.clearCookie("refreshToken", { httpOnly: true, secure: true, sameSite: "none" });
         res.json({ message: "Logged out successfully" });
     } catch (error) {
         res.status(500).json({ message: "Logout error" });
