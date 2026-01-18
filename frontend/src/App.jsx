@@ -242,7 +242,7 @@ function ShopContent() {
 
 
                 {/* Promotional Offers */}
-                {!filters.search && <HomeBanner />}
+                {!filters.search && <HomeBanner onShopNow={handleOpenCategories} />}
 
                 {/* Nearby Offers */}
                 {!filters.search && <NearbyOffers />}
