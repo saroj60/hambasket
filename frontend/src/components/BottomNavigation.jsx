@@ -38,26 +38,29 @@ const BottomNavigation = ({ cartCount, onOpenCart, onOpenProfile, isAdminMode, s
                 <span>Category</span>
             </div>
 
-            <div onClick={() => { handleHomeClick(); onOpenCart(); }} style={{ cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem', position: 'relative' }}>
-                <span style={{ fontSize: '1.5rem', marginBottom: '2px' }}>🛒</span>
+            <div onClick={() => { handleHomeClick(); onOpenCart(); }} style={{ cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
+                <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+                    <span style={{ fontSize: '1.5rem', marginBottom: '2px' }}>🛒</span>
+                    {cartCount > 0 && (
+                        <span style={{
+                            position: 'absolute',
+                            top: '-2px',
+                            right: '-6px',
+                            backgroundColor: 'var(--danger)',
+                            color: 'white',
+                            fontSize: '0.6rem',
+                            fontWeight: 'bold',
+                            padding: '1px 4px',
+                            borderRadius: '10px',
+                            minWidth: '14px',
+                            textAlign: 'center',
+                            lineHeight: '1.2'
+                        }}>
+                            {cartCount}
+                        </span>
+                    )}
+                </div>
                 <span>Cart</span>
-                {cartCount > 0 && (
-                    <span style={{
-                        position: 'absolute',
-                        top: '-5px',
-                        right: '-5px',
-                        backgroundColor: 'var(--danger)',
-                        color: 'white',
-                        fontSize: '0.7rem',
-                        fontWeight: 'bold',
-                        padding: '1px 5px',
-                        borderRadius: '10px',
-                        minWidth: '16px',
-                        textAlign: 'center'
-                    }}>
-                        {cartCount}
-                    </span>
-                )}
             </div>
 
 

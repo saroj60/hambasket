@@ -197,7 +197,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       </header>
 
       {/* Main Content */}
-      <main className="container" style={{ flex: 1, padding: '0', width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0, position: 'relative' }}>
+      <main className="container" style={{ flex: 1, padding: '0', width: '100%', overflowY: 'auto', overflowX: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0, position: 'relative', paddingBottom: '80px' }}>
         {children}
       </main>
 
