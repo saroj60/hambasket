@@ -68,9 +68,7 @@ const ProductCard = ({ product, onClick }) => {
       {/* 2. Content Section */}
       <div className="flex flex-col flex-1 gap-1 px-2 pb-2">
         {/* Timer Tag */}
-        <div className="w-fit bg-gray-100 px-1.5 py-0.5 rounded-[4px] text-[9px] font-bold text-gray-600 flex items-center gap-1 mb-1">
-          <span>⏱</span> 8 MINS
-        </div>
+
 
         {/* Title */}
         <h3 className="text-[12px] font-bold text-gray-900 leading-tight line-clamp-2 min-h-[2.4em]">
