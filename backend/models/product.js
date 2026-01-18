@@ -4,6 +4,7 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   store: { type: mongoose.Schema.Types.ObjectId, ref: "Store" },
   price: { type: Number, required: true },
+  unit: { type: String, default: 'pcs' }, // kg, liter, pcs, etc.
   description: { type: String },
   image: { type: String },
   emoji: { type: String },

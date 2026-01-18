@@ -36,6 +36,7 @@ const AdminProducts = () => {
         const data = new FormData();
         data.append('name', formData.name);
         data.append('price', formData.price);
+        data.append('unit', formData.unit || 'pcs');
         data.append('category', formData.category);
         if (formData.subCategory) data.append('subCategory', formData.subCategory);
         data.append('stock', formData.countInStock);

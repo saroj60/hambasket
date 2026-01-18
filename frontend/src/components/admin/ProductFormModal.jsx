@@ -10,6 +10,8 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
     const [formData, setFormData] = useState(initialData || {
         name: '',
         price: '',
+        unit: 'pcs', // Default unit
+
         category: CATEGORIES[0],
         subCategory: '',
         countInStock: '',
@@ -45,6 +47,8 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
             setFormData({
                 name: '',
                 price: '',
+                unit: 'pcs',
+
                 category: CATEGORIES[0],
                 subCategory: '',
                 countInStock: '',
@@ -210,6 +214,41 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                                     placeholder="0.00"
                                     className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all outline-none font-medium"
                                 />
+                            </div>
+                        </div>
+
+                        {/* Price & Unit */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-900 ml-1">Price (Rs.)</label>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    required
+                                    value={formData.price}
+                                    onChange={handleChange}
+                                    placeholder="0.00"
+                                    className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all outline-none font-medium"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-900 ml-1">Unit</label>
+                                <select
+                                    name="unit"
+                                    value={formData.unit || 'pcs'}
+                                    onChange={handleChange}
+                                    className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all outline-none font-medium cursor-pointer"
+                                >
+                                    <option value="pcs">Piece (pcs)</option>
+                                    <option value="kg">Kilogram (kg)</option>
+                                    <option value="g">Gram (g)</option>
+                                    <option value="liter">Liter (l)</option>
+                                    <option value="ml">Milliliter (ml)</option>
+                                    <option value="packet">Packet</option>
+                                    <option value="dozen">Dozen</option>
+                                    <option value="box">Box</option>
+                                    <option value="set">Set</option>
+                                </select>
                             </div>
                         </div>
 
