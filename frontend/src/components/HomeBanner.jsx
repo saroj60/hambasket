@@ -3,55 +3,52 @@ import { Link } from 'react-router-dom';
 
 const HomeBanner = () => {
     return (
-        <div className="relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-blue-600 shadow-2xl my-6" style={{ minHeight: '300px', background: 'linear-gradient(to right, #7c3aed, #4f46e5)' }}>
-            {/* Decorative Circles */}
-            <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-white opacity-10 blur-2xl"></div>
-            <div className="absolute bottom-0 left-0 -ml-16 -mb-16 h-64 w-64 rounded-full bg-white opacity-10 blur-2xl"></div>
+        <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl my-6" style={{ minHeight: '260px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+            {/* Inline Styles for Animations */}
+            <style>
+                {`
+          @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+          }
+          .animate-float { animation: float 5s ease-in-out infinite; }
+        `}
+            </style>
 
-            <div className="relative z-10 flex flex-col items-center justify-between px-6 py-10 md:flex-row md:px-12 md:py-16">
+            {/* Decorative Background Elements */}
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 h-80 w-80 rounded-full bg-white opacity-10 blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 h-64 w-64 rounded-full bg-black opacity-10 blur-3xl"></div>
+
+            <div className="relative z-10 flex flex-col items-center justify-between px-8 py-10 md:flex-row md:px-16 md:py-14 h-full">
                 {/* Text Content */}
-                <div className="mb-8 text-center md:mb-0 md:text-left">
-                    <span className="mb-2 inline-block rounded-full bg-yellow-400 px-4 py-1 text-xs font-bold uppercase tracking-wider text-gray-900 shadow-md">
-                        Limited Time Offer
-                    </span>
-                    <h2 className="mb-2 text-4xl font-extrabold leading-tight text-white md:text-5xl lg:text-6xl">
+                <div className="mb-6 text-center md:mb-0 md:text-left max-w-lg">
+
+                    <h2 className="mb-3 text-4xl font-black leading-tight text-white md:text-5xl lg:text-6xl drop-shadow-md">
                         Get <span className="text-yellow-300">20% OFF</span>
-                        <br />
-                        Your First Order
                     </h2>
-                    <p className="mb-6 text-lg font-medium text-indigo-100 md:text-xl">
-                        Plus enjoy <span className="font-bold text-white">FREE DELIVERY</span> on all orders!
+
+                    <p className="mb-6 text-lg font-medium text-purple-50 md:text-xl leading-relaxed opacity-95">
+                        Shop your daily essentials in low price <br className="hidden md:block" />
+                        <span className="font-bold text-white tracking-wide">FREE DELIVERY</span> on all orders!
                     </p>
 
                     <Link
                         to="/categories"
-                        className="inline-flex transform items-center rounded-full bg-white px-8 py-3 text-lg font-bold text-indigo-600 shadow-lg transition-all duration-300 hover:scale-105 hover:bg-yellow-50 hover:text-indigo-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-indigo-600"
+                        className="inline-block rounded-full bg-yellow-400 px-10 py-3 text-lg font-bold text-gray-900 shadow-lg transition-transform duration-200 hover:scale-105 hover:bg-yellow-300 hover:shadow-xl active:scale-95"
                     >
                         Shop Now
-                        <svg
-                            className="ml-2 -mr-1 h-5 w-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
                     </Link>
                 </div>
 
-                {/* Decorative Element / Illustration Placeholder */}
-                {/* Using a generic SVG illustration-style layout or we could use an image if user provided one. 
-            For now, creating a stylish abstract graphic with CSS. */}
-                <div className="relative hidden md:block">
-                    <div className="grid grid-cols-2 gap-4 opacity-90">
-                        <div className="h-24 w-24 rounded-2xl bg-white/20 backdrop-blur-sm animate-pulse"></div>
-                        <div className="h-24 w-24 rounded-2xl bg-yellow-400/20 backdrop-blur-sm mt-8"></div>
-                        <div className="h-24 w-24 rounded-2xl bg-white/20 backdrop-blur-sm -mt-8"></div>
-                        <div className="h-24 w-24 rounded-2xl bg-yellow-400/20 backdrop-blur-sm"></div>
+                {/* Decorative 3D-style Elements */}
+                <div className="relative hidden md:block w-56 h-56">
+                    <div className="absolute top-0 right-8 w-16 h-16 bg-yellow-400 rounded-2xl transform rotate-12 shadow-xl animate-float opacity-90 border border-white/20"></div>
+                    <div className="absolute bottom-8 right-0 w-20 h-20 bg-white/20 backdrop-blur-md rounded-full shadow-lg border border-white/30"></div>
+                    <div className="absolute top-16 left-0 w-12 h-12 bg-pink-400 rounded-lg transform -rotate-12 shadow-lg animate-float border border-white/20"></div>
+
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-7xl filter drop-shadow-xl">🛍️</span>
                     </div>
                 </div>
             </div>

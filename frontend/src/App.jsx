@@ -28,7 +28,7 @@ import CategorySection from "./components/CategorySection";
 import FlashSaleSection from "./components/FlashSaleSection";
 import BottomNavigation from "./components/BottomNavigation";
 import NearbyOffers from "./components/NearbyOffers";
-import OfferBanners from "./components/OfferBanners";
+import HomeBanner from "./components/HomeBanner";
 import { ProductProvider, useProducts } from "./context/ProductContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { NotificationProvider } from "./context/NotificationContext";
@@ -242,7 +242,7 @@ function ShopContent() {
 
 
                 {/* Promotional Offers */}
-                {!filters.search && <OfferBanners />}
+                {!filters.search && <HomeBanner />}
 
                 {/* Nearby Offers */}
                 {!filters.search && <NearbyOffers />}
