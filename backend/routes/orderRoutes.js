@@ -181,12 +181,17 @@ router.get("/analytics", isAdmin, async (req, res) => {
 
         const recentOrders = await Order.find().sort({ createdAt: -1 }).limit(5).populate('user', 'name');
 
+        const pendingOrders = await Order.countDocuments({
+            status: { $nin: ['Delivered', 'Cancelled'] }
+        });
+
         res.json({
             totalOrders,
             totalUsers,
             totalSales,
             salesPerDay,
-            recentOrders
+            recentOrders,
+            pendingOrders
         });
     } catch (error) {
         res.status(500).json({ message: "Error fetching analytics", error: error.message });

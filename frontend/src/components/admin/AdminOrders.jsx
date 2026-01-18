@@ -64,7 +64,7 @@ const AdminOrders = () => {
         ? orders
         : orders.filter(o => o.status === filterStatus);
 
-    const STATUS_OPTIONS = ["New", "Accepted", "Packed", "Out for delivery", "Delivered", "Cancelled"];
+    const STATUS_OPTIONS = ["New", "Pending", "Accepted", "Packed", "Out for delivery", "Delivered", "Cancelled"];
 
     if (loading && orders.length === 0) {
         return (

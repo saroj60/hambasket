@@ -273,8 +273,8 @@ function ShopContent() {
                     {`
                         .responsive-product-grid {
                           display: grid;
-                          grid-template-columns: repeat(3, 1fr);
-                          gap: 0.5rem;
+                          grid-template-columns: repeat(2, 1fr);
+                          gap: 0.75rem;
                           width: 100%;
                         }
                         @media (min-width: 640px) {

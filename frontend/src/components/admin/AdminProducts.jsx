@@ -37,9 +37,12 @@ const AdminProducts = () => {
         data.append('name', formData.name);
         data.append('price', formData.price);
         data.append('category', formData.category);
-        data.append('countInStock', formData.countInStock);
+        if (formData.subCategory) data.append('subCategory', formData.subCategory);
+        data.append('stock', formData.countInStock);
         data.append('description', formData.description);
         if (formData.image instanceof File) {
+            data.append('image', formData.image);
+        } else if (typeof formData.image === 'string' && formData.image.trim() !== '') {
             data.append('image', formData.image);
         }
 
@@ -83,6 +86,12 @@ const AdminProducts = () => {
         } catch (error) {
             console.error("Error deleting:", error);
         }
+    };
+
+    const handleEditProduct = (product) => {
+        // Ensure subCategory is passed to modal (it might be undefined in old records)
+        setEditingProduct({ ...product, subCategory: product.subCategory || '' });
+        setIsModalOpen(true);
     };
 
     if (loading && products.length === 0) return (
@@ -147,7 +156,9 @@ const AdminProducts = () => {
 
                             {/* Content */}
                             <div className="flex-1">
-                                <p className="text-xs font-bold text-purple-600 uppercase tracking-wide mb-1 opacity-80">{product.category}</p>
+                                <p className="text-xs font-bold text-purple-600 uppercase tracking-wide mb-1 opacity-80">
+                                    {product.category} {product.subCategory ? `• ${product.subCategory}` : ''}
+                                </p>
                                 <h3 className="font-bold text-gray-900 leading-tight mb-2 line-clamp-2 text-lg">{product.name}</h3>
                                 <div className="flex items-center justify-between mt-auto pt-2">
                                     <span className="text-xl font-black text-gray-900">Rs. {product.price}</span>
@@ -157,7 +168,7 @@ const AdminProducts = () => {
                             {/* Actions Overlay */}
                             <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-gray-50 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
                                 <button
-                                    onClick={() => { setEditingProduct(product); setIsModalOpen(true); }}
+                                    onClick={() => handleEditProduct(product)}
                                     className="py-2.5 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs hover:bg-blue-100 transition-colors flex items-center justify-center gap-1"
                                 >
                                     <span>✏️</span> Edit

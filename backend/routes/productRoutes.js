@@ -69,10 +69,27 @@ router.get("/:id", async (req, res) => {
 
 import upload from "../config/multerConfig.js";
 
+// Safer Upload Middleware to catch Multer/Cloudinary errors
+const uploadMiddleware = (req, res, next) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      console.error("Upload Error:", err);
+      return res.status(500).json({ message: "Image upload failed (Cloudinary/Multer)", error: err.message });
+    }
+    next();
+  });
+};
+
 // Add Product (Admin or Vendor)
-router.post("/", isVendorOrAdmin, upload.single('image'), async (req, res) => {
+router.post("/", isVendorOrAdmin, uploadMiddleware, async (req, res) => {
   try {
     const productData = req.body;
+
+    // Fix: Ensure 'stock' maps correctly if frontend sends 'countInStock' (though we fixed frontend, safe to have redundancy)
+    if (productData.countInStock && !productData.stock) {
+      productData.stock = productData.countInStock;
+    }
+
     if (req.file) {
       productData.image = req.file.path;
     }
@@ -86,6 +103,7 @@ router.post("/", isVendorOrAdmin, upload.single('image'), async (req, res) => {
     const product = await Product.create(productData);
     res.status(201).json(product);
   } catch (error) {
+    console.error("Product Create Error:", error);
     res.status(500).json({ message: "Error adding product", error: error.message });
   }
 });
