@@ -138,10 +138,10 @@ const ProductDetails = ({ product, onClose, onAdd, onProductSelect }) => {
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
                         <div style={{ fontSize: '1.25rem', fontWeight: '800', color: '#1f2937' }}>
-                            ₹{currentPrice}
+                            Rs. {currentPrice}
                         </div>
                         {product.oldPrice && (
-                            <div style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '0.9rem' }}>₹{product.oldPrice}</div>
+                            <div style={{ textDecoration: 'line-through', color: '#9ca3af', fontSize: '0.9rem' }}>Rs. {product.oldPrice}</div>
                         )}
                     </div>
 
@@ -167,7 +167,7 @@ const ProductDetails = ({ product, onClose, onAdd, onProductSelect }) => {
                                             fontWeight: '600'
                                         }}
                                     >
-                                        {variant.weight} - ₹{variant.price}
+                                        {variant.weight} - Rs. {variant.price}
                                     </button>
                                 ))}
                             </div>
@@ -213,7 +213,7 @@ const ProductDetails = ({ product, onClose, onAdd, onProductSelect }) => {
                             }}
                             disabled={isOutOfStock}
                         >
-                            {isOutOfStock ? 'Out of Stock' : `Add Item - ₹${currentPrice * quantity}`}
+                            {isOutOfStock ? 'Out of Stock' : `Add Item - Rs. ${currentPrice * quantity}`}
                         </button>
                     </div>
 
@@ -239,7 +239,7 @@ const ProductDetails = ({ product, onClose, onAdd, onProductSelect }) => {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

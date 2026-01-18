@@ -86,8 +86,8 @@ const ProductCard = ({ product, onClick }) => {
         <div className="mt-auto flex items-end justify-between pt-2 min-h-[32px]">
           {/* Price Stack */}
           <div className="flex flex-col leading-none">
-            <span className="text-[10px] text-gray-400 line-through mb-0.5">₹{price + 20}</span>
-            <span className="text-[14px] font-black text-gray-900">₹{price} <span className="text-[10px] text-gray-500 font-normal">/ {product.unit || 'pcs'}</span></span>
+            <span className="text-[10px] text-gray-400 line-through mb-0.5">Rs. {price + 20}</span>
+            <span className="text-[14px] font-black text-gray-900">Rs. {price} <span className="text-[10px] text-gray-500 font-normal">/ {product.unit || 'pcs'}</span></span>
           </div>
 
           {/* ADD Button */}
