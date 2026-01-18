@@ -11,6 +11,7 @@ import OrderTracking from "./components/OrderTracking";
 // Lazy Load Pages
 const AdminPanel = lazy(() => import("./components/AdminPanel"));
 const Profile = lazy(() => import("./components/Profile"));
+import DesktopGuard from "./components/DesktopGuard";
 const About = lazy(() => import("./components/About"));
 const Contact = lazy(() => import("./components/Contact"));
 const FAQ = lazy(() => import("./components/FAQ"));
@@ -111,6 +112,21 @@ function ShopContent() {
   const handleCheckout = () => {
     clearCart();
   };
+
+  // Early return for Admin Mode to bypass customer Layout entirely
+  if (isAdminMode && user?.role === 'admin') {
+    return (
+      <Suspense fallback={
+        <div className="flex items-center justify-center h-screen bg-gray-50">
+          <div className="text-primary font-bold text-xl">Loading Admin Panel...</div>
+        </div>
+      }>
+        <DesktopGuard>
+          <AdminPanel />
+        </DesktopGuard>
+      </Suspense>
+    );
+  }
 
   return (
     <Layout
@@ -221,49 +237,40 @@ function ShopContent() {
             <>
               {/* User Actions Bar Removed - Now in Header */}
 
-              {isAdminMode && user?.role === 'admin' ? (
-                <Suspense fallback={
-                  <div className="flex items-center justify-center h-screen bg-gray-50">
-                    <div className="text-primary font-bold text-xl">Loading Admin...</div>
-                  </div>
-                }>
-                  <AdminPanel />
-                </Suspense>
-              ) : (
-                <div className="absolute inset-0 w-full overflow-y-auto custom-scrollbar pb-40">
-                  {/* Hero / Banner Removed */}
+              <div className="absolute inset-0 w-full overflow-y-auto custom-scrollbar pb-40">
+                {/* Hero / Banner Removed */}
 
 
-                  {/* Promotional Offers */}
-                  {!filters.search && <OfferBanners />}
+                {/* Promotional Offers */}
+                {!filters.search && <OfferBanners />}
 
-                  {/* Nearby Offers */}
-                  {!filters.search && <NearbyOffers />}
+                {/* Nearby Offers */}
+                {!filters.search && <NearbyOffers />}
 
-                  {/* Category Filter */}
-                  {!filters.search && (
-                    <div ref={categorySectionRef}>
-                      <CategoryShowcase
-                        activeCategory={filters.category}
-                        onSelectCategory={(cat) => handleFilterChange({ category: cat })}
-                      />
-                    </div>
-                  )}
-
-                  {!filters.search && (
-                    <FlashSaleSection
-                      products={products}
-                      onAdd={(p) => addToCart(p, 1)}
-                      onClick={setSelectedProduct}
+                {/* Category Filter */}
+                {!filters.search && (
+                  <div ref={categorySectionRef}>
+                    <CategoryShowcase
+                      activeCategory={filters.category}
+                      onSelectCategory={(cat) => handleFilterChange({ category: cat })}
                     />
-                  )}
+                  </div>
+                )}
 
-                  <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', padding: '0 1rem' }} id="product-grid">
-                    {/* Sidebar Removed */}
+                {!filters.search && (
+                  <FlashSaleSection
+                    products={products}
+                    onAdd={(p) => addToCart(p, 1)}
+                    onClick={setSelectedProduct}
+                  />
+                )}
 
-                    {/* Product Grid */}
-                    <style>
-                      {`
+                <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', padding: '0 1rem' }} id="product-grid">
+                  {/* Sidebar Removed */}
+
+                  {/* Product Grid */}
+                  <style>
+                    {`
                         .responsive-product-grid {
                           display: grid;
                           grid-template-columns: repeat(3, 1fr);
@@ -281,24 +288,23 @@ function ShopContent() {
                           }
                         }
                       `}
-                    </style>
-                    <div className="responsive-product-grid" style={{ flex: 1 }}>
-                      {filters.search && (
-                        <h2 className="text-base font-bold mb-3 col-span-full" style={{ gridColumn: '1 / -1' }}>
-                          Search Results for "{filters.search}"
-                        </h2>
-                      )}
-                      {products.map((product) => (
-                        <ProductCard
-                          key={product._id}
-                          product={product}
-                          onClick={setSelectedProduct}
-                        />
-                      ))}
-                    </div>
+                  </style>
+                  <div className="responsive-product-grid" style={{ flex: 1 }}>
+                    {filters.search && (
+                      <h2 className="text-base font-bold mb-3 col-span-full" style={{ gridColumn: '1 / -1' }}>
+                        Search Results for "{filters.search}"
+                      </h2>
+                    )}
+                    {products.map((product) => (
+                      <ProductCard
+                        key={product._id}
+                        product={product}
+                        onClick={setSelectedProduct}
+                      />
+                    ))}
                   </div>
                 </div>
-              )}
+              </div>
             </>
           } />
           <Route path="/about" element={<About />} />

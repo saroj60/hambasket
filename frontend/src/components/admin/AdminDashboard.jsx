@@ -1,244 +1,230 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { API_URL } from '../../config';
 
+// Premium Line Chart Component (SVG)
+const SalesChart = ({ data }) => {
+    if (!data || data.length === 0) return <div className="h-64 flex items-center justify-center text-gray-400 font-medium">No sales data available yet</div>;
+
+    const sortedData = [...data].sort((a, b) => new Date(a._id) - new Date(b._id)).reverse().slice(0, 14).reverse();
+    const maxVal = Math.max(...sortedData.map(d => d.totalSales), 100);
+    const height = 300;
+    const width = 800;
+    const padding = 20;
+
+    const points = sortedData.map((d, i) => {
+        const x = padding + (i / (sortedData.length - 1)) * (width - 2 * padding);
+        const y = height - padding - (d.totalSales / maxVal) * (height - 2 * padding);
+        return `${x},${y}`;
+    }).join(' ');
+
+    const fillPath = `${padding},${height - padding} ${points} ${width - padding},${height - padding}`;
+
+    return (
+        <div className="w-full overflow-hidden">
+            <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full drop-shadow-lg">
+                <defs>
+                    <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.4" />
+                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+                    </linearGradient>
+                    <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#7c3aed" />
+                        <stop offset="100%" stopColor="#3b82f6" />
+                    </linearGradient>
+                </defs>
+
+                {/* Grid */}
+                {[0, 0.25, 0.5, 0.75, 1].map((t, i) => (
+                    <line
+                        key={i}
+                        x1={padding}
+                        y1={padding + t * (height - 2 * padding)}
+                        x2={width - padding}
+                        y2={padding + t * (height - 2 * padding)}
+                        stroke="#e5e7eb"
+                        strokeWidth="1"
+                        strokeDasharray="4 4"
+                    />
+                ))}
+
+                {/* Area */}
+                <polygon points={fillPath} fill="url(#chartGradient)" />
+
+                {/* Line */}
+                <polyline points={points} fill="none" stroke="url(#lineGradient)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+
+                {/* Interactive Dots */}
+                {sortedData.map((d, i) => {
+                    const x = padding + (i / (sortedData.length - 1)) * (width - 2 * padding);
+                    const y = height - padding - (d.totalSales / maxVal) * (height - 2 * padding);
+                    return (
+                        <g key={i} className="group cursor-pointer">
+                            <circle cx={x} cy={y} r="6" fill="#fff" stroke="#7c3aed" strokeWidth="3" className="transition-all duration-300 group-hover:scale-125 shadow-sm" />
+                            {/* Tooltip */}
+                            <foreignObject x={x - 60} y={y - 70} width="120" height="60" className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                                <div className="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 text-center shadow-xl transform translate-y-1">
+                                    <div className="font-bold text-sm">Rs. {d.totalSales.toLocaleString()}</div>
+                                    <div className="text-gray-400 text-[10px]">{d._id}</div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    );
+                })}
+            </svg>
+            <div className="flex justify-between px-2 text-xs font-semibold text-gray-400 mt-2 uppercase tracking-wide">
+                <span>{sortedData[0]?._id}</span>
+                <span>{sortedData[sortedData.length - 1]?._id}</span>
+            </div>
+        </div>
+    );
+};
+
 const AdminDashboard = () => {
-    const [analytics, setAnalytics] = useState(null);
-    const [forecast, setForecast] = useState([]);
+    const [stats, setStats] = useState({
+        totalOrders: 0,
+        totalSales: 0,
+        totalUsers: 0,
+        salesPerDay: [],
+        recentOrders: []
+    });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchData();
+        fetchAnalytics();
     }, []);
 
-    const fetchData = async () => {
-        setLoading(true);
+    const fetchAnalytics = async () => {
         try {
-            await Promise.all([fetchAnalytics(), fetchForecast()]);
+            const res = await fetch(`${API_URL}/orders/analytics`, { credentials: 'include' });
+            if (res.ok) {
+                const data = await res.json();
+                setStats(data);
+            }
+        } catch (error) {
+            console.error("Error fetching analytics:", error);
         } finally {
             setLoading(false);
         }
     };
 
-    const fetchAnalytics = async () => {
-        try {
-            const res = await fetch(`${API_URL}/orders/analytics`, { credentials: 'include' });
-            if (res.ok) setAnalytics(await res.json());
-        } catch (error) {
-            console.error("Error fetching analytics:", error);
-        }
-    };
-
-    const fetchForecast = async () => {
-        try {
-            const res = await fetch(`${API_URL}/analytics/forecast`, { credentials: 'include' });
-            if (res.ok) setForecast(await res.json());
-        } catch (error) {
-            console.error("Error fetching forecast:", error);
-        }
-    };
-
-    if (loading) {
-        return (
-            <div className="flex flex-col items-center justify-center h-[60vh] text-gray-400 gap-4">
-                <div className="relative w-16 h-16">
-                    <div className="absolute top-0 left-0 w-full h-full border-4 border-gray-100 rounded-full"></div>
-                    <div className="absolute top-0 left-0 w-full h-full border-4 border-primary rounded-full border-t-transparent animate-spin"></div>
-                </div>
-                <p className="animate-pulse font-medium">Loading Dashboard...</p>
-            </div>
-        );
-    }
-
-    if (!analytics) return (
-        <div className="flex flex-col items-center justify-center h-[50vh] text-gray-400">
-            <span className="text-4xl mb-2">⚠️</span>
-            <p>Failed to load analytics data.</p>
-            <button onClick={fetchData} className="mt-4 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50">Retry</button>
+    if (loading) return (
+        <div className="flex h-screen items-center justify-center">
+            <div className="w-12 h-12 border-4 border-purple-600 rounded-full animate-spin border-t-transparent"></div>
         </div>
     );
 
     return (
         <div className="space-y-8 animate-fade-in pb-20">
-            {/* Header */}
-            <div className="bg-white/80 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-xl shadow-gray-200/40 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-4 z-40">
+            {/* Header - Clean, No Search Bar */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-black text-gray-800 tracking-tight flex items-center gap-2">
-                        Good Morning! <span className="text-2xl animate-bounce">👋</span>
-                    </h2>
-                    <p className="text-gray-500 mt-1 font-medium flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        Overview for {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-                    </p>
+                    <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">Overview</h1>
+                    <p className="text-gray-500 font-medium text-lg">Detailed analysis of your store's performance.</p>
                 </div>
-                <button
-                    onClick={fetchData}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-xl shadow-lg shadow-gray-900/20 hover:bg-gray-800 transition-all font-medium text-sm hover:-translate-y-0.5"
-                >
-                    🔄 Refresh
-                </button>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <StatCard
-                    title="Total Revenue"
-                    value={`Rs. ${analytics.totalSales?.toLocaleString() || 0}`}
-                    icon="💰"
-                    trend="+12%"
-                    color="green"
-                />
-                <StatCard
-                    title="Total Orders"
-                    value={analytics.totalOrders || 0}
-                    icon="📦"
-                    trend="+5%"
-                    color="blue"
-                />
-                <StatCard
-                    title="Active Users"
-                    value={analytics.totalUsers || 0}
-                    icon="👥"
-                    trend="+8%"
-                    color="purple"
-                />
-            </div>
-
-            {/* Daily Sales Chart (Vertical Bar Chart) */}
-            {analytics.salesPerDay && analytics.salesPerDay.length > 0 ? (
-                <div className="bg-white p-8 rounded-3xl shadow-xl shadow-gray-200/40 border border-gray-100">
-                    <div className="flex justify-between items-center mb-8">
-                        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-3">
-                            <div className="p-2 bg-primary/10 rounded-lg text-primary">📊</div>
-                            Sales Performance
-                        </h3>
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 shadow-sm text-sm font-bold text-gray-600">
+                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        Live Updates
                     </div>
+                </div>
+            </div>
 
-                    <div className="h-64 flex items-end gap-3 md:gap-6 overflow-x-auto pb-4 custom-scrollbar px-2">
-                        {analytics.salesPerDay.map((day, index) => {
-                            const maxSales = Math.max(...analytics.salesPerDay.map(d => d.totalSales));
-                            const percentage = maxSales > 0 ? (day.totalSales / maxSales) * 100 : 0;
-                            return (
-                                <div key={day._id} className="group relative flex flex-col items-center flex-1 min-w-[50px] h-full justify-end">
-                                    {/* Tooltip */}
-                                    <div className="absolute -top-14 opacity-0 group-hover:opacity-100 transition-all bg-gray-900 text-white text-xs py-2 px-3 rounded-lg pointer-events-none whitespace-nowrap z-50 shadow-xl mb-2 font-medium transform translate-y-2 group-hover:translate-y-0">
-                                        Rs. {day.totalSales.toLocaleString()}
-                                        <div className="text-gray-400 text-[10px] mt-0.5">{day._id}</div>
-                                        <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+            {/* Premium Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Revenue Card */}
+                <div className="bg-gradient-to-br from-purple-600 to-indigo-700 p-1 rounded-[2rem] shadow-xl shadow-purple-200 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="bg-[#1e1b4b] h-full rounded-[1.8rem] p-6 text-white relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-2xl"></div>
+                        <div className="flex justify-between items-start mb-6 relative z-10">
+                            <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md">
+                                <span className="text-2xl">💰</span>
+                            </div>
+                            <span className="text-xs font-bold bg-green-500/20 text-green-300 px-3 py-1 rounded-full border border-green-500/20">+12% vs last mo</span>
+                        </div>
+                        <div className="relative z-10">
+                            <p className="text-indigo-200 font-medium text-sm uppercase tracking-wider mb-1">Total Revenue</p>
+                            <h3 className="text-3xl font-black text-white tracking-tight">Rs. {stats.totalSales.toLocaleString()}</h3>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Orders Card */}
+                <div className="bg-white p-6 rounded-[2rem] shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+                    <div className="flex justify-between items-start mb-6">
+                        <div className="p-3 bg-orange-50 rounded-2xl group-hover:bg-orange-100 transition-colors">
+                            <span className="text-2xl">📦</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-gray-400 font-bold text-sm uppercase tracking-wider mb-1">Total Orders</p>
+                        <h3 className="text-3xl font-black text-gray-800">{stats.totalOrders}</h3>
+                    </div>
+                </div>
+
+                {/* Customers Card */}
+                <div className="bg-white p-6 rounded-[2rem] shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group">
+                    <div className="flex justify-between items-start mb-6">
+                        <div className="p-3 bg-blue-50 rounded-2xl group-hover:bg-blue-100 transition-colors">
+                            <span className="text-2xl">👥</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-gray-400 font-bold text-sm uppercase tracking-wider mb-1">Total Customers</p>
+                        <h3 className="text-3xl font-black text-gray-800">{stats.totalUsers}</h3>
+                    </div>
+                </div>
+            </div>
+
+            {/* Sales Chart Section */}
+            <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-gray-100">
+                <div className="flex justify-between items-center mb-8">
+                    <div>
+                        <h3 className="text-2xl font-bold text-gray-800 tracking-tight">Revenue Trends</h3>
+                        <p className="text-gray-400 text-sm font-medium">Daily income over time</p>
+                    </div>
+                    <select className="bg-gray-50 border border-gray-200 text-sm font-bold text-gray-700 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500/20 transition-all cursor-pointer">
+                        <option>Last 14 Days</option>
+                        <option>Last 30 Days</option>
+                    </select>
+                </div>
+                <div className="h-0 md:h-auto overflow-hidden">
+                    <SalesChart data={stats.salesPerDay} />
+                </div>
+                <div className="md:hidden text-center text-gray-400 text-xs mt-4 bg-gray-50 p-3 rounded-xl">
+                    Full interactive chart available on desktop view.
+                </div>
+            </div>
+
+            {/* Minimal Recent Activity */}
+            {stats.recentOrders && stats.recentOrders.length > 0 && (
+                <div className="space-y-4">
+                    <h3 className="text-xl font-bold text-gray-800 px-2">Recent Activity</h3>
+                    <div className="bg-white rounded-[2rem] shadow-lg border border-gray-100 overflow-hidden">
+                        {stats.recentOrders.map((order, i) => (
+                            <div key={order._id} className={`flex items-center justify-between p-5 hover:bg-gray-50 transition-colors ${i !== stats.recentOrders.length - 1 ? 'border-b border-gray-50' : ''}`}>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-xl shadow-inner">
+                                        🛍️
                                     </div>
-
-                                    {/* Bar */}
-                                    <div
-                                        className="w-full max-w-[60px] bg-gradient-to-t from-primary/80 to-primary rounded-xl transition-all duration-500 ease-out group-hover:scale-y-105 group-hover:shadow-lg group-hover:shadow-primary/30 origin-bottom relative overflow-hidden"
-                                        style={{ height: `${percentage}%`, minHeight: '8px' }}
-                                    >
-                                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                                    </div>
-
-                                    {/* X-Axis Label */}
-                                    <div className="mt-4 text-xs text-gray-400 font-semibold group-hover:text-primary transition-colors">
-                                        {day._id.split('-').slice(1).join('/')}
+                                    <div>
+                                        <p className="font-bold text-gray-900">Order #{order._id.slice(-4)}</p>
+                                        <p className="text-xs text-gray-500 font-medium">{order.user?.name || 'Guest'} • {new Date(order.createdAt).toLocaleDateString()}</p>
                                     </div>
                                 </div>
-                            );
-                        })}
+                                <div className="text-right">
+                                    <p className="font-black text-gray-900">Rs. {order.totalAmount}</p>
+                                    <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-full ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
+                                            order.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
+                                                'bg-orange-100 text-orange-700'
+                                        }`}>
+                                        {order.status}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                </div>
-            ) : (
-                <div className="bg-white p-12 rounded-3xl shadow-sm border border-gray-100 text-center text-gray-400 italic">
-                    No sales data available for the charts yet.
                 </div>
             )}
-
-            {/* AI Forecast */}
-            <div className="bg-white p-8 rounded-3xl shadow-xl shadow-gray-200/40 border border-gray-100">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
-                    <div>
-                        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-3 mb-1">
-                            <div className="p-2 bg-yellow-100 rounded-lg text-yellow-600">⚡</div>
-                            AI Demand Forecast
-                        </h3>
-                        <p className="text-gray-500 text-sm ml-11">Predicted demand for the next 7 days based on data.</p>
-                    </div>
-                </div>
-
-                {forecast.length > 0 ? (
-                    <div className="overflow-x-auto rounded-2xl border border-gray-100">
-                        <table className="w-full text-left">
-                            <thead className="bg-gray-50/80 text-gray-400 text-xs uppercase font-bold tracking-wider">
-                                <tr>
-                                    <th className="p-5 pl-6">Product</th>
-                                    <th className="p-5 text-center">History (30d)</th>
-                                    <th className="p-5 text-center">Daily Avg</th>
-                                    <th className="p-5 pr-6 text-right">Prediction</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50 bg-white">
-                                {forecast.map(item => (
-                                    <tr key={item.productId} className="hover:bg-blue-50/30 transition-colors group">
-                                        <td className="p-5 pl-6 font-semibold text-gray-700 flex items-center gap-4">
-                                            <span className="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-xl text-xl shadow-sm border border-gray-100 group-hover:scale-110 transition-transform">{item.emoji}</span>
-                                            {item.name}
-                                        </td>
-                                        <td className="p-5 text-center text-gray-500 font-medium">{item.totalSoldLast30Days}</td>
-                                        <td className="p-5 text-center text-gray-500">{item.dailyAverage}</td>
-                                        <td className="p-5 pr-6 text-right">
-                                            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold bg-green-50 text-green-600 border border-green-100">
-                                                <span>📈</span> {item.forecastNext7Days} units
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                ) : (
-                    <div className="text-center py-12 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
-                        <div className="text-4xl mb-3 grayscale opacity-30">🤖</div>
-                        <p className="text-gray-400 font-medium">Not enough historical data for AI predictions</p>
-                    </div>
-                )}
-            </div>
-
-            <style>{`
-                .custom-scrollbar::-webkit-scrollbar {
-                    height: 6px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background-color: #f3f4f6;
-                    border-radius: 20px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background-color: #e5e7eb;
-                }
-            `}</style>
-        </div>
-    );
-};
-
-const StatCard = ({ title, value, icon, trend, color }) => {
-    const colorClasses = {
-        green: 'bg-emerald-50 text-emerald-600',
-        blue: 'bg-blue-50 text-blue-600',
-        purple: 'bg-purple-50 text-purple-600'
-    };
-
-    return (
-        <div className="bg-white p-6 rounded-3xl shadow-xl shadow-gray-200/40 border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
-            <div className="flex justify-between items-start mb-4">
-                <div className={`p-3.5 rounded-2xl ${colorClasses[color]} text-2xl shadow-sm`}>
-                    {icon}
-                </div>
-                <div className="px-2.5 py-1 rounded-full bg-gray-50 text-xs font-bold text-gray-400 border border-gray-100 flex items-center gap-1">
-                    {trend}
-                </div>
-            </div>
-            <div>
-                <p className="text-gray-400 text-sm font-semibold mb-1 uppercase tracking-wide">{title}</p>
-                <h3 className="text-3xl font-black text-gray-800 tracking-tight">{value}</h3>
-            </div>
         </div>
     );
 };

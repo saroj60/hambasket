@@ -20,10 +20,11 @@ const BottomNavigation = ({ cartCount, onOpenCart, onOpenProfile, isAdminMode, s
             right: 0,
             backgroundColor: 'white',
             borderTop: '1px solid var(--border)',
-            display: 'flex',
-            justifyContent: 'space-around',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
             alignItems: 'center',
-            padding: '0.5rem',
+            padding: '8px 0',
+            paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
             zIndex: 100,
             boxShadow: '0 -2px 10px rgba(0,0,0,0.05)'
         }}>
@@ -59,27 +60,7 @@ const BottomNavigation = ({ cartCount, onOpenCart, onOpenProfile, isAdminMode, s
                 )}
             </div>
 
-            <div onClick={() => { handleHomeClick(); onOpenProfile(); }} style={{ cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '0.75rem' }}>
-                <span style={{ fontSize: '1.5rem', marginBottom: '2px' }}>👤</span>
-                <span>{user ? 'Profile' : 'Login'}</span>
-            </div>
 
-            {user && user.role === 'admin' && (
-                <div
-                    onClick={() => setIsAdminMode && setIsAdminMode(true)}
-                    style={{
-                        cursor: 'pointer',
-                        color: isAdminMode ? 'var(--primary)' : 'var(--text-muted)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        fontSize: '0.75rem'
-                    }}
-                >
-                    <span style={{ fontSize: '1.5rem', marginBottom: '2px' }}>🛡️</span>
-                    <span>Admin</span>
-                </div>
-            )}
         </div>
     );
 };
