@@ -77,10 +77,7 @@ const ProductCard = ({ product, onClick }) => {
           {product.name}
         </h3>
 
-        {/* Weight */}
-        <div className="text-[11px] text-gray-400 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-          {product.weight || '500 g'}
-        </div>
+
 
         {/* Footer: Price & Add Button */}
         <div className="mt-auto flex items-end justify-between pt-2 min-h-[32px]">
