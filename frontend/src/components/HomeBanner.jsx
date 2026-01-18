@@ -20,22 +20,22 @@ const HomeBanner = ({ onShopNow }) => {
             <div className="absolute top-0 right-0 -mr-20 -mt-20 h-80 w-80 rounded-full bg-white opacity-10 blur-3xl pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 -ml-20 -mb-20 h-64 w-64 rounded-full bg-black opacity-10 blur-3xl pointer-events-none"></div>
 
-            <div className="relative z-10 flex flex-col items-center justify-center px-6 py-12 md:flex-row md:justify-between md:px-16 md:py-16 min-h-[280px]">
+            <div className="relative z-10 flex flex-col items-center justify-center px-6 py-8 md:flex-row md:justify-between md:px-16 md:py-16 md:min-h-[280px]">
                 {/* Text Content */}
                 <div className="text-center md:text-left max-w-lg z-20">
 
-                    <h2 className="mb-4 text-4xl font-black leading-tight text-white md:text-5xl lg:text-6xl drop-shadow-md">
+                    <h2 className="mb-2 text-3xl font-black leading-tight text-white md:text-5xl lg:text-6xl drop-shadow-md">
                         Get <span className="text-yellow-300">20% OFF</span>
                     </h2>
 
-                    <p className="mb-8 text-lg font-medium text-purple-50 md:text-xl leading-relaxed opacity-95">
-                        Shop your daily essentials in low price <br className="hidden md:block" />
-                        <span className="font-bold text-white tracking-wide">FREE DELIVERY</span> on all orders!
-                    </p>
+                    <div className="mb-6 text-base font-medium text-purple-50 md:text-xl leading-relaxed opacity-95">
+                        <p>Shop your daily essentials in low price</p>
+                        <p className="mt-1 font-bold text-white tracking-wide">FREE DELIVERY on all orders!</p>
+                    </div>
 
                     <button
                         onClick={onShopNow}
-                        className="inline-block rounded-full bg-yellow-400 px-12 py-4 text-xl font-bold text-gray-900 shadow-xl transition-transform duration-200 hover:scale-105 hover:bg-yellow-300 hover:shadow-2xl active:scale-95 cursor-pointer"
+                        className="inline-block rounded-full bg-yellow-400 px-8 py-3 text-lg font-bold text-gray-900 shadow-xl transition-transform duration-200 hover:scale-105 hover:bg-yellow-300 hover:shadow-2xl active:scale-95 cursor-pointer"
                     >
                         Shop Now
                     </button>
