@@ -83,7 +83,7 @@ const Home = () => {
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                 <span>🔥</span> Popular Right Now
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 {popularProducts.map((product) => (
                   <ProductCard
                     key={`pop-${product._id || product.id}`}
@@ -100,7 +100,7 @@ const Home = () => {
             {new URLSearchParams(location.search).get('search') ? `Search Results for "${new URLSearchParams(location.search).get('search')}"` : 'All Products'}
           </h2>
           {products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {products.map((product) => (
                 <ProductCard
                   key={product._id || product.id}
