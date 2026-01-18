@@ -91,7 +91,7 @@ const AdminProducts = () => {
 
     const handleEditProduct = (product) => {
         // Ensure subCategory is passed to modal (it might be undefined in old records)
-        setEditingProduct({ ...product, subCategory: product.subCategory || '' });
+        setEditingProduct({ ...product, subCategory: product.subCategory || '', countInStock: product.stock });
         setIsModalOpen(true);
     };
 
@@ -133,11 +133,11 @@ const AdminProducts = () => {
                         <div key={product._id} className="bg-white p-4 rounded-[1.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group flex flex-col relative overflow-hidden">
                             {/* Stock Badge */}
                             <div className="absolute top-4 right-4 z-10">
-                                <span className={`text-[10px] font-bold px-2 py-1 rounded-full shadow-sm border backdrop-blur-md ${product.countInStock > 0
+                                <span className={`text-[10px] font-bold px-2 py-1 rounded-full shadow-sm border backdrop-blur-md ${product.stock > 0
                                     ? 'bg-white/80 text-gray-700 border-gray-100'
                                     : 'bg-red-50 text-red-600 border-red-100'
                                     }`}>
-                                    {product.countInStock > 0 ? `${product.countInStock} Left` : 'Out of Stock'}
+                                    {product.stock > 0 ? `${product.stock} Left` : 'Out of Stock'}
                                 </span>
                             </div>
 
