@@ -41,6 +41,11 @@ const AdminProducts = () => {
         if (formData.subCategory) data.append('subCategory', formData.subCategory);
         data.append('stock', formData.countInStock);
         data.append('description', formData.description);
+
+        // Fix: Append Weight and Variants
+        if (formData.weight) data.append('weight', formData.weight);
+        if (formData.variants) data.append('variants', JSON.stringify(formData.variants));
+
         if (formData.image instanceof File) {
             data.append('image', formData.image);
         } else if (typeof formData.image === 'string' && formData.image.trim() !== '') {

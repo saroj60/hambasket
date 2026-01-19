@@ -100,6 +100,13 @@ router.post("/", isVendorOrAdmin, uploadMiddleware, async (req, res) => {
         console.error("Error parsing flashSale:", e);
       }
     }
+    if (productData.variants) {
+      try {
+        productData.variants = JSON.parse(productData.variants);
+      } catch (e) {
+        console.error("Error parsing variants:", e);
+      }
+    }
     const product = await Product.create(productData);
     res.status(201).json(product);
   } catch (error) {
@@ -120,6 +127,13 @@ router.put("/:id", isVendorOrAdmin, upload.single('image'), async (req, res) => 
         productData.flashSale = JSON.parse(productData.flashSale);
       } catch (e) {
         console.error("Error parsing flashSale:", e);
+      }
+    }
+    if (productData.variants) {
+      try {
+        productData.variants = JSON.parse(productData.variants);
+      } catch (e) {
+        console.error("Error parsing variants:", e);
       }
     }
     const product = await Product.findByIdAndUpdate(req.params.id, productData, { new: true });
