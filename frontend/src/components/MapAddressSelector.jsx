@@ -10,23 +10,7 @@ const VITE_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 // Store Location: 27°39'59.1"N 85°21'17.1"E -> Decimal: 27.666417, 85.354750
 const STORE_LOCATION = { lat: 27.666417, lng: 85.354750 };
-const DELIVERY_RADIUS_METERS = 3000; // 3 KM
-
-const haversineDistance = (coords1, coords2) => {
-    const toRad = (x) => (x * Math.PI) / 180;
-    const R = 6371e3; // Earth radius in meters
-
-    const dLat = toRad(coords2.lat - coords1.lat);
-    const dLon = toRad(coords2.lng - coords1.lng);
-    const lat1 = toRad(coords1.lat);
-    const lat2 = toRad(coords2.lat);
-
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return R * c;
-};
+const DELIVERY_RADIUS_METERS = 3000; // 3 KM - Visual Only, backend does robust check
 
 const containerStyle = {
     width: '100%',
@@ -37,7 +21,7 @@ const libraries = ['places'];
 
 const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
     const { user } = useAuth();
-    const { isLoaded } = useJsApiLoader({
+    const { isLoaded, loadError } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: VITE_GOOGLE_MAPS_API_KEY,
         libraries: libraries
@@ -74,20 +58,9 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
             const newPos = { lat, lng };
             setCenter(newPos);
 
-            // Check Radius
-            const distance = haversineDistance(newPos, STORE_LOCATION);
-            const inRange = distance <= DELIVERY_RADIUS_METERS;
-            setIsInRange(inRange);
-
             // Debounce fetch
             if (timerRef.current) clearTimeout(timerRef.current);
             setLoading(true); // show loading immediately for better feedback
-
-            if (!inRange) {
-                setAddress("Currently not delivering in this area");
-                setLoading(false);
-                return;
-            }
 
             timerRef.current = setTimeout(() => {
                 fetchAddress(lat, lng);
@@ -96,89 +69,46 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
     }, [map, step]);
 
     const fetchAddress = async (lat, lng) => {
-        if (!window.google || !window.google.maps) {
-            setAddress("Map API not loaded");
-            setLoading(false);
-            return;
-        }
-
-        // Safety timeout to prevent sticking in loading state
-        const safetyTimeout = setTimeout(() => {
-            setLoading(false);
-            setAddress(prev => (prev && prev !== 'Checking location...') ? prev : "Location Check Timed Out");
-        }, 8000);
+        setAddress("Fetching location details...");
 
         try {
-            const geocoder = new window.google.maps.Geocoder();
-            const placesService = new window.google.maps.places.PlacesService(map);
-            const location = { lat, lng };
-
-            // 1. Get Basic Geocoded Address
-            geocoder.geocode({ location }, (results, status) => {
-                if (status !== 'OK') {
-                    clearTimeout(safetyTimeout);
-                    setAddress("Location not found");
-                    setLoading(false);
-                    return;
-                }
-
-                try {
-                    if (results[0]) {
-                        // Filter out Plus Codes if a better address exists
-                        const bestResult = results.find(r =>
-                            !r.types.includes('plus_code') &&
-                            !r.formatted_address.match(/^[A-Z0-9]{4}\+[A-Z0-9]{2,}/)
-                        );
-
-                        let baseAddress = bestResult ? bestResult.formatted_address : results[0].formatted_address;
-
-                        // 2. Get Nearby Landmark (Place)
-                        const request = {
-                            location: location,
-                            radius: 50,
-                            type: 'point_of_interest'
-                        };
-
-                        try {
-                            placesService.nearbySearch(request, (placeResults, placeStatus) => {
-                                clearTimeout(safetyTimeout);
-
-                                if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK && placeResults && placeResults.length > 0) {
-                                    const landmark = placeResults[0];
-                                    if (!baseAddress.includes(landmark.name)) {
-                                        setAddress(`${baseAddress}, Near ${landmark.name}`);
-                                        setLandmark(landmark.name);
-                                    } else {
-                                        setAddress(baseAddress);
-                                    }
-                                } else {
-                                    setAddress(baseAddress);
-                                }
-                                setLoading(false);
-                            });
-                        } catch (placeError) {
-                            clearTimeout(safetyTimeout);
-                            console.error("Places API Error:", placeError);
-                            setAddress(baseAddress);
-                            setLoading(false);
-                        }
-
-                    } else {
-                        clearTimeout(safetyTimeout);
-                        setAddress(`Location not found`);
-                        setLoading(false);
-                    }
-                } catch (e) {
-                    clearTimeout(safetyTimeout);
-                    console.error("Geocoding Logic Error:", e);
-                    setAddress("Error processing location");
-                    setLoading(false);
-                }
+            // Call our new Backend API
+            const response = await fetch(`${API_URL}/location/resolve`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lat, lng })
             });
-        } catch (error) {
-            clearTimeout(safetyTimeout);
-            setAddress(`Error: ${error.message}`);
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to resolve location');
+            }
+
+            // Update State with Backend Data
+            setAddress(data.formatted_address);
+
+            // Backend handles serviceability check logic now
+            setIsInRange(data.serviceable);
+
+            // Auto-populate form fields if components exist
+            if (data.components) {
+                if (data.components.landmark) {
+                    setLandmark(data.components.landmark);
+                } else if (data.components.area) {
+                    // Fallback to area if no specific landmark
+                    // setLandmark(data.components.area); 
+                }
+            }
+
             setLoading(false);
+
+        } catch (error) {
+            console.error("Location Resolve Error:", error);
+            setAddress("Could not fetch address details. Please check connection.");
+            setLoading(false);
+            // Fallback: If backend fails, assume failed check
+            setIsInRange(false);
         }
     };
 
@@ -209,7 +139,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
                 if (map) {
                     map.panTo(newPos);
-                    map.setZoom(19); // High precision zoom
+                    map.setZoom(19);
                 }
             }
         }
@@ -242,7 +172,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
             if (map && pos) {
                 map.panTo(pos);
-                map.setZoom(19); // High precision zoom
+                map.setZoom(19);
             }
         } catch (error) {
             alert("Could not detect location. Please ensure GPS is enabled.");
@@ -253,9 +183,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
     const handleConfirmLocation = () => {
         setStep('details');
-        // Check if mapRef is available and resize
         if (mapRef.current) {
-            // Slight timeout to allow transition
             setTimeout(() => {
                 window.google.maps.event.trigger(mapRef.current, 'resize');
                 mapRef.current.panTo(center);
@@ -271,9 +199,8 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
         setLoading(true);
         const finalLabel = label === 'Other' ? customLabel : label;
-        // Construct full address string for display/older compatibility if needed
-        // But mainly we send structured data now
-        const displayAddress = `${landmark ? landmark + ', ' : ''}${address}`;
+        // Use the address from backend directly
+        const displayAddress = address;
 
         const fullAddressData = {
             address: displayAddress,
@@ -284,7 +211,6 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
             isDefault: false
         };
 
-        // If user is logged in, save to backend
         if (user) {
             try {
                 await fetch(`${API_URL}/users/address`, {
@@ -308,18 +234,19 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
         setLoading(false);
     };
 
+    if (loadError) return <div style={{ color: 'red', padding: '2rem' }}>Error loading maps: {loadError.message}</div>;
     if (!isLoaded) return <div style={{ padding: '2rem', textAlign: 'center' }}>Loading Maps...</div>;
 
     return (
         <div style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
             backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 3000,
-            display: 'flex', alignItems: 'flex-end', justifyContent: 'center', // Align bottom used for mobile sheet feel
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
         }}>
             {/* Main Card */}
             <div className="card" style={{
                 width: '100%', maxWidth: '600px',
-                height: step === 'map' ? '90vh' : 'auto', // Adjust height based on step
+                height: step === 'map' ? '90vh' : 'auto',
                 maxHeight: '90vh',
                 display: 'flex', flexDirection: 'column',
                 padding: 0, overflow: 'hidden', position: 'relative',
@@ -335,7 +262,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                     position: 'relative',
                     transition: 'all 0.3s ease'
                 }}>
-                    {/* Search Bar (Only visible in Map step) */}
+                    {/* Search Bar */}
                     {step === 'map' && (
                         <div style={{ position: 'absolute', top: 10, left: 10, right: 10, zIndex: 1001 }}>
                             <Autocomplete
@@ -363,17 +290,17 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                         onUnmount={onUnmount}
                         onIdle={onIdle}
                         options={{
-                            disableDefaultUI: true, // Clean look
+                            disableDefaultUI: true,
                             zoomControl: false,
-                            gestureHandling: step === 'map' ? 'greedy' : 'none', // Disable interaction in details step
+                            gestureHandling: step === 'map' ? 'greedy' : 'none',
                         }}
                     >
-                        {/* Delivery Radius Circle */}
+                        {/* Delivery Radius Circle (Visual Aid) */}
                         <Circle
                             center={STORE_LOCATION}
                             radius={DELIVERY_RADIUS_METERS}
                             options={{
-                                strokeColor: "#10b981", // Primary Green
+                                strokeColor: "#10b981",
                                 strokeOpacity: 0.8,
                                 strokeWeight: 2,
                                 fillColor: "#10b981",
@@ -383,7 +310,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                         />
                     </GoogleMap>
 
-                    {/* Fixed Center Pin (Only in Map Step or Static in Details) */}
+                    {/* Fixed Center Pin */}
                     <div style={{
                         position: 'absolute', top: '50%', left: '50%',
                         transform: 'translate(-50%, -100%)', zIndex: 1000,
@@ -392,7 +319,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                         <img src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png" alt="pin" style={{ height: '40px' }} />
                     </div>
 
-                    {/* Locate Me (Only in Map step) */}
+                    {/* Locate Me */}
                     {step === 'map' && (
                         <button
                             onClick={handleLocateMe}
@@ -431,11 +358,11 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                                     : 'Confirm Address Details'}
                             </h3>
                             <p style={{ fontSize: '0.9rem', color: isInRange ? '#6b7280' : '#ef4444', lineHeight: '1.4' }}>
-                                {loading ? 'Checking location...' : address}
+                                {loading ? 'Fetching location details...' : address}
                             </p>
                             {!isInRange && (
                                 <p style={{ fontSize: '0.8rem', color: '#ef4444', marginTop: '0.25rem' }}>
-                                    We currently only deliver within 3km of our store.
+                                    We unfortunately do not deliver to this location yet.
                                 </p>
                             )}
                         </div>
@@ -458,7 +385,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                                 onClick={handleConfirmLocation}
                                 className="btn btn-primary"
                                 style={{ width: '100%', padding: '1rem', fontSize: '1rem' }}
-                                disabled={loading || !isInRange || !address || address.startsWith('Error')}
+                                disabled={loading || !isInRange || !address || address.startsWith('Error') || address.startsWith('Fetching')}
                             >
                                 {isInRange ? 'Confirm Location' : 'Location Not Available'}
                             </button>

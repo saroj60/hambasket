@@ -148,6 +148,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/stores", storeRoutes);
 app.use("/api/offers", offerRoutes);
 app.use("/api/analytics", analyticsRoutes);
+import locationRoutes from "./routes/locationRoutes.js";
+app.use("/api/location", locationRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
