@@ -240,7 +240,7 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                         </div>
 
                         {/* Price & Unit */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-900 ml-1">Price (Rs.)</label>
                                 <input
@@ -250,6 +250,17 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                                     value={formData.price}
                                     onChange={handleChange}
                                     placeholder="0.00"
+                                    className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all outline-none font-medium"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-900 ml-1">Weight/Size</label>
+                                <input
+                                    type="text"
+                                    name="weight"
+                                    value={formData.weight || ''}
+                                    onChange={handleChange}
+                                    placeholder="e.g. 2.5, 500"
                                     className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all outline-none font-medium"
                                 />
                             </div>
@@ -269,6 +280,8 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                                     <option value="packet">Packet</option>
                                     <option value="dozen">Dozen</option>
                                     <option value="box">Box</option>
+                                    <option value="bottle">Bottle</option>
+                                    <option value="can">Can</option>
                                     <option value="set">Set</option>
                                 </select>
                             </div>
