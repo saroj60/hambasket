@@ -31,6 +31,16 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
   const deliveryFee = 0; // subtotal > 150 ? 0 : 50;
   const total = subtotal + deliveryFee;
 
+  const [whatsappUrl, setWhatsAppUrl] = useState('');
+
+  const handleFinalizeWhatsApp = () => {
+    if (whatsappUrl) {
+      window.open(whatsappUrl, '_blank');
+      clearCart();
+      onClose();
+    }
+  };
+
   // Reset step when cart opens/closes
   useEffect(() => {
     if (isOpen) {
@@ -138,7 +148,10 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
       const orderId = newOrder._id ? newOrder._id.slice(-6).toUpperCase() : 'N/A';
 
       // 5. Construct Message with Order ID
-      const itemsList = cartItems.map(i => `• ${i.name} (x${i.qty}) - Rs. ${i.price * i.qty}`).join('\n');
+      const itemsList = cartItems.map(i => {
+        const variantText = i.variant ? ` (${i.variant.weight})` : '';
+        return `• ${i.name}${variantText} (x${i.qty}) - Rs. ${i.price * i.qty}`;
+      }).join('\n');
       const locationLink = location.coordinates ? `https://www.google.com/maps?q=${location.coordinates.lat},${location.coordinates.lng}` : 'N/A';
 
       const message = `*New Order Request* 🛒\n` +
@@ -153,13 +166,12 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
         `*Address:* ${addressToUse}\n` +
         `*Location:* ${locationLink}`;
 
-      // 6. Open WhatsApp
+      // 6. Generate Link & Switch to Success Step
+      // We do NOT open window here to avoid popup blockers on iOS (async context)
       const url = `https://wa.me/+9779815769007?text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank');
 
-      // 7. Clear Cart & Close
-      clearCart();
-      onClose();
+      setWhatsAppUrl(url);
+      setStep('success');
 
     } catch (error) {
       console.error("Checkout Error:", error);
@@ -334,9 +346,41 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
               </div>
             </form>
           )}
+
+          {step === 'success' && (
+            <div style={{ padding: '2rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--success)', marginBottom: '0.5rem' }}>Order Placed!</h3>
+              <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
+                Your order ID has been generated.<br />
+                Please send the order details to us on WhatsApp to confirm delivery.
+              </p>
+
+              <button
+                onClick={handleFinalizeWhatsApp}
+                className="btn btn-primary"
+                style={{
+                  width: '100%',
+                  padding: '1rem',
+                  fontSize: '1.1rem',
+                  backgroundColor: '#25D366',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)'
+                }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '10px' }}>
+                  <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
+                </svg>
+                Open WhatsApp
+              </button>
+            </div>
+          )}
+
         </div>
 
-        {cartItems.length > 0 && (
+        {cartItems.length > 0 && step !== 'success' && (
           <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border)', backgroundColor: '#f9fafb', paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
             {step === 'cart' ? (
               <>

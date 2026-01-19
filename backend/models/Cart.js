@@ -6,6 +6,12 @@ const cartSchema = new mongoose.Schema({
   price: Number,
   qty: Number,
   image: String,
+  variant: {
+    weight: String,
+    price: Number,
+    size: String,
+    _id: String // Optional: if variants have own IDs
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

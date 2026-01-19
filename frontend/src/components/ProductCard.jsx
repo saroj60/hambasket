@@ -87,26 +87,40 @@ const ProductCard = ({ product, onClick }) => {
 
           {/* ADD Button */}
           <div className="w-[70px] h-[30px] relative">
-            {quantity > 0 ? (
-              <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-between w-full h-full bg-[#16a34a] text-white rounded-lg shadow-sm">
-                <button onClick={handleDecrement} className="w-6 h-full flex items-center justify-center text-lg font-bold pb-1">-</button>
-                <span className="text-[12px] font-bold">{quantity}</span>
-                <button onClick={handleIncrement} className="w-6 h-full flex items-center justify-center text-lg font-bold pb-1">+</button>
-              </div>
-            ) : (
+            {product.variants && product.variants.length > 0 ? (
+              // Variant Product: Always show OPTIONS
               <button
-                onClick={handleAdd}
-                disabled={isOutOfStock}
-                className={`
-                  w-full h-full rounded-lg text-[12px] font-bold uppercase transition-all active:scale-95 flex items-center justify-center border
-                  ${isOutOfStock
-                    ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-                    : 'border-[#16a34a] bg-white text-[#16a34a] shadow-sm'
-                  }
-                `}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClick(product); // Trigger modal
+                }}
+                className="w-full h-full rounded-lg text-[10px] font-bold uppercase transition-all active:scale-95 flex items-center justify-center border border-purple-600 bg-purple-50 text-purple-700 shadow-sm"
               >
-                {isOutOfStock ? 'SOLD' : 'ADD'}
+                Options
               </button>
+            ) : (
+              // Regular Product: Add/Counter
+              quantity > 0 ? (
+                <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-between w-full h-full bg-[#16a34a] text-white rounded-lg shadow-sm">
+                  <button onClick={handleDecrement} className="w-6 h-full flex items-center justify-center text-lg font-bold pb-1">-</button>
+                  <span className="text-[12px] font-bold">{quantity}</span>
+                  <button onClick={handleIncrement} className="w-6 h-full flex items-center justify-center text-lg font-bold pb-1">+</button>
+                </div>
+              ) : (
+                <button
+                  onClick={handleAdd}
+                  disabled={isOutOfStock}
+                  className={`
+                    w-full h-full rounded-lg text-[12px] font-bold uppercase transition-all active:scale-95 flex items-center justify-center border
+                    ${isOutOfStock
+                      ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
+                      : 'border-[#16a34a] bg-white text-[#16a34a] shadow-sm'
+                    }
+                    `}
+                >
+                  {isOutOfStock ? 'SOLD' : 'ADD'}
+                </button>
+              )
             )}
           </div>
         </div>

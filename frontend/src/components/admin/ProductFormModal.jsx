@@ -53,12 +53,34 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                 subCategory: '',
                 countInStock: '',
                 description: '',
-                image: null
+                image: null,
+                variants: [] // Initialize variants
             });
             setPreview('');
             setImageInputType('upload');
+            setVariantInput({ weight: '', price: '', stock: '' }); // Reset variant input
         }
     }, [initialData, isOpen]);
+
+    // Local state for new variant input
+    const [variantInput, setVariantInput] = useState({ weight: '', price: '', stock: '' });
+
+    const handleVariantAdd = () => {
+        if (variantInput.weight && variantInput.price) {
+            setFormData(prev => ({
+                ...prev,
+                variants: [...(prev.variants || []), { ...variantInput }]
+            }));
+            setVariantInput({ weight: '', price: '', stock: '' });
+        }
+    };
+
+    const handleVariantRemove = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            variants: prev.variants.filter((_, i) => i !== index)
+        }));
+    };
 
     // Update Available SubCategories when Category changes
     useEffect(() => {
@@ -294,6 +316,67 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                                     className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all outline-none font-medium"
                                 />
                             </div>
+                        </div>
+
+                        {/* Variants Section */}
+                        <div className="bg-purple-50 p-6 rounded-3xl border border-purple-100 space-y-4">
+                            <h3 className="text-lg font-bold text-purple-900">Product Variants</h3>
+                            <p className="text-sm text-purple-600 mb-4">Add different weight options (e.g., 500g, 1kg) with specific prices.</p>
+
+                            {/* Variant Inputs */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input
+                                    type="text"
+                                    placeholder="Weight/Size (e.g. 1kg)"
+                                    value={variantInput.weight}
+                                    onChange={e => setVariantInput({ ...variantInput, weight: e.target.value })}
+                                    className="px-4 py-2 rounded-xl border border-gray-200 focus:border-purple-500 outline-none"
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Price (Rs.)"
+                                    value={variantInput.price}
+                                    onChange={e => setVariantInput({ ...variantInput, price: e.target.value })}
+                                    className="px-4 py-2 rounded-xl border border-gray-200 focus:border-purple-500 outline-none"
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Stock (optional)"
+                                    value={variantInput.stock}
+                                    onChange={e => setVariantInput({ ...variantInput, stock: e.target.value })}
+                                    className="px-4 py-2 rounded-xl border border-gray-200 focus:border-purple-500 outline-none"
+                                />
+                            </div>
+                            <button
+                                type="button"
+                                onClick={handleVariantAdd}
+                                disabled={!variantInput.weight || !variantInput.price}
+                                className="w-full py-2 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            >
+                                + Add Variant
+                            </button>
+
+                            {/* Variants List */}
+                            {formData.variants && formData.variants.length > 0 && (
+                                <div className="space-y-2 mt-4">
+                                    {formData.variants.map((v, i) => (
+                                        <div key={i} className="flex justify-between items-center bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                                            <div className="flex gap-4 text-sm font-medium text-gray-700">
+                                                <span className="font-bold text-purple-900">{v.weight}</span>
+                                                <span>Rs. {v.price}</span>
+                                                {v.stock && <span className="text-gray-400">Stock: {v.stock}</span>}
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleVariantRemove(i)}
+                                                className="text-red-500 hover:text-red-700 font-bold px-2"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Description */}

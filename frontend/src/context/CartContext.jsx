@@ -54,18 +54,28 @@ export const CartProvider = ({ children }) => {
 
   // Add item to cart
   const addToCart = async (product, qty = 1) => {
+    const variant = product.variant; // Expecting product object to might have selected variant info
+    const productId = product._id || product.id;
+
     if (user) {
       // API Internal Logic
       try {
-        const addedItem = await apiAddToCart({
-          productId: product._id || product.id,
+        const payload = {
+          productId: productId,
           name: product.name,
           price: product.price,
           image: product.image,
-          qty
-        });
+          qty,
+          variant: variant // Pass variant info
+        };
 
-        const existingItemIndex = cartItems.findIndex((item) => item.productId === (product._id || product.id) || item._id === addedItem._id);
+        const addedItem = await apiAddToCart(payload);
+
+        // API returns the updated/new cart item.
+        // We need to match it in our local state to update UI immediately or just append.
+
+        // Match by _id if possible, or fuzzy match
+        const existingItemIndex = cartItems.findIndex((item) => item._id === addedItem._id);
 
         if (existingItemIndex > -1) {
           const newCart = [...cartItems];
@@ -76,18 +86,18 @@ export const CartProvider = ({ children }) => {
         }
       } catch (e) {
         console.error("Add to cart failed", e);
-        // If unauthorized or error, verify session
         if (e.message.includes("401") || e.message.includes("Unauthorized")) {
           alert("Session expired. Please log in again.");
-          // Ideally could fallback to guest: addToCart(product, qty) (recursive with user=null?) => tricky with state
         } else {
           alert("Failed to add to cart. Please try again.");
         }
       }
     } else {
       // Guest Logic
-      const productId = product._id || product.id;
-      const existingItemIndex = cartItems.findIndex(item => (item.productId === productId) || (item._id === productId));
+      // Generate a unique ID for the cart item based on variant
+      const uniqueId = variant ? `${productId}-${variant.weight}` : productId;
+
+      const existingItemIndex = cartItems.findIndex(item => item._id === uniqueId); // Check by unique ID
 
       let newCart = [...cartItems];
       if (existingItemIndex > -1) {
@@ -103,13 +113,14 @@ export const CartProvider = ({ children }) => {
         if (qty > 0) {
           // New Item
           newCart.push({
-            _id: productId, // Use product ID as cart ID for guests
+            _id: uniqueId,
             productId: productId,
             name: product.name,
             price: product.price,
             image: product.image,
             qty: qty,
-            emoji: product.emoji
+            emoji: product.emoji,
+            variant: variant
           });
         }
       }
@@ -122,13 +133,14 @@ export const CartProvider = ({ children }) => {
     if (user) {
       try {
         await apiRemoveFromCart(itemId);
-        setCartItems(cartItems.filter((item) => item.productId !== itemId && item._id !== itemId));
+        // Remove strictly by _id
+        setCartItems(cartItems.filter((item) => item._id !== itemId));
       } catch (e) {
         console.error("Remove from cart failed", e);
       }
     } else {
-      // Guest Logic
-      setCartItems(cartItems.filter((item) => item._id !== itemId && item.productId !== itemId));
+      // Guest Logic - Remove by the unique ID (_id) we assigned
+      setCartItems(cartItems.filter((item) => item._id !== itemId));
     }
   };
 
