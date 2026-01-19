@@ -20,11 +20,8 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
   };
 
   // Checkout State
-  const [couponCode, setCouponCode] = useState('');
-  const [discount, setDiscount] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState('');
   const [customAddress, setCustomAddress] = useState(location?.address || 'Kathmandu, Nepal');
-  const [couponMessage, setCouponMessage] = useState('');
 
   // Guest State
   const [guestName, setGuestName] = useState('');
@@ -32,15 +29,13 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
   const deliveryFee = 0; // subtotal > 150 ? 0 : 50;
-  const total = subtotal + deliveryFee - discount;
+  const total = subtotal + deliveryFee;
 
   // Reset step when cart opens/closes
   useEffect(() => {
     if (isOpen) {
       setStep('cart');
-      setDiscount(0);
-      setCouponCode('');
-      setCouponMessage('');
+
     }
   }, [isOpen]);
 
@@ -72,28 +67,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
     setStep('checkout');
   };
 
-  const applyCoupon = async () => {
-    if (!couponCode) return;
-    try {
-      const res = await fetch(`${API_URL}/coupons/validate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: couponCode, orderAmount: subtotal })
-      });
-      const data = await res.json();
 
-      if (res.ok) {
-        setDiscount(data.discount);
-        setCouponMessage({ type: 'success', text: `Saved Rs. ${data.discount}!` });
-      } else {
-        setDiscount(0);
-        setCouponMessage({ type: 'error', text: data.message });
-      }
-    } catch (error) {
-      console.error("Coupon Error:", error);
-      setCouponMessage({ type: 'error', text: "Failed to apply coupon" });
-    }
-  };
 
   const handleWhatsAppCheckout = async (e) => {
     e.preventDefault();
@@ -130,7 +104,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
       })),
       subtotal,
       deliveryFee,
-      discount,
+      discount: 0,
       tax: 0,
       totalAmount: total,
       shippingAddress: addressToUse,
@@ -174,7 +148,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
         `*Items:*\n${itemsList}\n\n` +
         `*Subtotal:* Rs. ${subtotal}\n` +
         `*Delivery Fee:* ${deliveryFee === 0 ? 'Free' : 'Rs. ' + deliveryFee}\n` +
-        (discount > 0 ? `*Discount:* -Rs. ${discount}\n` : '') +
+
         `*Total:* Rs. ${total}\n\n` +
         `*Address:* ${addressToUse}\n` +
         `*Location:* ${locationLink}`;
@@ -350,19 +324,12 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
                 </div>
               </div>
 
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>Promo Code</label>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <input placeholder="Enter Code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
-                  <button type="button" onClick={applyCoupon} className="btn btn-outline">Apply</button>
-                </div>
-                {couponMessage && <p style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: couponMessage.type === 'success' ? 'var(--success)' : 'var(--danger)' }}>{couponMessage.text}</p>}
-              </div>
+
 
               <div style={{ backgroundColor: '#f9fafb', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Subtotal</span><span>Rs. {subtotal}</span></div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}><span>Delivery Fee</span><span>{deliveryFee === 0 ? <span style={{ color: 'var(--success)' }}>Free</span> : `Rs. ${deliveryFee}`}</span></div>
-                {discount > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--success)' }}><span>Discount</span><span>- Rs. {discount}</span></div>}
+
                 <div style={{ borderTop: '1px solid var(--border)', paddingTop: '0.5rem', marginTop: '0.5rem', display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1.125rem' }}><span>Total</span><span>Rs. {total}</span></div>
               </div>
             </form>
