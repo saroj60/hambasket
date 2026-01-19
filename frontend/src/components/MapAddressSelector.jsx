@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Autocomplete, Circle } from '@react-google-maps/api';
 import { Geolocation } from '@capacitor/geolocation';
@@ -103,6 +102,12 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
             return;
         }
 
+        // Safety timeout to prevent sticking in loading state
+        const safetyTimeout = setTimeout(() => {
+            setLoading(false);
+            setAddress(prev => (prev && prev !== 'Checking location...') ? prev : "Location Check Timed Out");
+        }, 8000);
+
         try {
             const geocoder = new window.google.maps.Geocoder();
             const placesService = new window.google.maps.places.PlacesService(map);
@@ -110,56 +115,68 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
             // 1. Get Basic Geocoded Address
             geocoder.geocode({ location }, (results, status) => {
-                if (status === 'OK' && results[0]) {
-                    // Filter out Plus Codes if a better address exists
-                    const bestResult = results.find(r =>
-                        !r.types.includes('plus_code') &&
-                        !r.formatted_address.match(/^[A-Z0-9]{4}\+[A-Z0-9]{2,}/)
-                    );
+                if (status !== 'OK') {
+                    clearTimeout(safetyTimeout);
+                    setAddress("Location not found");
+                    setLoading(false);
+                    return;
+                }
 
-                    let baseAddress = bestResult ? bestResult.formatted_address : results[0].formatted_address;
+                try {
+                    if (results[0]) {
+                        // Filter out Plus Codes if a better address exists
+                        const bestResult = results.find(r =>
+                            !r.types.includes('plus_code') &&
+                            !r.formatted_address.match(/^[A-Z0-9]{4}\+[A-Z0-9]{2,}/)
+                        );
 
-                    // 2. Get Nearby Landmark (Place)
-                    const request = {
-                        location: location,
-                        radius: 50, // Look within 50 meters for very close landmarks
-                        type: 'point_of_interest' // Must be a string
-                    };
+                        let baseAddress = bestResult ? bestResult.formatted_address : results[0].formatted_address;
 
-                    placesService.nearbySearch(request, (placeResults, placeStatus) => {
-                        if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK && placeResults[0]) {
-                            // Find the closest place (excluding the generic area names if possible)
-                            const landmark = placeResults[0];
+                        // 2. Get Nearby Landmark (Place)
+                        const request = {
+                            location: location,
+                            radius: 50,
+                            type: 'point_of_interest'
+                        };
 
-                            // Check if landmark name is already part of the address to avoid redundancy
-                            if (!baseAddress.includes(landmark.name)) {
-                                // Construct Enhanced Address
-                                // Format: "Tikathali, Near Bhagwati Temple, Lalitpur..." 
-                                // We might want to inject "Near [Landmark]" at the start or appropriate position.
-                                // Simple approach: "Near [Landmark], [Address]"
+                        try {
+                            placesService.nearbySearch(request, (placeResults, placeStatus) => {
+                                clearTimeout(safetyTimeout);
 
-                                // Let's try to be smart:
-                                // If baseAddress starts with a street/area, maybe append landmark after it?
-                                // OR just prepend "Near [Landmark]"
-
-                                setAddress(`${baseAddress}, Near ${landmark.name}`);
-                                setLandmark(landmark.name); // Auto-fill landmark field too
-                            } else {
-                                setAddress(baseAddress);
-                            }
-                        } else {
-                            // No close landmark found, stick to geocode
+                                if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK && placeResults && placeResults.length > 0) {
+                                    const landmark = placeResults[0];
+                                    if (!baseAddress.includes(landmark.name)) {
+                                        setAddress(`${baseAddress}, Near ${landmark.name}`);
+                                        setLandmark(landmark.name);
+                                    } else {
+                                        setAddress(baseAddress);
+                                    }
+                                } else {
+                                    setAddress(baseAddress);
+                                }
+                                setLoading(false);
+                            });
+                        } catch (placeError) {
+                            clearTimeout(safetyTimeout);
+                            console.error("Places API Error:", placeError);
                             setAddress(baseAddress);
+                            setLoading(false);
                         }
-                        setLoading(false);
-                    });
 
-                } else {
-                    setAddress(`Location not found`);
+                    } else {
+                        clearTimeout(safetyTimeout);
+                        setAddress(`Location not found`);
+                        setLoading(false);
+                    }
+                } catch (e) {
+                    clearTimeout(safetyTimeout);
+                    console.error("Geocoding Logic Error:", e);
+                    setAddress("Error processing location");
                     setLoading(false);
                 }
             });
         } catch (error) {
+            clearTimeout(safetyTimeout);
             setAddress(`Error: ${error.message}`);
             setLoading(false);
         }
@@ -538,10 +555,8 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 
 export default MapAddressSelector;
-
-
