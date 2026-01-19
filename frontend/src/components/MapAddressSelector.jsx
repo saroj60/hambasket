@@ -123,7 +123,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                     const request = {
                         location: location,
                         radius: 50, // Look within 50 meters for very close landmarks
-                        type: ['point_of_interest', 'establishment'] // Broad category
+                        type: 'point_of_interest' // Must be a string
                     };
 
                     placesService.nearbySearch(request, (placeResults, placeStatus) => {
@@ -341,7 +341,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
                     <GoogleMap
                         mapContainerStyle={containerStyle}
                         defaultCenter={defaultCenter}
-                        zoom={17}
+                        zoom={19}
                         onLoad={onLoad}
                         onUnmount={onUnmount}
                         onIdle={onIdle}
@@ -538,7 +538,7 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
