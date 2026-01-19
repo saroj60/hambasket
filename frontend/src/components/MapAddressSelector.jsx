@@ -105,26 +105,59 @@ const MapAddressSelector = ({ onConfirm, onCancel, initialLocation }) => {
 
         try {
             const geocoder = new window.google.maps.Geocoder();
-            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+            const placesService = new window.google.maps.places.PlacesService(map);
+            const location = { lat, lng };
+
+            // 1. Get Basic Geocoded Address
+            geocoder.geocode({ location }, (results, status) => {
                 if (status === 'OK' && results[0]) {
                     // Filter out Plus Codes if a better address exists
-                    // Plus codes usually have type 'plus_code' or contain a '+' in the short name/address
                     const bestResult = results.find(r =>
                         !r.types.includes('plus_code') &&
-                        !r.formatted_address.match(/^[A-Z0-9]{4}\+[A-Z0-9]{2,}/) // Regex to avoid basic plus codes
+                        !r.formatted_address.match(/^[A-Z0-9]{4}\+[A-Z0-9]{2,}/)
                     );
 
-                    if (bestResult) {
-                        setAddress(bestResult.formatted_address);
-                    } else {
-                        // Fallback to first result if only plus code exists, but maybe strip the code?
-                        // Usually results[0] is best, so we default to it if no better option.
-                        setAddress(results[0].formatted_address);
-                    }
+                    let baseAddress = bestResult ? bestResult.formatted_address : results[0].formatted_address;
+
+                    // 2. Get Nearby Landmark (Place)
+                    const request = {
+                        location: location,
+                        radius: 50, // Look within 50 meters for very close landmarks
+                        type: ['point_of_interest', 'establishment'] // Broad category
+                    };
+
+                    placesService.nearbySearch(request, (placeResults, placeStatus) => {
+                        if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK && placeResults[0]) {
+                            // Find the closest place (excluding the generic area names if possible)
+                            const landmark = placeResults[0];
+
+                            // Check if landmark name is already part of the address to avoid redundancy
+                            if (!baseAddress.includes(landmark.name)) {
+                                // Construct Enhanced Address
+                                // Format: "Tikathali, Near Bhagwati Temple, Lalitpur..." 
+                                // We might want to inject "Near [Landmark]" at the start or appropriate position.
+                                // Simple approach: "Near [Landmark], [Address]"
+
+                                // Let's try to be smart:
+                                // If baseAddress starts with a street/area, maybe append landmark after it?
+                                // OR just prepend "Near [Landmark]"
+
+                                setAddress(`${baseAddress}, Near ${landmark.name}`);
+                                setLandmark(landmark.name); // Auto-fill landmark field too
+                            } else {
+                                setAddress(baseAddress);
+                            }
+                        } else {
+                            // No close landmark found, stick to geocode
+                            setAddress(baseAddress);
+                        }
+                        setLoading(false);
+                    });
+
                 } else {
                     setAddress(`Location not found`);
+                    setLoading(false);
                 }
-                setLoading(false);
             });
         } catch (error) {
             setAddress(`Error: ${error.message}`);
