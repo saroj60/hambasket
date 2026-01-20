@@ -33,12 +33,7 @@ const HomeBanner = ({ onShopNow }) => {
                         <p className="mt-1 font-bold text-white tracking-wide">FREE DELIVERY on all orders!</p>
                     </div>
 
-                    <button
-                        onClick={onShopNow}
-                        className="inline-block rounded-full bg-yellow-400 px-8 py-3 text-lg font-bold text-gray-900 shadow-xl transition-transform duration-200 hover:scale-105 hover:bg-yellow-300 hover:shadow-2xl active:scale-95 cursor-pointer"
-                    >
-                        Shop Now
-                    </button>
+
                 </div>
 
                 {/* Decorative 3D-style Elements */}
