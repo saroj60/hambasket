@@ -8,3 +8,6 @@ coverage/
 .idea/
 npm-debug.log
 yarn-error.log
+
+hs_err_pid*.log
+replay_pid*.log
