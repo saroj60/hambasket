@@ -25,7 +25,7 @@ const Contact = () => {
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span>📞</span>
-                            <span>+977 9815769007</span>
+                            <span>+9779815769007</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span>📧</span>

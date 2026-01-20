@@ -125,8 +125,8 @@ const InvoiceModal = ({ order, isOpen, onClose }) => {
                                 <p style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '0.25rem' }}>Aone Kirana</p>
                                 <p style={{ color: '#4b5563', lineHeight: '1.4' }}>
                                     Kathmandu, Nepal<br />
-                                    support@hambasket.com<br />
-                                    +977 9815769007
+                                    sarojbhagat666@gmail.com<br />
+                                    +9779815769007
                                 </p>
                             </div>
                         </div>

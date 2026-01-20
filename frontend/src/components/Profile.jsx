@@ -257,6 +257,12 @@ const Profile = ({ onClose, onTrackOrder }) => {
                 >
                     Wishlist
                 </button>
+                <button
+                    onClick={() => setActiveTab('support')}
+                    style={{ flex: 1, minWidth: '100px', padding: '1rem', background: 'none', border: 'none', borderBottom: activeTab === 'support' ? '2px solid var(--primary)' : 'none', color: activeTab === 'support' ? 'var(--primary)' : 'var(--text-muted)', fontWeight: '600', cursor: 'pointer' }}
+                >
+                    Support
+                </button>
             </div>
 
             {/* Content */}
@@ -537,6 +543,54 @@ const Profile = ({ onClose, onTrackOrder }) => {
                                 </div>
                             ))
                         )}
+                    </div>
+                )}
+
+                {activeTab === 'support' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+                            <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>👋</div>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.5rem' }}>How can we help?</h3>
+                            <p style={{ color: 'var(--text-muted)' }}>We are here to assist you with any questions or issues.</p>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            <a href="tel:+9779815769007" style={{ textDecoration: 'none' }}>
+                                <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'transform 0.1s' }}>
+                                    <span style={{ fontSize: '2rem' }}>📞</span>
+                                    <span style={{ fontWeight: '600', color: 'var(--text)' }}>Call Us</span>
+                                </div>
+                            </a>
+                            <a href="https://wa.me/+9779815769007" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                                <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'transform 0.1s' }}>
+                                    <span style={{ fontSize: '2rem' }}>💬</span>
+                                    <span style={{ fontWeight: '600', color: 'var(--text)' }}>WhatsApp</span>
+                                </div>
+                            </a>
+                        </div>
+
+                        <a href="mailto:sarojbhagat666@gmail.com" style={{ textDecoration: 'none' }}>
+                            <div className="card" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer' }}>
+                                <div style={{ width: '40px', height: '40px', backgroundColor: '#f3f4f6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
+                                    📧
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: '600', color: 'var(--text)' }}>Email Support</div>
+                                    <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>sarojbhagat666@gmail.com</div>
+                                </div>
+                                <span style={{ color: 'var(--text-muted)' }}>→</span>
+                            </div>
+                        </a>
+
+                        <div className="card" style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{ width: '40px', height: '40px', backgroundColor: '#f3f4f6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
+                                📍
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: '600', color: 'var(--text)' }}>Our Location</div>
+                                <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Tikathali, Lalitpur</div>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>

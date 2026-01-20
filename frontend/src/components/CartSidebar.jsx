@@ -3,6 +3,7 @@ import { API_URL, BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { useLocation } from '../context/LocationContext';
 import { CartContext } from '../context/CartContext';
+import { App as CapacitorApp } from '@capacitor/app';
 
 const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLoginRequired }) => {
   const [step, setStep] = useState('cart'); // cart, checkout, success
@@ -45,9 +46,27 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
   useEffect(() => {
     if (isOpen) {
       setStep('cart');
-
     }
   }, [isOpen]);
+
+  // Handle Android Back Button
+  useEffect(() => {
+    if (isOpen) {
+      const handleBackButton = async () => {
+        await CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+          onClose();
+        });
+      };
+
+      let listener;
+      handleBackButton().then(l => listener = l);
+
+      return () => {
+        if (listener) listener.remove();
+        CapacitorApp.removeAllListeners();
+      };
+    }
+  }, [isOpen, onClose]);
 
   // Set default address if user has one
   useEffect(() => {
@@ -195,7 +214,9 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
         position: 'fixed', top: 0, right: 0, bottom: 0,
         width: '100%', maxWidth: '400px', backgroundColor: 'white', zIndex: 2000,
         boxShadow: '-4px 0 15px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column',
-        transform: isOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.3s ease-in-out'
+        transform: isOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.3s ease-in-out',
+        paddingTop: 'env(safe-area-inset-top)', // Safe Area for Notch
+        paddingBottom: 'env(safe-area-inset-bottom)' // Safe Area for Home Indicator
       }}>
         <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: '700' }}>
@@ -273,7 +294,14 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
                 <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
                   <h4 style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.75rem' }}>Contact Details</h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <input placeholder="Full Name" value={guestName} onChange={(e) => setGuestName(e.target.value)} required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }} />
+                    <input
+                      placeholder="Full Name"
+                      value={guestName}
+                      onChange={(e) => setGuestName(e.target.value)}
+                      required
+                      autoComplete="name"
+                      style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
+                    />
                     <input
                       type="tel"
                       placeholder="Phone Number"
@@ -284,6 +312,8 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
                       }}
                       required
                       maxLength={10}
+                      inputMode="numeric"
+                      autoComplete="tel"
                       style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}
                     />
                   </div>
@@ -299,6 +329,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
                     onChange={(e) => setCustomAddress(e.target.value)}
                     required
                     placeholder="Describe your location..."
+                    autoComplete="street-address"
                     style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', minHeight: '80px', marginBottom: '0.5rem' }}
                   />
 
