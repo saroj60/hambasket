@@ -177,3 +177,13 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Get Top Picked Products
+export const getTopPickedProducts = async (req, res) => {
+  try {
+    const topPicks = await Product.find({ isTopPick: true }).limit(10);
+    res.json(topPicks);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

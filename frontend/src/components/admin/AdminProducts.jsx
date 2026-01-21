@@ -45,6 +45,7 @@ const AdminProducts = () => {
         // Fix: Append Weight and Variants
         if (formData.weight) data.append('weight', formData.weight);
         if (formData.variants) data.append('variants', JSON.stringify(formData.variants));
+        if (formData.isTopPick !== undefined) data.append('isTopPick', formData.isTopPick);
 
         if (formData.image instanceof File) {
             data.append('image', formData.image);

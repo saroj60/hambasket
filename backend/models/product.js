@@ -27,6 +27,7 @@ const productSchema = new mongoose.Schema({
     discount: { type: Number, default: 0 },
     endTime: { type: Date }
   },
+  isTopPick: { type: Boolean, default: false },
 }, { timestamps: true });
 
 // Indexes for performance

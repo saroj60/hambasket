@@ -25,6 +25,11 @@ export const getSimilarProducts = async (id) => {
   return res.json();
 };
 
+export const getTopPickedProducts = async () => {
+  const res = await fetch(`${API_URL}/products/top-picks`);
+  return res.json();
+};
+
 // Cart API
 export const getCartItems = async () => {
   const res = await fetch(`${API_URL}/cart`, {

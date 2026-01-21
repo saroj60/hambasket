@@ -6,6 +6,9 @@ import { CartContext } from "../context/CartContext";
 import { useLocation } from "react-router-dom";
 
 import HomeBanner from "../components/HomeBanner";
+import TopPicks from "../components/TopPicks";
+import CategorySection from "../components/CategorySection";
+import { MAIN_CATEGORIES } from "../data/CategoryStructure";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -17,25 +20,19 @@ const Home = () => {
   const [popularProducts, setPopularProducts] = useState([]);
   const location = useLocation();
 
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = searchParams.toString();
+  const searchTerm = searchParams.get('search');
+
   useEffect(() => {
     const fetchAllData = async () => {
       try {
         setLoading(true);
-        const searchParams = new URLSearchParams(location.search);
-        const searchQuery = searchParams.toString();
 
         const [productsData, popularData] = await Promise.all([
           getProducts(searchQuery),
           getPopularProducts()
         ]);
-
-        // Shuffle products for random appearance on home screen (if not searching)
-        if (!searchQuery && productsData) {
-          for (let i = productsData.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [productsData[i], productsData[j]] = [productsData[j], productsData[i]];
-          }
-        }
 
         setProducts(productsData || []);
         setPopularProducts(popularData || []);
@@ -67,52 +64,59 @@ const Home = () => {
       ) : (
         // Main Content
         <>
-          {/* Hero Section */}
-          <div className="text-center mb-10">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
-              Welcome to Our Store 🛍️
-            </h1>
-            <p className="text-gray-600">
-              Discover top deals and best-selling products
-            </p>
-          </div>
-
-          {/* Popular Products Section */}
-          {!new URLSearchParams(location.search).toString() && popularProducts.length > 0 && (
-            <div className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <span>🔥</span> Popular Right Now
+          {/* Search Results View */}
+          {searchTerm ? (
+            <>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Search Results for "{searchTerm}"
               </h2>
-              <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                {popularProducts.map((product) => (
-                  <ProductCard
-                    key={`pop-${product._id || product.id}`}
-                    product={product}
-                    onClick={setSelectedProduct}
-                  />
+              {products.length > 0 ? (
+                <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {products.map((product) => (
+                    <ProductCard
+                      key={product._id || product.id}
+                      product={product}
+                      onClick={setSelectedProduct}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center text-gray-500 mt-10">
+                  No products found.
+                </div>
+              )}
+            </>
+          ) : (
+            /* Default Home View */
+            <>
+              {/* Top Picks Section */}
+              <TopPicks />
+
+              {/* Popular Products Section (Optional: Keeping it as it was requested before or similar to Top Picks) */}
+              {popularProducts.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                    <span>🔥</span> Popular Right Now
+                  </h2>
+                  <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                    {popularProducts.map((product) => (
+                      <ProductCard
+                        key={`pop-${product._id || product.id}`}
+                        product={product}
+                        onClick={setSelectedProduct}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Category Wise Products */}
+              <div className="mt-8">
+                {MAIN_CATEGORIES.map((category) => (
+                  <CategorySection key={category} category={category} title={category} />
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Product Grid */}
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            {new URLSearchParams(location.search).get('search') ? `Search Results for "${new URLSearchParams(location.search).get('search')}"` : 'All Products'}
-          </h2>
-          {products.length > 0 ? (
-            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              {products.map((product) => (
-                <ProductCard
-                  key={product._id || product.id}
-                  product={product}
-                  onClick={setSelectedProduct}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-gray-500 mt-10">
-              No products available at the moment.
-            </div>
+            </>
           )}
 
           {/* Product Details Modal */}

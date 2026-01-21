@@ -35,7 +35,10 @@ const isVendorOrAdmin = (req, res, next) => {
   }
 };
 
-import { getProducts, addProduct, updateProduct, deleteProduct, getPopularProducts, getSimilarProducts } from "../controllers/productController.js";
+import { getProducts, addProduct, updateProduct, deleteProduct, getPopularProducts, getSimilarProducts, getTopPickedProducts } from "../controllers/productController.js";
+
+// Get Top Picked Products
+router.get("/top-picks", getTopPickedProducts);
 
 // Get All Products (with Search & Filters)
 router.get("/", getProducts);

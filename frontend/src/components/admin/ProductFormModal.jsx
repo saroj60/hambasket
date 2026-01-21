@@ -16,6 +16,7 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
         subCategory: '',
         countInStock: '',
         description: '',
+        isTopPick: false,
         image: null
     });
 
@@ -54,6 +55,7 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                 countInStock: '',
                 description: '',
                 image: null,
+                isTopPick: false,
                 variants: [] // Initialize variants
             });
             setPreview('');
@@ -329,6 +331,21 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                                     className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all outline-none font-medium"
                                 />
                             </div>
+                        </div>
+
+                        {/* Top Pick Toggle */}
+                        <div className="flex items-center gap-3 bg-yellow-50 p-4 rounded-xl border border-yellow-100 mb-6">
+                            <input
+                                type="checkbox"
+                                name="isTopPick"
+                                id="isTopPick"
+                                checked={formData.isTopPick || false}
+                                onChange={(e) => setFormData(prev => ({ ...prev, isTopPick: e.target.checked }))}
+                                className="w-5 h-5 text-yellow-500 rounded focus:ring-yellow-500 border-gray-300 cursor-pointer"
+                            />
+                            <label htmlFor="isTopPick" className="text-sm font-bold text-gray-900 cursor-pointer select-none">
+                                Mark as Top Pick ⭐
+                            </label>
                         </div>
 
                         {/* Variants Section */}
