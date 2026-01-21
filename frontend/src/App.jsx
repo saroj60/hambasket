@@ -139,6 +139,13 @@ function ShopContent() {
       onLogin={() => setShowAuthModal(true)}
       onAdminClick={() => setIsAdminMode(true)}
       isAdminMode={isAdminMode}
+      onOpenProfile={() => {
+        if (user) {
+          setIsProfileOpen(true);
+        } else {
+          setShowAuthModal(true);
+        }
+      }}
       bottomNav={
         <div className="mobile-bottom-nav">
           <BottomNavigation

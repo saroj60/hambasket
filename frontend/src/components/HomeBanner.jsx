@@ -3,7 +3,7 @@ import React from 'react';
 
 const HomeBanner = ({ onShopNow }) => {
     return (
-        <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl my-6 transition-all duration-300 hover:shadow-purple-500/20" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl my-6 transition-all duration-300 hover:shadow-green-500/20" style={{ background: 'linear-gradient(135deg, #42e695 0%, #3bb2b8 100%)' }}>
             {/* Inline Styles for Animations */}
             <style>
                 {`
@@ -28,7 +28,7 @@ const HomeBanner = ({ onShopNow }) => {
                         Get <span className="text-yellow-300">20% OFF</span>
                     </h2>
 
-                    <div className="mb-6 text-base font-medium text-purple-50 md:text-xl leading-relaxed opacity-95">
+                    <div className="mb-6 text-base font-medium text-green-50 md:text-xl leading-relaxed opacity-95">
                         <p>Shop your daily essentials in low price</p>
                         <p className="mt-1 font-bold text-white tracking-wide">FREE DELIVERY on all orders!</p>
                     </div>

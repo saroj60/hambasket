@@ -17,6 +17,16 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
 
   const placeholders = ['Search "milk"', 'Search "bread"', 'Search "potato"', 'Search "egg"', 'Search "rice"', 'Search "beer"'];
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,17 +38,9 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
   return (
     <>
       {/* Desktop/Tablet Header */}
-      <header style={{
-        backgroundColor: 'var(--primary)',
-        borderBottom: '1px solid var(--border)',
-        borderTop: '4px solid',
-        borderImage: 'var(--gradient-header) 1',
-        position: 'sticky',
-        top: 0,
-        zIndex: 50
-      }}>
+      <header className={`main-header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="container">
-          <div className="header-content">
+          <div className="header-content header-container">
             {/* Logo */}
             <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <img src="/brand_logo.png" alt="Aone Kirana" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
@@ -51,7 +53,7 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
             {/* Location */}
             <div
               onClick={openMap}
-              className="location-selector"
+              className="location-selector mobile-header-right"
             >
               <span style={{ fontSize: '1.2rem' }}>📍</span>
               <div className="location-label-group" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -64,38 +66,53 @@ const Navbar = ({ onCartClick, onLoginClick }) => {
             </div>
 
             {/* Search Bar */}
-            <div className="search-bar">
-              <input
-                type="text"
-                placeholder={placeholders[placeholderIndex]}
-                className="search-input"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    window.location.href = `/?search=${e.target.value}`;
-                  }
-                }}
-              />
-              {/* Back Button or Search Icon */}
-              {routeLocation.pathname !== '/' ? (
-                <span
-                  onClick={() => window.history.back()}
-                  style={{
-                    position: 'absolute',
-                    left: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--text-main)',
-                    fontSize: '1.2rem',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    zIndex: 10
-                  }}
-                >
-                  ←
-                </span>
-              ) : (
-                <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>🔍</span>
+            <div className="search-bar" style={{ display: 'flex', flexDirection: 'column' }}>
+              {user && (
+                <div className="mobile-visible" style={{
+                  marginBottom: '8px',
+                  fontSize: '1.2rem',
+                  fontWeight: '800',
+                  color: 'var(--text-main)',
+                  alignSelf: 'flex-start',
+                  paddingLeft: '4px'
+                }}>
+                  Hi {user.name ? user.name.split(' ')[0] : 'Guest'} 👋
+                </div>
               )}
+
+              <div style={{ position: 'relative', width: '100%' }}>
+                <input
+                  type="text"
+                  placeholder={placeholders[placeholderIndex]}
+                  className="search-input"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      window.location.href = `/?search=${e.target.value}`;
+                    }
+                  }}
+                />
+                {/* Back Button or Search Icon */}
+                {routeLocation.pathname !== '/' ? (
+                  <span
+                    onClick={() => window.history.back()}
+                    style={{
+                      position: 'absolute',
+                      left: '1rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: 'var(--text-main)',
+                      fontSize: '1.2rem',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      zIndex: 10
+                    }}
+                  >
+                    ←
+                  </span>
+                ) : (
+                  <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>🔍</span>
+                )}
+              </div>
             </div>
 
             {/* Actions */}
