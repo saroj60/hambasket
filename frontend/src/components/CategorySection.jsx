@@ -98,7 +98,7 @@ const CategorySection = ({ title, category }) => {
                     textTransform: 'uppercase'
                 }}
             >
-                See All {title || category}
+                See All &#10095;
             </button>
         </div>
     );
