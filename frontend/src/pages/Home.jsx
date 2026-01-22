@@ -6,6 +6,7 @@ import { CartContext } from "../context/CartContext";
 import { useLocation } from "react-router-dom";
 
 import HomeBanner from "../components/HomeBanner";
+import CategoryShowcase from "../components/CategoryShowcase";
 import TopPicks from "../components/TopPicks";
 import CategorySection from "../components/CategorySection";
 import { MAIN_CATEGORIES } from "../data/CategoryStructure";
@@ -89,6 +90,9 @@ const Home = () => {
           ) : (
             /* Default Home View */
             <>
+              {/* Category Showcase - Shop by Category */}
+              <CategoryShowcase />
+
               {/* Top Picks Section */}
               <TopPicks />
 
