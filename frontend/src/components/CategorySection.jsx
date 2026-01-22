@@ -17,12 +17,14 @@ const CategorySection = ({ title, category }) => {
             // So we pass 'category=Candies%20%26%20Gums'
             try {
                 const query = `category=${encodeURIComponent(category)}`;
+                console.log('Fetching', category, query);
                 const data = await getProducts(query);
+                console.log('Got data for', category, data ? data.length : 'null');
                 if (Array.isArray(data)) {
                     setProducts(data);
                 }
             } catch (err) {
-                console.error("Failed to load category products", err);
+                console.error("Failed to load category products for", category, err);
             } finally {
                 setLoading(false);
             }

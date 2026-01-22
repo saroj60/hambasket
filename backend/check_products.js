@@ -1,7 +1,10 @@
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const path = require('path');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load env vars
 dotenv.config({ path: path.join(__dirname, '.env') });
@@ -13,14 +16,21 @@ const connectDB = async () => {
 
         // Define simple schema to read products
         const productSchema = new mongoose.Schema({}, { strict: false });
-        const Product = mongoose.model('Product', productSchema, 'products'); // explicitly use 'products' collection
+        const Product = mongoose.model('Product', productSchema, 'products');
 
-        const products = await Product.find({}).limit(5);
-        console.log('--- Current Products in DB (First 5) ---');
+        const products = await Product.find({});
+        console.log(`Total Products: ${products.length}`);
+
+        // Count categories
+        const categoryCounts = {};
         products.forEach(p => {
-            console.log(`ID: ${p._id}, Name: ${p.name}, Price: ${p.price}`);
+            const cat = p.category;
+            categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
         });
-        console.log('----------------------------------------');
+
+        console.log('--- Categories in DB ---');
+        console.table(categoryCounts);
+        console.log('------------------------');
 
         process.exit();
     } catch (error) {

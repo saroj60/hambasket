@@ -38,7 +38,9 @@ import { CartProvider, CartContext } from "./context/CartContext";
 import { SocketProvider } from "./context/SocketContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery and Biscuits", "Beverages", "Snacks", "Frozen", "Baby Care", "Chocolate and Ice Cream", "Cooking Oil, Masala and more", "Birthday items", "Other"];
+import { MAIN_CATEGORIES } from "./data/CategoryStructure";
+
+// const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery", "Beverages", "Snacks", "Frozen", "Baby Care", "Chocolate and Ice Cream", "Cooking Oil, Masala and more", "Birthday items", "Other"];
 
 function ShopContent() {
   const navigate = useNavigate();
@@ -274,7 +276,7 @@ function ShopContent() {
 
                     {/* Category Sections */}
                     <div className="flex flex-col gap-6 px-4 pb-8">
-                      {CATEGORIES.filter(cat => cat !== "All" && cat !== "Other").map((category) => (
+                      {MAIN_CATEGORIES.map((category) => (
                         <CategorySection
                           key={category}
                           title={category}
