@@ -15,6 +15,58 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
   const routeLocation = useRouteLocation();
   const navigate = useNavigate();
 
+  // Scroll Logic
+  const mainRef = React.useRef(null);
+  const headerRef = React.useRef(null);
+  const topRowRef = React.useRef(null);
+  const [showHeader, setShowHeader] = useState(true);
+  const lastScrollY = React.useRef(0);
+  const [topRowHeight, setTopRowHeight] = useState(0);
+
+  const isHomePage = routeLocation.pathname === '/';
+
+  React.useLayoutEffect(() => {
+    if (topRowRef.current) {
+      setTopRowHeight(topRowRef.current.offsetHeight);
+    }
+  }, [searchTerm, user, routeLocation.pathname]);
+
+  React.useEffect(() => {
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+
+    // Reset header on route change
+    if (!isHomePage) {
+      setShowHeader(true);
+      return;
+    }
+
+    const handleScroll = () => {
+      const currentScrollY = mainEl.scrollTop;
+
+      // If at top, always show
+      if (currentScrollY < 10) {
+        setShowHeader(true);
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+
+      // Determine direction
+      // Collapse when scrolling down (> 50px), Expand when scrolling up
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        setShowHeader(false);
+      } else {
+        setShowHeader(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    mainEl.addEventListener('scroll', handleScroll);
+    return () => mainEl.removeEventListener('scroll', handleScroll);
+  }, [isHomePage]);
+
+
   const handleLogout = async () => {
     await logout();
     setIsProfileMenuOpen(false);
@@ -40,11 +92,28 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
   return (
     <div style={{ position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column', backgroundColor: 'var(--background)', overflow: 'hidden' }}>
       {/* Header */}
-      <header className="main-header" style={{ backgroundColor: 'white', borderBottom: '1px solid #f0f0f0', position: 'sticky', top: 0, zIndex: 1000 }}>
+      <header
+        ref={headerRef}
+        className="main-header"
+        style={{
+          backgroundColor: 'white',
+          borderBottom: '1px solid #f0f0f0',
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          transform: isHomePage && !showHeader ? `translateY(-${topRowHeight}px)` : 'translateY(0)',
+          transition: 'transform 0.3s ease-in-out'
+        }}
+      >
         <div style={{ maxWidth: '100%', margin: '0 auto' }}>
 
           {/* Row 1: Logo & Location & Profile */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 10px', flexWrap: 'nowrap' }}>
+          <div
+            ref={topRowRef}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 10px', flexWrap: 'nowrap' }}
+          >
 
             {/* Logo */}
             <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0, marginRight: '6px' }}>
@@ -298,7 +367,23 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
       </header>
 
       {/* Main Content */}
-      <main className="container" style={{ flex: 1, padding: '0', width: '100%', overflowY: 'auto', overflowX: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0, position: 'relative', paddingBottom: '80px' }}>
+      <main
+        ref={mainRef}
+        className="container"
+        style={{
+          flex: 1,
+          padding: '0',
+          width: '100%',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 0,
+          position: 'relative',
+          paddingBottom: '80px',
+          paddingTop: 0,
+        }}
+      >
         {children}
       </main>
 

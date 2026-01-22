@@ -29,6 +29,7 @@ import FlashSaleSection from "./components/FlashSaleSection";
 import BottomNavigation from "./components/BottomNavigation";
 import NearbyOffers from "./components/NearbyOffers";
 import HomeBanner from "./components/HomeBanner";
+import TopPicks from "./components/TopPicks";
 import { ProductProvider, useProducts } from "./context/ProductContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { NotificationProvider } from "./context/NotificationContext";
@@ -244,7 +245,7 @@ function ShopContent() {
             <>
               {/* User Actions Bar Removed - Now in Header */}
 
-              <div className="absolute inset-0 w-full overflow-y-auto custom-scrollbar pb-40">
+              <div className="w-full pb-40">
                 {/* Hero / Banner Removed */}
 
 
@@ -264,53 +265,66 @@ function ShopContent() {
                   </div>
                 )}
 
-                {!filters.search && (
-                  <FlashSaleSection
-                    products={products}
-                    onAdd={(p) => addToCart(p, 1)}
-                    onClick={setSelectedProduct}
-                  />
-                )}
+                {!filters.search ? (
+                  <>
+                    {/* Top Picks */}
+                    <div className="px-4 mt-6">
+                      <TopPicks />
+                    </div>
 
-                <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', padding: '0 1rem' }} id="product-grid">
-                  {/* Sidebar Removed */}
+                    {/* Category Sections */}
+                    <div className="flex flex-col gap-6 px-4 pb-8">
+                      {CATEGORIES.filter(cat => cat !== "All" && cat !== "Other").map((category) => (
+                        <CategorySection
+                          key={category}
+                          title={category}
+                          category={category}
+                        />
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  /* Search Results Grid */
+                  <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', padding: '0 1rem' }} id="product-grid">
+                    {/* Sidebar Removed */}
 
-                  {/* Product Grid */}
-                  <style>
-                    {`
-                        .responsive-product-grid {
-                          display: grid;
-                          grid-template-columns: repeat(2, 1fr);
-                          gap: 0.75rem;
-                          width: 100%;
-                        }
-                        @media (min-width: 640px) {
+                    {/* Product Grid */}
+                    <style>
+                      {`
                           .responsive-product-grid {
-                             grid-template-columns: repeat(3, 1fr);
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 0.75rem;
+                            width: 100%;
                           }
-                        }
-                        @media (min-width: 1024px) {
-                          .responsive-product-grid {
-                             grid-template-columns: repeat(4, 1fr);
+                          @media (min-width: 640px) {
+                            .responsive-product-grid {
+                               grid-template-columns: repeat(3, 1fr);
+                            }
                           }
-                        }
-                      `}
-                  </style>
-                  <div className="responsive-product-grid" style={{ flex: 1 }}>
-                    {filters.search && (
-                      <h2 className="text-base font-bold mb-3 col-span-full" style={{ gridColumn: '1 / -1' }}>
-                        Search Results for "{filters.search}"
-                      </h2>
-                    )}
-                    {products.map((product) => (
-                      <ProductCard
-                        key={product._id}
-                        product={product}
-                        onClick={setSelectedProduct}
-                      />
-                    ))}
+                          @media (min-width: 1024px) {
+                            .responsive-product-grid {
+                               grid-template-columns: repeat(4, 1fr);
+                            }
+                          }
+                        `}
+                    </style>
+                    <div className="responsive-product-grid" style={{ flex: 1 }}>
+                      {filters.search && (
+                        <h2 className="text-base font-bold mb-3 col-span-full" style={{ gridColumn: '1 / -1' }}>
+                          Search Results for "{filters.search}"
+                        </h2>
+                      )}
+                      {products.map((product) => (
+                        <ProductCard
+                          key={product._id}
+                          product={product}
+                          onClick={setSelectedProduct}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </>
           } />
