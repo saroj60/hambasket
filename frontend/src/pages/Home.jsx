@@ -117,7 +117,7 @@ const Home = () => {
               {/* Category Wise Products */}
               <div className="mt-8">
                 {MAIN_CATEGORIES.map((category) => (
-                  <CategorySection key={category} category={category} title={category} />
+                  <CategorySection key={category} category={category} title={category} onProductClick={setSelectedProduct} />
                 ))}
               </div>
             </>

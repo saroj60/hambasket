@@ -4,7 +4,7 @@ import { getProducts } from '../services/api';
 import { CartContext } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
-const CategorySection = ({ title, category }) => {
+const CategorySection = ({ title, category, onProductClick }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const { addToCart } = useContext(CartContext);
@@ -76,7 +76,7 @@ const CategorySection = ({ title, category }) => {
                     <div key={product._id} style={{ width: '100%' }}>
                         <ProductCard
                             product={product}
-                            onClick={() => { navigate(`/category/${encodeURIComponent(category)}`) }}
+                            onClick={() => onProductClick ? onProductClick(product) : navigate(`/category/${encodeURIComponent(category)}`)}
                         />
                     </div>
                 ))}

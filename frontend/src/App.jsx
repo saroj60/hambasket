@@ -281,6 +281,7 @@ function ShopContent() {
                           key={category}
                           title={category}
                           category={category}
+                          onProductClick={setSelectedProduct}
                         />
                       ))}
                     </div>
