@@ -44,54 +44,62 @@ const CategorySection = ({ title, category }) => {
     };
 
     return (
-        <div className="category-section" style={{ marginBottom: '2rem' }}>
+        <div className="category-section" style={{ marginBottom: '2rem', padding: '0 1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#1f2937' }}>{title || category}</h2>
-                <button
-                    onClick={handleSeeAll}
-                    style={{
-                        color: '#0c831f',
-                        fontWeight: '600',
-                        fontSize: '1rem',
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer'
-                    }}
-                >
-                    see all
-                </button>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#1f2937' }}>{title || category}</h2>
             </div>
 
-            <div
-                style={{
-                    display: 'flex',
-                    gap: '1rem',
-                    overflowX: 'auto',
-                    paddingBottom: '1rem',
-                    scrollbarWidth: 'none', /* Firefox */
-                    msOverflowStyle: 'none',  /* IE 10+ */
-                }}
-                className="hide-scrollbar"
-            >
-                <style>
-                    {`
-                        .hide-scrollbar::-webkit-scrollbar { 
-                            display: none; 
+            <style>
+                {`
+                    .category-grid-layout {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 0.75rem;
+                        width: 100%;
+                    }
+                    /* On very small screens, maybe 2 columns? */
+                    @media (max-width: 380px) {
+                        .category-grid-layout {
+                            grid-template-columns: repeat(2, 1fr);
                         }
-                    `}
-                </style>
-                {products.map(product => (
-                    <div key={product._id} style={{ minWidth: '180px', maxWidth: '180px' }}>
+                    }
+                    @media (min-width: 1024px) {
+                        .category-grid-layout {
+                            grid-template-columns: repeat(6, 1fr);
+                        }
+                    }
+                `}
+            </style>
+
+            <div className="category-grid-layout">
+                {products.slice(0, 6).map(product => (
+                    <div key={product._id} style={{ width: '100%' }}>
                         <ProductCard
                             product={product}
-                            onClick={() => { }} // Handle click if needed, maybe open details
-                        // ProductCard handles add to cart internally via context, 
-                        // but implementation in ProductCard.jsx uses onClick for the card itself.
-                        // We should probably pass a do-nothing or open-details handler.
+                            onClick={() => { navigate(`/category/${encodeURIComponent(category)}`) }}
                         />
                     </div>
                 ))}
             </div>
+
+            <button
+                onClick={handleSeeAll}
+                style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    marginTop: '1rem',
+                    backgroundColor: '#f3f4f6',
+                    color: '#0c831f',
+                    fontWeight: '700',
+                    fontSize: '0.9rem',
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    textTransform: 'uppercase'
+                }}
+            >
+                See All {title || category}
+            </button>
         </div>
     );
 };
