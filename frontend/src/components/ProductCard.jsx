@@ -48,7 +48,7 @@ const ProductCard = ({ product, onClick }) => {
       )}
 
       {/* 1. Image Area - Clean & Spacious */}
-      <div className="w-full aspect-[1/1] bg-white p-4 flex items-center justify-center relative">
+      <div className="w-full aspect-[1/1] bg-white p-4 flex items-center justify-center relative mb-2">
         {product.image ? (
           <img
             src={
@@ -65,64 +65,71 @@ const ProductCard = ({ product, onClick }) => {
       </div>
 
       {/* 2. Content Section - Equal Spacing */}
-      <div className="flex flex-col flex-1 p-3 pt-0">
+      <div className="flex flex-col flex-1 px-3 pb-3">
 
-        {/* Title: Fixed height for 2 lines to ensure alignment */}
-        <h3 className="text-[13px] font-medium text-gray-800 leading-snug line-clamp-2 min-h-[2.5em] mb-1 group-hover:text-purple-700 transition-colors">
+        {/* Time Badge (Optional - can be dynamic if data exists) */}
+        {/* <div className="bg-gray-100 text-[9px] font-bold text-gray-600 px-1.5 py-0.5 rounded w-fit mb-2 flex items-center gap-1">
+          <span>⏱️</span> 8 MINS
+        </div> */}
+
+        {/* Title: Stronger Font */}
+        <h3 className="text-[14px] font-bold text-gray-900 leading-tight line-clamp-2 mb-1 group-hover:text-purple-700 transition-colors">
           {product.name}
         </h3>
 
-        {/* Weights/Units */}
-        <div className="text-[11px] text-gray-500 mb-3">
+        {/* Weights/Units - Below Name */}
+        <div className="text-[12px] text-gray-500 mb-4 font-medium">
           {product.weight} {product.unit}
         </div>
 
 
         {/* Footer: Price & Action - Pushed to bottom */}
-        <div className="mt-auto flex items-center justify-between gap-2">
+        <div className="mt-auto flex items-center justify-between">
 
           {/* Price Stack */}
           <div className="flex flex-col leading-none">
             {product.discount > 0 && (
-              <span className="text-[10px] text-gray-400 line-through">
+              <span className="text-[11px] text-gray-400 line-through mb-0.5">
                 ₹{product.originalPrice || (price + 20)}
               </span>
             )}
             <div className="flex items-center gap-1">
-              <span className="text-[14px] font-bold text-gray-900">
+              <span className="text-[15px] font-bold text-gray-900">
                 ₹{price}
               </span>
             </div>
           </div>
 
-          {/* ADD Button */}
-          <div className="w-[80px] h-[32px]">
+          {/* ADD Button - Classic Outline Style */}
+          <div className="w-[85px] h-[34px]">
             {product.variants && product.variants.length > 0 ? (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onClick(product);
                 }}
-                className="w-full h-full rounded-full text-[11px] font-bold uppercase border border-purple-600 text-purple-700 bg-purple-50 hover:bg-purple-100 transition-colors active:scale-95"
+                className="w-full h-full rounded-md text-[13px] font-bold uppercase border border-green-600 text-green-700 bg-white hover:bg-green-50 transition-colors active:scale-95"
               >
                 Select
               </button>
             ) : (
               quantity > 0 ? (
-                <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-between w-full h-full bg-green-500 text-white rounded-full shadow-md overflow-hidden">
-                  <button onClick={handleDecrement} className="w-8 h-full flex items-center justify-center hover:bg-green-600 transition-colors text-lg active:scale-90">-</button>
-                  <span className="text-[12px] font-bold">{quantity}</span>
-                  <button onClick={handleIncrement} className="w-8 h-full flex items-center justify-center hover:bg-green-600 transition-colors text-lg active:scale-90">+</button>
+                /* Counter for Quantity > 0 */
+                <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-between w-full h-full bg-green-600 text-white rounded-md shadow-sm overflow-hidden border border-green-600">
+                  <button onClick={handleDecrement} className="w-8 h-full flex items-center justify-center hover:bg-green-700 transition-colors text-lg active:scale-90">-</button>
+                  <span className="text-[13px] font-bold">{quantity}</span>
+                  <button onClick={handleIncrement} className="w-8 h-full flex items-center justify-center hover:bg-green-700 transition-colors text-lg active:scale-90">+</button>
                 </div>
               ) : (
+                /* ADD Button Default */
                 <button
                   onClick={handleAdd}
                   disabled={isOutOfStock}
                   className={`
-                        w-full h-full rounded-full text-[12px] font-bold uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center
+                        w-full h-full rounded-md text-[13px] font-bold uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center border
                         ${isOutOfStock
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                      : 'bg-white text-green-600 border border-green-600 hover:bg-green-50'
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                      : 'bg-white text-green-600 border-green-600 hover:bg-green-50'
                     }
                         `}
                 >
