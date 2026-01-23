@@ -1,10 +1,9 @@
 import React, { useContext } from 'react';
-import { API_URL, BASE_URL } from '../config';
+import { BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
 
 const ProductCard = ({ product, onClick }) => {
-  const { user, wishlist, addToWishlist, removeFromWishlist } = useAuth();
   const { cartItems, addToCart, removeFromCart } = useContext(CartContext);
   const isOutOfStock = product.stock <= 0;
 
@@ -38,18 +37,18 @@ const ProductCard = ({ product, onClick }) => {
 
   return (
     <div
-      className="flex flex-col h-full bg-white relative gap-2"
+      className="group flex flex-col h-full bg-white rounded-xl overflow-hidden transition-all duration-300 border border-gray-100 hover:shadow-lg hover:border-purple-100 relative"
       onClick={() => onClick(product)}
     >
-      {/* 1. Image Container - Separate Box with Border */}
-      <div className="w-full h-[120px] bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-3 relative overflow-hidden">
-        {/* Discount Badge */}
-        {(isFlashSaleActive || discount > 0) && (
-          <div className="absolute top-0 left-0 bg-[#2563eb] text-white text-[9px] font-black px-1.5 py-0.5 rounded-br-lg z-10 uppercase tracking-wide">
-            {isFlashSaleActive ? `${discount}% OFF` : '12% OFF'}
-          </div>
-        )}
+      {/* Discount Badge */}
+      {(isFlashSaleActive || discount > 0) && (
+        <div className="absolute top-0 left-0 bg-[#2563eb] text-white text-[10px] font-bold px-2 py-1 rounded-br-lg z-10 shadow-sm">
+          {isFlashSaleActive ? `${discount}% OFF` : '12% OFF'}
+        </div>
+      )}
 
+      {/* 1. Image Area - Clean & Spacious */}
+      <div className="w-full aspect-[1/1] bg-white p-4 flex items-center justify-center relative">
         {product.image ? (
           <img
             src={
@@ -58,78 +57,81 @@ const ProductCard = ({ product, onClick }) => {
                 : `${BASE_URL}${product.image}`
             }
             alt={product.name}
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110 will-change-transform" // Smooth zoom on hover
           />
         ) : (
-          <div className="text-3xl">{product.emoji || '📦'}</div>
+          <div className="text-4xl">📦</div>
         )}
       </div>
 
-      {/* 2. Content Section */}
-      <div className="flex flex-col flex-1 gap-1 px-2 pb-2">
-        {/* Timer Tag */}
+      {/* 2. Content Section - Equal Spacing */}
+      <div className="flex flex-col flex-1 p-3 pt-0">
 
-
-        {/* Title */}
-        <h3 className="text-[12px] font-bold text-gray-900 leading-tight line-clamp-2 min-h-[2.4em]">
+        {/* Title: Fixed height for 2 lines to ensure alignment */}
+        <h3 className="text-[13px] font-medium text-gray-800 leading-snug line-clamp-2 min-h-[2.5em] mb-1 group-hover:text-purple-700 transition-colors">
           {product.name}
         </h3>
 
+        {/* Weights/Units */}
+        <div className="text-[11px] text-gray-500 mb-3">
+          {product.weight} {product.unit}
+        </div>
 
 
-        {/* Footer: Price & Add Button */}
-        <div className="mt-auto flex items-end justify-between pt-2 min-h-[32px]">
+        {/* Footer: Price & Action - Pushed to bottom */}
+        <div className="mt-auto flex items-center justify-between gap-2">
+
           {/* Price Stack */}
           <div className="flex flex-col leading-none">
-            {product.discount > 0 ? (
-              <span className="text-[10px] text-gray-400 line-through mb-0.5">Rs. {product.originalPrice || (price + 20)}</span>
-            ) : (
-              <span className="text-[10px] text-gray-400 line-through mb-0.5 invisible">Rs. 0</span>
+            {product.discount > 0 && (
+              <span className="text-[10px] text-gray-400 line-through">
+                ₹{product.originalPrice || (price + 20)}
+              </span>
             )}
-            <span className="text-[14px] font-black text-gray-900">
-              Rs. {price}
-              <span className="text-[10px] text-gray-500 font-normal"> / {product.weight ? `(${product.weight} ${product.unit})` : product.unit}</span>
-            </span>
+            <div className="flex items-center gap-1">
+              <span className="text-[14px] font-bold text-gray-900">
+                ₹{price}
+              </span>
+            </div>
           </div>
 
           {/* ADD Button */}
-          <div className="w-[70px] h-[30px] relative">
+          <div className="w-[80px] h-[32px]">
             {product.variants && product.variants.length > 0 ? (
-              // Variant Product: Always show OPTIONS
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onClick(product); // Trigger modal
+                  onClick(product);
                 }}
-                className="w-full h-full rounded-lg text-[10px] font-bold uppercase transition-all active:scale-95 flex items-center justify-center border border-purple-600 bg-purple-50 text-purple-700 shadow-sm"
+                className="w-full h-full rounded-full text-[11px] font-bold uppercase border border-purple-600 text-purple-700 bg-purple-50 hover:bg-purple-100 transition-colors active:scale-95"
               >
-                Options
+                Select
               </button>
             ) : (
-              // Regular Product: Add/Counter
               quantity > 0 ? (
-                <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-between w-full h-full bg-[#16a34a] text-white rounded-lg shadow-sm">
-                  <button onClick={handleDecrement} className="w-6 h-full flex items-center justify-center text-lg font-bold pb-1">-</button>
+                <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-between w-full h-full bg-green-500 text-white rounded-full shadow-md overflow-hidden">
+                  <button onClick={handleDecrement} className="w-8 h-full flex items-center justify-center hover:bg-green-600 transition-colors text-lg active:scale-90">-</button>
                   <span className="text-[12px] font-bold">{quantity}</span>
-                  <button onClick={handleIncrement} className="w-6 h-full flex items-center justify-center text-lg font-bold pb-1">+</button>
+                  <button onClick={handleIncrement} className="w-8 h-full flex items-center justify-center hover:bg-green-600 transition-colors text-lg active:scale-90">+</button>
                 </div>
               ) : (
                 <button
                   onClick={handleAdd}
                   disabled={isOutOfStock}
                   className={`
-                    w-full h-full rounded-lg text-[12px] font-bold uppercase transition-all active:scale-95 flex items-center justify-center border
-                    ${isOutOfStock
-                      ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-                      : 'border-[#16a34a] bg-white text-[#16a34a] shadow-sm'
+                        w-full h-full rounded-full text-[12px] font-bold uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center
+                        ${isOutOfStock
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
+                      : 'bg-white text-green-600 border border-green-600 hover:bg-green-50'
                     }
-                    `}
+                        `}
                 >
-                  {isOutOfStock ? 'SOLD' : 'ADD'}
+                  {isOutOfStock ? 'Sold' : 'ADD'}
                 </button>
               )
             )}
           </div>
+
         </div>
       </div>
     </div>
