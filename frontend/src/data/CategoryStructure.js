@@ -13,7 +13,7 @@ export const CATEGORY_HIERARCHY = {
         { name: "Bread", image: "/images/dairy/bread.jpg" }, // Bread
         { name: "Eggs", image: "https://images.unsplash.com/photo-1587486913049-53fc88980cfc?auto=format&fit=crop&w=100&q=80" }, // Eggs
         { name: "Butter & Cheese", image: "/images/dairy/butter_cheese.jpg" }, // Cheese
-        { name: "Curd & Yogurt", image: "/images/dairy/curd.jpg" }, // Yogurt
+        { name: "Curd & Yogurt", image: "/images/dairy/curd_yogurt.png" }, // Yogurt
         { name: "Paneer & Cream", image: "/images/dairy/paneer.jpg" }  // Paneer/Cheese
     ],
     "Atta, Rice, Oil & Dals": [
