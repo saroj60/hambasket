@@ -58,10 +58,13 @@ const CategorySection = ({ title, category, onProductClick }) => {
                         width: 100%;
                     }
                     /* On very small screens, maybe 2 columns? */
-                    @media (max-width: 380px) {
+                    /* @media (max-width: 380px) {
                         .category-grid-layout {
-                            grid-template-columns: repeat(2, 1fr);
+                            grid-template-columns: repeat(3, 1fr);
                         }
+                    } */
+                    .category-grid-layout {
+                        grid-template-columns: repeat(3, 1fr);
                     }
                     @media (min-width: 1024px) {
                         .category-grid-layout {

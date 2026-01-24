@@ -48,7 +48,7 @@ const Home = () => {
   }, [location.search]);
 
   return (
-    <div className="px-6 py-10">
+    <div className="px-3 py-6 md:px-6 md:py-10">
       {/* Promotional Banner - Always visible */}
       <HomeBanner />
 
