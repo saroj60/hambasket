@@ -1,0 +1,4 @@
+# Android keys and keystores
+*.keystore
+*.jks
+keystore.properties

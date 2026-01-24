@@ -103,94 +103,100 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           left: 0,
           right: 0,
           zIndex: 1000,
-          transform: isHomePage && !showHeader ? `translateY(-${topRowHeight}px)` : 'translateY(0)',
-          transition: 'transform 0.3s ease-in-out'
+          transition: 'box-shadow 0.3s ease'
         }}
       >
         <div style={{ maxWidth: '100%', margin: '0 auto' }}>
 
-          {/* Row 1: Logo & Location & Profile */}
-          <div
-            ref={topRowRef}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 10px', flexWrap: 'nowrap' }}
-          >
+          {/* Collapsible Top Row Container */}
+          <div style={{
+            height: isHomePage && !showHeader ? 0 : (topRowHeight ? `${topRowHeight}px` : 'auto'),
+            opacity: isHomePage && !showHeader ? 0 : 1,
+            overflow: 'hidden',
+            transition: 'height 0.3s ease-in-out, opacity 0.3s ease-in-out'
+          }}>
+            {/* Row 1: Logo & Location & Profile */}
+            <div
+              ref={topRowRef}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 10px', flexWrap: 'nowrap' }}
+            >
 
-            {/* Logo */}
-            <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0, marginRight: '6px' }}>
-              <h1 style={{ fontWeight: '900', fontSize: 'clamp(1.1rem, 3.5vw, 1.6rem)', color: 'var(--brand-yellow)', letterSpacing: '-0.5px', margin: 0, lineHeight: 1, whiteSpace: 'nowrap' }}>
-                Aone <span style={{ color: '#6b21a8' }}>Kirana</span>
-              </h1>
-            </Link>
+              {/* Logo */}
+              <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0, marginRight: '6px' }}>
+                <h1 style={{ fontWeight: '900', fontSize: 'clamp(1.1rem, 3.5vw, 1.6rem)', color: 'var(--brand-yellow)', letterSpacing: '-0.5px', margin: 0, lineHeight: 1, whiteSpace: 'nowrap' }}>
+                  Aone <span style={{ color: '#6b21a8' }}>Kirana</span>
+                </h1>
+              </Link>
 
-            {/* Right Actions: Location + Profile */}
-            <div className="mobile-header-right" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 1, minWidth: 0, justifyContent: 'flex-end' }}>
+              {/* Right Actions: Location + Profile */}
+              <div className="mobile-header-right" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 1, minWidth: 0, justifyContent: 'flex-end' }}>
 
-              {/* Location */}
-              <div onClick={openModal} style={{ textAlign: 'right', cursor: 'pointer', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
-                <div className="delivery-text" style={{ fontWeight: '800', fontSize: '0.65rem', color: '#1f2937', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
-                  Delivery in mins
-                </div>
-                <div className="location-subtext" style={{ fontSize: '0.75rem', color: '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '2px', maxWidth: '100%' }}>
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>
-                    {location?.address ? location.address.split(',')[0] : "Select"}
-                  </span>
-                  <span style={{ fontSize: '0.7rem', flexShrink: 0 }}>▼</span>
-                </div>
-              </div>
-
-              {/* Profile Icon with Dropdown */}
-              <div style={{ position: 'relative' }}>
-                <div
-                  onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    backgroundColor: '#f3f4f6',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    border: '1px solid #e5e7eb'
-                  }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
+                {/* Location */}
+                <div onClick={openModal} style={{ textAlign: 'right', cursor: 'pointer', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
+                  <div className="delivery-text" style={{ fontWeight: '800', fontSize: '0.65rem', color: '#1f2937', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
+                    Delivery in mins
+                  </div>
+                  <div className="location-subtext" style={{ fontSize: '0.75rem', color: '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '2px', maxWidth: '100%' }}>
+                    <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>
+                      {location?.address ? location.address.split(',')[0] : "Select"}
+                    </span>
+                    <span style={{ fontSize: '0.7rem', flexShrink: 0 }}>▼</span>
+                  </div>
                 </div>
 
-                {/* Dropdown Menu */}
-                {isProfileMenuOpen && (
-                  <>
-                    <div
-                      style={{ position: 'fixed', inset: 0, zIndex: 90 }}
-                      onClick={() => setIsProfileMenuOpen(false)}
-                    />
-                    <div style={{
-                      position: 'absolute',
-                      top: '120%',
-                      right: 0,
-                      backgroundColor: 'white',
-                      borderRadius: '12px',
-                      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                      width: '220px',
-                      zIndex: 100,
-                      border: '1px solid #f3f4f6',
-                      overflow: 'hidden'
-                    }}>
-                      {/* User Info Header */}
-                      <div style={{ padding: '12px', borderBottom: '1px solid #f3f4f6', backgroundColor: '#f9fafb' }}>
-                        <div style={{ fontWeight: '700', fontSize: '0.9rem', color: '#1f2937' }}>
-                          {user?.name || location?.receiverName || 'Guest'}
+                {/* Profile Icon with Dropdown */}
+                <div style={{ position: 'relative' }}>
+                  <div
+                    onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      backgroundColor: '#f3f4f6',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      border: '1px solid #e5e7eb'
+                    }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+
+                  {/* Dropdown Menu */}
+                  {isProfileMenuOpen && (
+                    <>
+                      <div
+                        style={{ position: 'fixed', inset: 0, zIndex: 90 }}
+                        onClick={() => setIsProfileMenuOpen(false)}
+                      />
+                      <div style={{
+                        position: 'absolute',
+                        top: '120%',
+                        right: 0,
+                        backgroundColor: 'white',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                        width: '220px',
+                        zIndex: 100,
+                        border: '1px solid #f3f4f6',
+                        overflow: 'hidden'
+                      }}>
+                        {/* User Info Header */}
+                        <div style={{ padding: '12px', borderBottom: '1px solid #f3f4f6', backgroundColor: '#f9fafb' }}>
+                          <div style={{ fontWeight: '700', fontSize: '0.9rem', color: '#1f2937' }}>
+                            {user?.name || location?.receiverName || 'Guest'}
+                          </div>
+                          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                            {user?.phone || user?.email || location?.receiverPhone || ''}
+                          </div>
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-                          {user?.phone || user?.email || location?.receiverPhone || ''}
-                        </div>
-                      </div>
 
-                      {/* Menu Items */}
-                      {/* <div
+                        {/* Menu Items */}
+                        {/* <div
                         onClick={() => { setIsProfileMenuOpen(false); onOpenProfile && onOpenProfile(); }}
                         style={{ padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#374151', fontSize: '0.9rem' }}
                         className="hover:bg-gray-50"
@@ -198,63 +204,64 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
                         📦 Your Orders
                       </div> */}
 
-                      <div
-                        onClick={() => { setIsProfileMenuOpen(false); openModal(); }}
-                        style={{ padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#374151', fontSize: '0.9rem' }}
-                        className="hover:bg-gray-50"
-                      >
-                        📍 Location
-                      </div>
-
-                      <div
-                        onClick={() => { setIsProfileMenuOpen(false); navigate('/contact'); }}
-                        style={{ padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#374151', fontSize: '0.9rem' }}
-                        className="hover:bg-gray-50"
-                      >
-                        🎧 Help & Support
-                      </div>
-
-                      {user && (
                         <div
-                          onClick={handleLogout}
-                          style={{ padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#ef4444', fontSize: '0.9rem', borderTop: '1px solid #f3f4f6' }}
-                          className="hover:bg-red-50"
+                          onClick={() => { setIsProfileMenuOpen(false); openModal(); }}
+                          style={{ padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#374151', fontSize: '0.9rem' }}
+                          className="hover:bg-gray-50"
                         >
-                          🚪 Logout
+                          📍 Location
                         </div>
-                      )}
-                    </div>
-                  </>
-                )}
+
+                        <div
+                          onClick={() => { setIsProfileMenuOpen(false); navigate('/contact'); }}
+                          style={{ padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#374151', fontSize: '0.9rem' }}
+                          className="hover:bg-gray-50"
+                        >
+                          🎧 Help & Support
+                        </div>
+
+                        {user && (
+                          <div
+                            onClick={handleLogout}
+                            style={{ padding: '12px 16px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: '#ef4444', fontSize: '0.9rem', borderTop: '1px solid #f3f4f6' }}
+                            className="hover:bg-red-50"
+                          >
+                            🚪 Logout
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+
               </div>
 
-            </div>
+              {/* Admin Button - Visible if Admin */}
+              {user?.role === 'admin' && (
+                <div
+                  onClick={onAdminClick}
+                  className="hidden md:flex"
+                  style={{ cursor: 'pointer', flexDirection: 'column', alignItems: 'center', gap: '2px' }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                  <span style={{ fontSize: '0.7rem', fontWeight: '600', color: '#ef4444' }}>Admin</span>
+                </div>
+              )}
 
-            {/* Admin Button - Visible if Admin */}
-            {user?.role === 'admin' && (
+              {/* Login Button - Visible on Desktop */}
               <div
-                onClick={onAdminClick}
+                onClick={user ? () => navigate('/profile') : onLogin}
                 className="hidden md:flex"
                 style={{ cursor: 'pointer', flexDirection: 'column', alignItems: 'center', gap: '2px' }}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span style={{ fontSize: '0.7rem', fontWeight: '600', color: '#ef4444' }}>Admin</span>
+                <span style={{ fontSize: '0.7rem', fontWeight: '600', color: '#374151' }}>{user ? 'Profile' : 'Login'}</span>
               </div>
-            )}
-
-            {/* Login Button - Visible on Desktop */}
-            <div
-              onClick={user ? () => navigate('/profile') : onLogin}
-              className="hidden md:flex"
-              style={{ cursor: 'pointer', flexDirection: 'column', alignItems: 'center', gap: '2px' }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-              <span style={{ fontSize: '0.7rem', fontWeight: '600', color: '#374151' }}>{user ? 'Profile' : 'Login'}</span>
             </div>
           </div>
         </div>

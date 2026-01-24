@@ -44,7 +44,7 @@ const ProductCard = ({ product, onClick }) => {
 
   return (
     <div
-      className="group flex flex-col h-full bg-white rounded-xl overflow-hidden transition-all duration-300 border border-gray-100 hover:shadow-lg hover:border-purple-100 relative"
+      className="group flex flex-col h-[280px] w-full bg-white rounded-xl overflow-hidden transition-all duration-300 border border-gray-100 hover:shadow-lg hover:border-purple-100 relative"
       onClick={() => onClick(product)}
     >
       {/* Discount Badge */}
@@ -54,8 +54,8 @@ const ProductCard = ({ product, onClick }) => {
         </div>
       )}
 
-      {/* 1. Image Area - Clean & Spacious */}
-      <div className="w-full aspect-[1/1] bg-white p-4 flex items-center justify-center relative mb-2">
+      {/* 1. Image Area - Fixed Height for Uniformity */}
+      <div className="w-full h-[140px] bg-white p-3 flex items-center justify-center relative shrink-0">
         {product.image ? (
           <img
             src={
@@ -64,7 +64,7 @@ const ProductCard = ({ product, onClick }) => {
                 : `${BASE_URL}${product.image}`
             }
             alt={product.name}
-            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110 will-change-transform" // Smooth zoom on hover
+            className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-110 will-change-transform" // Smooth zoom on hover
           />
         ) : (
           <div className="text-4xl">📦</div>
@@ -72,15 +72,10 @@ const ProductCard = ({ product, onClick }) => {
       </div>
 
       {/* 2. Content Section - Equal Spacing */}
-      <div className="flex flex-col flex-1 px-2 pb-2">
+      <div className="flex flex-col flex-1 px-3 pb-3 min-h-0">
 
-        {/* Time Badge (Optional - can be dynamic if data exists) */}
-        {/* <div className="bg-gray-100 text-[9px] font-bold text-gray-600 px-1.5 py-0.5 rounded w-fit mb-2 flex items-center gap-1">
-          <span>⏱️</span> 8 MINS
-        </div> */}
-
-        {/* Title: Stronger Font */}
-        <h3 className="text-[14px] font-bold text-gray-900 leading-tight line-clamp-2 mb-1 group-hover:text-purple-700 transition-colors">
+        {/* Title: Stronger Font, Fixed Lines */}
+        <h3 className="text-[13px] font-bold text-gray-900 leading-tight line-clamp-2 mb-1 group-hover:text-purple-700 transition-colors h-[32px]">
           {product.name}
         </h3>
 
@@ -91,7 +86,7 @@ const ProductCard = ({ product, onClick }) => {
 
 
         {/* Footer: Price & Action - Pushed to bottom */}
-        <div className="mt-auto flex items-end justify-between">
+        <div className="mt-auto flex items-end justify-between w-full">
 
           {/* Price Stack */}
           <div className="flex flex-col leading-none mb-1">
@@ -108,14 +103,14 @@ const ProductCard = ({ product, onClick }) => {
           </div>
 
           {/* ADD Button - Compact, Bottom Right */}
-          <div className="w-[60px] h-[26px]">
+          <div className="w-[65px] h-[28px] shrink-0">
             {product.variants && product.variants.length > 0 ? (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onClick(product);
                 }}
-                className="w-full h-full rounded text-[12px] font-bold uppercase border border-green-600 text-green-700 bg-white hover:bg-green-50 transition-colors active:scale-95"
+                className="w-full h-full rounded text-[11px] font-bold uppercase border border-green-600 text-green-700 bg-white hover:bg-green-50 transition-colors active:scale-95 flex items-center justify-center"
               >
                 Select
               </button>
@@ -123,17 +118,17 @@ const ProductCard = ({ product, onClick }) => {
               quantity > 0 ? (
                 /* Counter for Quantity > 0 */
                 <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-between w-full h-full bg-green-600 text-white rounded shadow-sm overflow-hidden border border-green-600">
-                  <button onClick={handleDecrement} className="w-7 h-full flex items-center justify-center hover:bg-green-700 transition-colors text-lg active:scale-90">-</button>
-                  <span className="text-[12px] font-bold">{quantity}</span>
-                  <button onClick={handleIncrement} className="w-7 h-full flex items-center justify-center hover:bg-green-700 transition-colors text-lg active:scale-90">+</button>
+                  <button onClick={handleDecrement} className="w-6 h-full flex items-center justify-center hover:bg-green-700 transition-colors text-lg active:scale-90 pb-0.5">-</button>
+                  <span className="text-[11px] font-bold">{quantity}</span>
+                  <button onClick={handleIncrement} className="w-6 h-full flex items-center justify-center hover:bg-green-700 transition-colors text-lg active:scale-90 pb-0.5">+</button>
                 </div>
               ) : (
                 /* ADD Button Default */
                 <button
                   onClick={handleAdd}
-                  disabled={isOutOfStock}
+                  disabled={isOutOfStock || isFlashSaleActive && product.flashSale.sold >= product.flashSale.quantity}
                   className={`
-                        w-full h-full rounded text-[12px] font-bold uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center border
+                        w-full h-full rounded text-[11px] font-bold uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center border
                         ${isOutOfStock
                       ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
                       : 'bg-white text-green-600 border-green-600 hover:bg-green-50'
