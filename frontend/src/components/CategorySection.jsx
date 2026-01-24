@@ -76,7 +76,7 @@ const CategorySection = ({ title, category, onProductClick }) => {
 
             <div className="category-grid-layout">
                 {products.slice(0, 6).map(product => (
-                    <div key={product._id} style={{ width: '100%' }}>
+                    <div key={product._id} style={{ width: '100%', height: '100%' }}>
                         <ProductCard
                             product={product}
                             onClick={() => onProductClick ? onProductClick(product) : navigate(`/category/${encodeURIComponent(category)}`)}

@@ -101,7 +101,7 @@ const ProductCard = ({ product, onClick }) => {
           </div>
 
           {/* ADD Button - Compact, Bottom Right */}
-          <div className="w-[70px] h-[30px]">
+          <div className="w-[60px] h-[26px]">
             {product.variants && product.variants.length > 0 ? (
               <button
                 onClick={(e) => {
