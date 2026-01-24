@@ -32,8 +32,15 @@ const ProductCard = ({ product, onClick }) => {
   };
 
   const isFlashSaleActive = product.flashSale?.active && new Date(product.flashSale.endTime) > new Date();
-  const discount = isFlashSaleActive ? product.flashSale.discount : 0;
   const price = product.price;
+  const originalPrice = product.originalPrice || (product.discount > 0 ? (product.originalPrice || (price + 20)) : null); // Fallback logic or explicit field
+
+  let discountPercentage = 0;
+  if (isFlashSaleActive) {
+    discountPercentage = product.flashSale.discount;
+  } else if (originalPrice > price) {
+    discountPercentage = Math.round(((originalPrice - price) / originalPrice) * 100);
+  }
 
   return (
     <div
@@ -41,9 +48,9 @@ const ProductCard = ({ product, onClick }) => {
       onClick={() => onClick(product)}
     >
       {/* Discount Badge */}
-      {(isFlashSaleActive || discount > 0) && (
+      {(discountPercentage > 0) && (
         <div className="absolute top-0 left-0 bg-[#2563eb] text-white text-[10px] font-bold px-2 py-1 rounded-br-lg z-10 shadow-sm">
-          {isFlashSaleActive ? `${discount}% OFF` : '12% OFF'}
+          {discountPercentage}% OFF
         </div>
       )}
 
@@ -88,9 +95,9 @@ const ProductCard = ({ product, onClick }) => {
 
           {/* Price Stack */}
           <div className="flex flex-col leading-none mb-1">
-            {product.discount > 0 && (
+            {(originalPrice > price) && (
               <span className="text-[10px] text-gray-400 line-through mb-0.5">
-                Rs {product.originalPrice || (price + 20)}
+                Rs {originalPrice}
               </span>
             )}
             <div className="flex items-center gap-0.5">
