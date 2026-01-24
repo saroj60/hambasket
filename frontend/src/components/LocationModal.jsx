@@ -3,7 +3,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { useLocation } from '../context/LocationContext';
 
 const LocationModal = () => {
-    const { isModalOpen, closeModal, openMap } = useLocation();
+    const { isModalOpen, closeModal, openMap, updateLocation } = useLocation();
     const [manualAddress, setManualAddress] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -22,7 +22,20 @@ const LocationModal = () => {
         try {
             const coordinates = await Geolocation.getCurrentPosition();
             const { latitude, longitude } = coordinates.coords;
-            openMap({ lat: latitude, lng: longitude });
+            // openMap({ lat: latitude, lng: longitude }); // Skip map, resolve address directly
+
+            // Reverse Geocoding using Nominatim (OpenStreetMap)
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`);
+            const data = await response.json();
+
+            if (data && data.display_name) {
+                // Construct a cleaner address if possible, or use display_name
+                const addr = data.display_name;
+                updateLocation(addr, { lat: latitude, lng: longitude });
+
+            } else {
+                openMap({ lat: latitude, lng: longitude }); // Fallback if geocoding fails
+            }
         } catch (error) {
             console.error("Geolocation error:", error);
             alert("Unable to retrieve your location. Please ensure location services are enabled.");
