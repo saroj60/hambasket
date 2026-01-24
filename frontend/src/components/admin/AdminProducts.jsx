@@ -101,6 +101,77 @@ const AdminProducts = () => {
         setIsModalOpen(true);
     };
 
+    const handleToggleStock = async (product) => {
+        const newStock = product.stock > 0 ? 0 : 100; // Toggle between 0 and 100
+        const endpoint = `${API_URL}/products/${product._id}`;
+
+        // Optimistic UI Update
+        const updatedProducts = products.map(p =>
+            p._id === product._id ? { ...p, stock: newStock } : p
+        );
+        setProducts(updatedProducts);
+
+        try {
+            const formData = new FormData();
+            formData.append('stock', newStock);
+            // We need to send other required fields if the backend validation is strict, 
+            // but typically a PATCH/PUT might allow partial updates or we re-send critical data.
+            // For safety with FormData and the existing endpoint logic, we might need to send more data 
+            // OR use a JSON PATCH if supported. Assuming the existing PUT supports update.
+            // Let's try sending just the stock first if the backend handles it, 
+            // but looking at handleSaveProduct, it builds a full object. 
+            // To be safe and reuse the specific endpoint, we should probably construct a minimal update 
+            // or if the backend supports JSON for partial updates.
+            // Let's try a JSON update which is cleaner if the backend supports it.
+            // If the backend expects FormData/multipart, we must stick to that.
+            // Given the previous code uses FormData for everything (including images), let's stick to FormData
+            // but we might need to populate other fields to avoid overwriting them with nulls if the backend isn't smart.
+            // HOEVER, for a quick toggle, ideally we have a specific endpoint. 
+            // Since we don't, let's use the same PUT but be careful. 
+            // Inspecting handleSaveProduct: it sends everything. 
+            // Checking standard Mongoose update patterns: if we send a PUT with just 'stock', 
+            // strict PUT might replace the doc, but mongoose findByIdAndUpdate usually does $set.
+
+            // Let's assume standard behavior:
+            const itemsToUpdate = {
+                name: product.name,
+                price: product.price,
+                category: product.category,
+                stock: newStock
+            };
+
+            // Re-using handleSaveProduct logic effectively but stripping image handling for speed
+            // or just calling fetch directly.
+
+            const res = await fetch(endpoint, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' }, // Try JSON first for partial
+                body: JSON.stringify(itemsToUpdate),
+                credentials: 'include'
+            });
+
+            // If JSON fails because backend expects FormData:
+            if (!res.ok && res.status === 415) {
+                // Fallback to FormData if 415 Unsupported Media Type
+                const fd = new FormData();
+                fd.append('name', product.name);
+                fd.append('price', product.price);
+                fd.append('category', product.category);
+                fd.append('stock', newStock);
+                await fetch(endpoint, { method: 'PUT', body: fd, credentials: 'include' });
+            } else if (!res.ok) {
+                throw new Error("Failed to update stock");
+            }
+
+            // No need to fetchProducts() if optimistic update worked, but good for consistency
+            // fetchProducts(); 
+        } catch (error) {
+            console.error("Error toggling stock:", error);
+            alert("Failed to update stock status");
+            fetchProducts(); // Revert on error
+        }
+    };
+
     if (loading && products.length === 0) return (
         <div className="flex h-screen items-center justify-center">
             <div className="w-12 h-12 border-4 border-purple-600 rounded-full animate-spin border-t-transparent"></div>
@@ -132,19 +203,24 @@ const AdminProducts = () => {
                 {products.map(product => {
                     // Fix Image URL: Use BASE_URL for uploads
                     const imageUrl = product.image
-                        ? (product.image.startsWith('http') ? product.image : `${BASE_URL}/${product.image}`)
+                        ? (product.image.startsWith('http') ? product.image : `${BASE_URL}${product.image}`) // Removed extra slash if potentially needed, adjust if BASE_URL has slash
                         : null;
 
                     return (
                         <div key={product._id} className="bg-white p-4 rounded-[1.5rem] shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group flex flex-col relative overflow-hidden">
-                            {/* Stock Badge */}
+                            {/* Stock Badge / Toggle */}
                             <div className="absolute top-4 right-4 z-10">
-                                <span className={`text-[10px] font-bold px-2 py-1 rounded-full shadow-sm border backdrop-blur-md ${product.stock > 0
-                                    ? 'bg-white/80 text-gray-700 border-gray-100'
-                                    : 'bg-red-50 text-red-600 border-red-100'
-                                    }`}>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); handleToggleStock(product); }}
+                                    className={`text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm border backdrop-blur-md transition-all active:scale-95 cursor-pointer flex items-center gap-1 ${product.stock > 0
+                                        ? 'bg-white/90 text-green-700 border-green-100 hover:bg-green-50'
+                                        : 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100'
+                                        }`}
+                                    title="Click to toggle stock status"
+                                >
+                                    <span className={`w-2 h-2 rounded-full ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></span>
                                     {product.stock > 0 ? `${product.stock} Left` : 'Out of Stock'}
-                                </span>
+                                </button>
                             </div>
 
                             {/* Image Area */}

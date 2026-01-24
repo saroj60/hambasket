@@ -56,6 +56,15 @@ const ProductCard = ({ product, onClick }) => {
 
       {/* 1. Image Area - Fixed Height for Uniformity */}
       <div className="w-full h-[140px] bg-white p-3 flex items-center justify-center relative shrink-0">
+        {/* Out of Stock Overlay */}
+        {isOutOfStock && (
+          <div className="absolute inset-0 bg-white/60 z-10 flex items-center justify-center backdrop-blur-[1px]">
+            <span className="bg-gray-800 text-white text-[10px] font-bold px-2 py-1 rounded shadow-md uppercase">
+              Out of Stock
+            </span>
+          </div>
+        )}
+
         {product.image ? (
           <img
             src={
@@ -64,7 +73,7 @@ const ProductCard = ({ product, onClick }) => {
                 : `${BASE_URL}${product.image}`
             }
             alt={product.name}
-            className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-110 will-change-transform" // Smooth zoom on hover
+            className={`h-full w-full object-contain transition-transform duration-300 group-hover:scale-110 will-change-transform ${isOutOfStock ? 'grayscale opacity-50' : ''}`}
           />
         ) : (
           <div className="text-4xl">📦</div>
@@ -75,7 +84,7 @@ const ProductCard = ({ product, onClick }) => {
       <div className="flex flex-col flex-1 px-3 pb-3 min-h-0">
 
         {/* Title: Stronger Font, Fixed Lines */}
-        <h3 className="text-[13px] font-bold text-gray-900 leading-tight line-clamp-2 mb-1 group-hover:text-purple-700 transition-colors h-[32px]">
+        <h3 className={`text-[13px] font-bold text-gray-900 leading-tight line-clamp-2 mb-1 group-hover:text-purple-700 transition-colors h-[32px] ${isOutOfStock ? 'text-gray-500' : ''}`}>
           {product.name}
         </h3>
 
@@ -103,7 +112,7 @@ const ProductCard = ({ product, onClick }) => {
           </div>
 
           {/* ADD Button - Compact, Bottom Right */}
-          <div className="w-[65px] h-[28px] shrink-0">
+          <div className="w-[75px] h-[28px] shrink-0">
             {product.variants && product.variants.length > 0 ? (
               <button
                 onClick={(e) => {
@@ -115,7 +124,7 @@ const ProductCard = ({ product, onClick }) => {
                 Select
               </button>
             ) : (
-              quantity > 0 ? (
+              quantity > 0 && !isOutOfStock ? (
                 /* Counter for Quantity > 0 */
                 <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-between w-full h-full bg-green-600 text-white rounded shadow-sm overflow-hidden border border-green-600">
                   <button onClick={handleDecrement} className="w-6 h-full flex items-center justify-center hover:bg-green-700 transition-colors text-lg active:scale-90 pb-0.5">-</button>
@@ -126,16 +135,16 @@ const ProductCard = ({ product, onClick }) => {
                 /* ADD Button Default */
                 <button
                   onClick={handleAdd}
-                  disabled={isOutOfStock || isFlashSaleActive && product.flashSale.sold >= product.flashSale.quantity}
+                  disabled={isOutOfStock || (isFlashSaleActive && product.flashSale.sold >= product.flashSale.quantity)}
                   className={`
-                        w-full h-full rounded text-[11px] font-bold uppercase transition-all shadow-sm active:scale-95 flex items-center justify-center border
+                        w-full h-full rounded text-[10px] font-bold uppercase transition-all shadow-sm flex items-center justify-center border
                         ${isOutOfStock
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
-                      : 'bg-white text-green-600 border-green-600 hover:bg-green-50'
+                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
+                      : 'bg-white text-green-600 border-green-600 hover:bg-green-50 active:scale-95'
                     }
                         `}
                 >
-                  {isOutOfStock ? 'Sold' : 'ADD'}
+                  {isOutOfStock ? 'Out of Stock' : 'ADD'}
                 </button>
               )
             )}
