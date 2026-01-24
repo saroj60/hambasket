@@ -24,88 +24,44 @@ export const resolveLocation = async (req, res) => {
 
         const isServiceable = distance <= DELIVERY_RADIUS_KM;
 
-        // 2. Reverse Geocoding via Google Maps API
-        // NOTE: Ensure GOOGLE_MAPS_API_KEY is in .env (Backend doesn't use VITE_ prefix)
-        // We will try to read VITE_ one if strictly backend one is missing for convenience in this setup
-        const apiKey = process.env.GOOGLE_MAPS_API_KEY || process.env.VITE_GOOGLE_MAPS_API_KEY;
+        // 2. Reverse Geocoding via Nominatim (OpenStreetMap) - Free & No Key
+        const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
 
-        if (!apiKey) {
-            console.error("Using fallback mock address - API Key missing");
-            // Fallback for dev without key
-            return res.json({
-                formatted_address: "Debug Mode: API Key Missing",
-                components: {
-                    area: "Debug Area",
-                    city: "Kathmandu",
-                    state: "Bagmati"
-                },
-                serviceable: isServiceable,
-                serviceability_details: {
-                    distance_km: distance.toFixed(2),
-                    max_radius_km: DELIVERY_RADIUS_KM
-                }
-            });
-        }
-
-        const googleUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}&result_type=street_address|point_of_interest|premise|sublocality|locality`;
-
-        const response = await axios.get(googleUrl);
-
-        if (response.data.status !== 'OK') {
-            throw new Error(`Google Maps API Error: ${response.data.status}`);
-        }
-
-        const result = response.data.results[0];
-
-        // 3. Format Address Logic
-        // Extract meaningful components
-        let addressComponents = {
-            area: '',
-            street: '',
-            landmark: '',
-            city: '',
-            state: '',
-            pincode: ''
-        };
-
-        result.address_components.forEach(comp => {
-            if (comp.types.includes('sublocality') || comp.types.includes('neighborhood')) {
-                addressComponents.area = comp.long_name;
-            }
-            if (comp.types.includes('route') || comp.types.includes('street_address')) {
-                addressComponents.street = comp.long_name;
-            }
-            if (comp.types.includes('point_of_interest') || comp.types.includes('establishment')) {
-                addressComponents.landmark = comp.long_name;
-            }
-            if (comp.types.includes('locality')) {
-                addressComponents.city = comp.long_name;
-            }
-            if (comp.types.includes('administrative_area_level_1')) {
-                addressComponents.state = comp.long_name;
-            }
-            if (comp.types.includes('postal_code')) {
-                addressComponents.pincode = comp.long_name;
-            }
+        // Nominatim requires User-Agent
+        const response = await axios.get(nominatimUrl, {
+            headers: { 'User-Agent': 'HamBasketApp/1.0' }
         });
 
-        // "Tikathali, Near Bhagwati Temple..."
-        // If we found a landmark from Places API (not just geocode), we'd use that. 
-        // Geocode API 'point_of_interest' isn't always reliable for "Near X".
-        // But let's construct a friendly string.
+        const result = response.data;
+        const address = result.address || {};
+
+        // 3. Format Address Logic
+        let addressComponents = {
+            area: address.suburb || address.neighbourhood || address.residential || '',
+            street: address.road || address.pedestrian || '',
+            landmark: address.amenity || address.shop || address.tourism || '',
+            city: address.city || address.town || address.village || address.municipality || '',
+            state: address.state || address.province || '',
+            pincode: address.postcode || ''
+        };
 
         const parts = [];
-        if (addressComponents.area) parts.push(addressComponents.area);
         if (addressComponents.street) parts.push(addressComponents.street);
-        if (addressComponents.landmark) parts.push(`Near ${addressComponents.landmark}`);
+        if (addressComponents.area) parts.push(addressComponents.area);
         if (addressComponents.city) parts.push(addressComponents.city);
 
-        // Fallback if parts are empty (e.g. middle of nowhere)
-        const friendlyAddress = parts.length > 1 ? parts.join(', ') : result.formatted_address;
+        // Friendly Display Address
+        let friendlyAddress = result.display_name;
+        // Construct a shorter version if Nominatim's is too long?
+        // Nominatim's display_name is usually very good but long.
+        // Let's use our constructed one if decent
+        if (parts.length >= 2) {
+            friendlyAddress = parts.join(', ');
+        }
 
         res.json({
             formatted_address: friendlyAddress,
-            original_formatted_address: result.formatted_address,
+            original_formatted_address: result.display_name,
             components: addressComponents,
             serviceable: isServiceable,
             coordinates: { lat, lng },

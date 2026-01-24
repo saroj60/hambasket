@@ -29,12 +29,12 @@ const LocationModal = () => {
             const data = await response.json();
 
             if (data && data.display_name) {
-                // Construct a cleaner address if possible, or use display_name
-                const addr = data.display_name;
-                updateLocation(addr, { lat: latitude, lng: longitude });
-
+                // We have an address, but MapAddressSelector mainly takes coords. 
+                // However, we can pass it if we update MapAddressSelector to accept it.
+                // For now, just open map at these coords. Converting backend controller to Nominatim is the real fix.
+                openMap({ lat: latitude, lng: longitude });
             } else {
-                openMap({ lat: latitude, lng: longitude }); // Fallback if geocoding fails
+                openMap({ lat: latitude, lng: longitude });
             }
         } catch (error) {
             console.error("Geolocation error:", error);
