@@ -33,7 +33,7 @@ const ProductDetails = ({ product, onClose, onAdd, onProductSelect }) => {
 
     const currentPrice = selectedVariant ? selectedVariant.price : product.price;
     const currentStock = selectedVariant ? selectedVariant.stock : product.stock;
-    const currentWeight = selectedVariant ? selectedVariant.weight : product.weight;
+    const currentWeight = selectedVariant ? selectedVariant.weight : `${product.weight} ${product.unit || ''}`;
 
     const handleAdd = () => {
         const itemToAdd = {
@@ -227,7 +227,7 @@ const ProductDetails = ({ product, onClose, onAdd, onProductSelect }) => {
                                 gap: '1rem'
                             }}>
                                 {similarProducts.map(similar => (
-                                    <div key={similar._id} style={{ height: '280px' }}>
+                                    <div key={similar._id} style={{ height: 'auto' }}>
                                         <ProductCard
                                             product={similar}
                                             onClick={onProductSelect || (() => { })}
