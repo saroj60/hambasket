@@ -229,7 +229,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
           {step === 'cart' && (
             <>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--success)', fontWeight: '700', fontSize: '0.9rem' }}>
-                <span>🎉</span> Free Delivery on All Orders!
+                <span>🎉</span> Free Cash on Delivery!
               </div>
 
               {cartItems.length === 0 ? (
