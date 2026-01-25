@@ -7,7 +7,7 @@ import * as turf from '@turf/turf';
 // For now, let's stick to the 3km radius check using turf which is robust.
 // Store Location: 27.666417, 85.354750
 const STORE_LOCATION = [85.354750, 27.666417]; // Lng, Lat for Turf
-const DELIVERY_RADIUS_KM = 3;
+const DELIVERY_RADIUS_KM = 5;
 
 export const resolveLocation = async (req, res) => {
     try {
@@ -21,6 +21,8 @@ export const resolveLocation = async (req, res) => {
         const userPoint = turf.point([lng, lat]);
         const storePoint = turf.point(STORE_LOCATION);
         const distance = turf.distance(userPoint, storePoint, { units: 'kilometers' });
+
+        console.log(`[Location Debug] User: ${lat},${lng} | Store: ${STORE_LOCATION[1]},${STORE_LOCATION[0]} | Dist: ${distance.toFixed(3)}km | Max: ${DELIVERY_RADIUS_KM}km`);
 
         const isServiceable = distance <= DELIVERY_RADIUS_KM;
 
@@ -37,26 +39,33 @@ export const resolveLocation = async (req, res) => {
 
         // 3. Format Address Logic
         let addressComponents = {
+            landmark: address.amenity || address.shop || address.tourism || '',
             area: address.suburb || address.neighbourhood || address.residential || '',
             street: address.road || address.pedestrian || '',
-            landmark: address.amenity || address.shop || address.tourism || '',
             city: address.city || address.town || address.village || address.municipality || '',
             state: address.state || address.province || '',
             pincode: address.postcode || ''
         };
 
-        const parts = [];
-        if (addressComponents.street) parts.push(addressComponents.street);
-        if (addressComponents.area) parts.push(addressComponents.area);
-        if (addressComponents.city) parts.push(addressComponents.city);
+        // User requested: "nearby landmark and place name only" -> minimal address
+        // Priority: Landmark -> Area -> Street -> City
+        const candidates = [
+            addressComponents.landmark,
+            addressComponents.area,
+            addressComponents.street,
+            addressComponents.city
+        ];
+
+        // Filter empty and deduplicate
+        const uniqueParts = [...new Set(candidates.filter(c => c && c.trim() !== ''))];
+
+        // Take strictly top 2 parts for brevity
+        const displayParts = uniqueParts.slice(0, 2);
 
         // Friendly Display Address
         let friendlyAddress = result.display_name;
-        // Construct a shorter version if Nominatim's is too long?
-        // Nominatim's display_name is usually very good but long.
-        // Let's use our constructed one if decent
-        if (parts.length >= 2) {
-            friendlyAddress = parts.join(', ');
+        if (displayParts.length > 0) {
+            friendlyAddress = displayParts.join(', ');
         }
 
         res.json({

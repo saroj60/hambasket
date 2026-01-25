@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation as useRouteLocation, useNavigate } from 'react-router-dom';
 import { useLocation } from '../context/LocationContext';
 import { useAuth } from '../context/AuthContext';
@@ -22,6 +22,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = React.useRef(0);
   const [topRowHeight, setTopRowHeight] = useState(0);
+  const [overflowVisible, setOverflowVisible] = useState(true);
 
   const isHomePage = routeLocation.pathname === '/';
 
@@ -65,6 +66,17 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
     mainEl.addEventListener('scroll', handleScroll);
     return () => mainEl.removeEventListener('scroll', handleScroll);
   }, [isHomePage]);
+
+  useEffect(() => {
+    if (showHeader) {
+      const timer = setTimeout(() => {
+        setOverflowVisible(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setOverflowVisible(false);
+    }
+  }, [showHeader]);
 
 
   const handleLogout = async () => {
@@ -112,7 +124,7 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
           <div style={{
             height: isHomePage && !showHeader ? 0 : (topRowHeight ? `${topRowHeight}px` : 'auto'),
             opacity: isHomePage && !showHeader ? 0 : 1,
-            overflow: 'hidden',
+            overflow: overflowVisible ? 'visible' : 'hidden',
             transition: 'height 0.3s ease-in-out, opacity 0.3s ease-in-out'
           }}>
             {/* Row 1: Logo & Location & Profile */}
@@ -121,26 +133,43 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 10px', flexWrap: 'nowrap' }}
             >
 
-              {/* Logo */}
-              <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0, marginRight: '6px' }}>
-                <h1 style={{ fontWeight: '900', fontSize: 'clamp(1.1rem, 3.5vw, 1.6rem)', color: 'var(--brand-yellow)', letterSpacing: '-0.5px', margin: 0, lineHeight: 1, whiteSpace: 'nowrap' }}>
-                  Aone <span style={{ color: '#6b21a8' }}>Kirana</span>
-                </h1>
-              </Link>
+              {/* Logo Removed */}
 
               {/* Right Actions: Location + Profile */}
-              <div className="mobile-header-right" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 1, minWidth: 0, justifyContent: 'flex-end' }}>
+              <div className="mobile-header-right" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 1, minWidth: 0, justifyContent: 'space-between', width: '100%' }}>
 
                 {/* Location */}
-                <div onClick={openModal} style={{ textAlign: 'right', cursor: 'pointer', flexShrink: 1, minWidth: 0, overflow: 'hidden' }}>
-                  <div className="delivery-text" style={{ fontWeight: '800', fontSize: '0.65rem', color: '#1f2937', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
-                    Delivery in mins
+                <div onClick={openModal} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', cursor: 'pointer', flexShrink: 1, flexGrow: 1, minWidth: 0, overflow: 'hidden', marginRight: '6px' }}>
+
+                  <div className="delivery-text" style={{ fontWeight: '800', fontSize: '0.7rem', color: '#4f46e5', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', marginBottom: '2px' }}>
+                    Delivery in minutes
                   </div>
-                  <div className="location-subtext" style={{ fontSize: '0.75rem', color: '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '2px', maxWidth: '100%' }}>
-                    <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>
-                      {location?.address ? location.address.split(',')[0] : "Select"}
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', maxWidth: '100%', overflow: 'hidden' }}>
+                    {/* Location Icon */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                      </svg>
+                    </div>
+
+                    <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#1f2937', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {location?.address ? (() => {
+                        // Strict simplified display: First 2 parts only (Landmark/Area)
+                        const parts = location.address.split(',').map(s => s.trim()).filter(Boolean);
+                        // Take top 2 distinct parts
+                        const uniqueParts = [...new Set(parts)];
+                        const display = uniqueParts.slice(0, 2).join(', ');
+                        return display;
+                      })() : "Select Location"}
                     </span>
-                    <span style={{ fontSize: '0.7rem', flexShrink: 0 }}>▼</span>
+                    <span style={{ fontSize: '0.7rem', color: '#6b7280', flexShrink: 0 }}>▼</span>
                   </div>
                 </div>
 

@@ -10,7 +10,7 @@ const VITE_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 // Store Location: 27°39'59.1"N 85°21'17.1"E -> Decimal: 27.666417, 85.354750
 const STORE_LOCATION = { lat: 27.666417, lng: 85.354750 };
-const DELIVERY_RADIUS_METERS = 3000; // 3 KM - Visual Only, backend does robust check
+const DELIVERY_RADIUS_METERS = 5000; // 5 KM - Visual Only, backend does robust check
 
 const containerStyle = {
     width: '100%',
