@@ -30,6 +30,45 @@ export const getTopPickedProducts = async () => {
   return res.json();
 };
 
+// Occasion API
+export const getActiveOccasions = async () => {
+  const res = await fetch(`${API_URL}/occasions`);
+  return res.json();
+};
+
+export const getAllOccasions = async () => {
+  const res = await fetch(`${API_URL}/occasions?admin=true`, {
+    credentials: 'include'
+  });
+  return res.json();
+};
+
+export const createOccasion = async (formData) => {
+  const res = await fetch(`${API_URL}/occasions`, {
+    method: 'POST',
+    body: formData, // FormData for file upload
+    credentials: 'include'
+  });
+  return res.json();
+};
+
+export const updateOccasion = async (id, formData) => {
+  const res = await fetch(`${API_URL}/occasions/${id}`, {
+    method: 'PUT',
+    body: formData,
+    credentials: 'include'
+  });
+  return res.json();
+};
+
+export const deleteOccasion = async (id) => {
+  const res = await fetch(`${API_URL}/occasions/${id}`, {
+    method: 'DELETE',
+    credentials: 'include'
+  });
+  return res.json();
+};
+
 // Cart API
 export const getCartItems = async () => {
   const res = await fetch(`${API_URL}/cart`, {

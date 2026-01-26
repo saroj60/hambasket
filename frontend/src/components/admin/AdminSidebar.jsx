@@ -5,6 +5,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, onLogout, isCollapsed, setIsCol
         { id: 'dashboard', label: 'Dashboard', icon: '📊' },
         { id: 'products', label: 'Products', icon: '📦' },
         { id: 'orders', label: 'Orders', icon: '🛍️' },
+        { id: 'occasions', label: 'Occasions', icon: '🎉' },
     ];
 
     return (

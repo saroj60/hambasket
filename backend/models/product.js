@@ -29,6 +29,7 @@ const productSchema = new mongoose.Schema({
     endTime: { type: Date }
   },
   isTopPick: { type: Boolean, default: false },
+  occasions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Occasion" }],
 }, { timestamps: true });
 
 // Indexes for performance

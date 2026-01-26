@@ -201,9 +201,11 @@ const AdminProducts = () => {
             {/* Product Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {products.map(product => {
-                    // Fix Image URL: Use BASE_URL for uploads
+                    // Fix Image URL: match ProductCard logic
                     const imageUrl = product.image
-                        ? (product.image.startsWith('http') ? product.image : `${BASE_URL}${product.image}`) // Removed extra slash if potentially needed, adjust if BASE_URL has slash
+                        ? (product.image.startsWith('http') || product.image.startsWith('/assets') || product.image.startsWith('data:')
+                            ? product.image
+                            : `${BASE_URL}${product.image}`)
                         : null;
 
                     return (

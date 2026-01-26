@@ -4,6 +4,7 @@ import AdminDashboard from './admin/AdminDashboard';
 import AdminProducts from './admin/AdminProducts';
 import AdminOrders from './admin/AdminOrders';
 import AdminCustomers from './admin/AdminCustomers';
+import AdminOccasions from './admin/AdminOccasions';
 import AdminSettings from './admin/AdminSettings';
 
 const AdminPanel = () => {
@@ -11,7 +12,7 @@ const AdminPanel = () => {
     // Simple hash routing for basic persistence on refresh
     const getInitialTab = () => {
         const hash = window.location.hash.replace('#', '');
-        return ['dashboard', 'products', 'orders', 'customers', 'settings'].includes(hash)
+        return ['dashboard', 'products', 'orders', 'customers', 'occasions', 'settings'].includes(hash)
             ? hash
             : 'dashboard';
     };
@@ -30,6 +31,7 @@ const AdminPanel = () => {
             case 'products': return <AdminProducts />;
             case 'orders': return <AdminOrders />;
             case 'customers': return <AdminCustomers />;
+            case 'occasions': return <AdminOccasions />;
             case 'settings': return <AdminSettings />;
             case 'dashboard':
             default: return <AdminDashboard />;

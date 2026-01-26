@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import ProductCard from "../components/ProductCard";
 import ProductDetails from "../components/ProductDetails";
-import { getProducts, getPopularProducts } from "../services/api";
+import { getProducts, getPopularProducts, getActiveOccasions } from "../services/api";
 import { CartContext } from "../context/CartContext";
 import { useLocation } from "react-router-dom";
 
@@ -9,6 +9,7 @@ import HomeBanner from "../components/HomeBanner";
 import CategoryShowcase from "../components/CategoryShowcase";
 import TopPicks from "../components/TopPicks";
 import CategorySection from "../components/CategorySection";
+import OccasionSection from "../components/OccasionSection";
 import { MAIN_CATEGORIES } from "../data/CategoryStructure";
 
 const Home = () => {
@@ -18,6 +19,7 @@ const Home = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { addToCart } = useContext(CartContext);
 
+  const [activeOccasions, setActiveOccasions] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
   const location = useLocation();
 
@@ -30,13 +32,15 @@ const Home = () => {
       try {
         setLoading(true);
 
-        const [productsData, popularData] = await Promise.all([
+        const [productsData, popularData, occasionsData] = await Promise.all([
           getProducts(searchQuery),
-          getPopularProducts()
+          getPopularProducts(),
+          getActiveOccasions()
         ]);
 
         setProducts(productsData || []);
         setPopularProducts(popularData || []);
+        setActiveOccasions(occasionsData || []);
       } catch (err) {
         setError("Failed to load products. Please try again later.");
       } finally {
@@ -90,6 +94,15 @@ const Home = () => {
           ) : (
             /* Default Home View */
             <>
+              {/* Occasion Sections */}
+              {activeOccasions.map((occasion) => (
+                <OccasionSection
+                  key={occasion._id}
+                  occasion={occasion}
+                  onProductClick={setSelectedProduct}
+                />
+              ))}
+
               {/* Category Showcase - Shop by Category */}
               <CategoryShowcase />
 
