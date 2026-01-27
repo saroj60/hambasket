@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL, BASE_URL } from '../../config';
 import ProductFormModal from './ProductFormModal';
+import { CATEGORY_HIERARCHY } from '../../data/CategoryStructure';
 
 const AdminProducts = () => {
     const [products, setProducts] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("All");
     const [loading, setLoading] = useState(true);
 
     // Modal State
@@ -178,6 +180,12 @@ const AdminProducts = () => {
         </div>
     );
 
+    const filteredProducts = selectedCategory === "All"
+        ? products
+        : products.filter(p => p.category === selectedCategory);
+
+    const CATEGORIES = ["All", ...Object.keys(CATEGORY_HIERARCHY).filter(k => k !== "All")];
+
     return (
         <div className="space-y-8 animate-fade-in pb-20">
             {/* Header */}
@@ -188,6 +196,15 @@ const AdminProducts = () => {
                 </div>
 
                 <div className="flex gap-4 w-full md:w-auto items-center">
+                    {/* Category Filter */}
+                    <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="px-4 py-3 rounded-xl border border-gray-200 bg-white font-medium text-gray-700 outline-none focus:border-purple-500 shadow-sm"
+                    >
+                        {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    </select>
+
                     {/* Add Product Button */}
                     <button
                         onClick={() => { setEditingProduct(null); setIsModalOpen(true); }}
@@ -200,7 +217,7 @@ const AdminProducts = () => {
 
             {/* Product Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {products.map(product => {
+                {filteredProducts.map(product => {
                     // Fix Image URL: match ProductCard logic
                     const imageUrl = product.image
                         ? (product.image.startsWith('http') || product.image.startsWith('/assets') || product.image.startsWith('data:')

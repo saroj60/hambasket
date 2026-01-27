@@ -5,6 +5,7 @@ import AdminProducts from './admin/AdminProducts';
 import AdminOrders from './admin/AdminOrders';
 import AdminCustomers from './admin/AdminCustomers';
 import AdminOccasions from './admin/AdminOccasions';
+import AdminCategories from './admin/AdminCategories';
 import AdminSettings from './admin/AdminSettings';
 
 const AdminPanel = () => {
@@ -29,6 +30,7 @@ const AdminPanel = () => {
     const renderContent = () => {
         switch (activeTab) {
             case 'products': return <AdminProducts />;
+            case 'categories': return <AdminCategories />;
             case 'orders': return <AdminOrders />;
             case 'customers': return <AdminCustomers />;
             case 'occasions': return <AdminOccasions />;

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getAllOccasions, createOccasion, updateOccasion, deleteOccasion, getProducts } from '../../services/api';
+import { getAllOccasions, createOccasion, updateOccasion, deleteOccasion, getProducts, createProduct } from '../../services/api';
+import ProductFormModal from './ProductFormModal';
+import { API_URL } from '../../config'; // For product fetch if needed, though api.js is used
 
 const AdminOccasions = () => {
     const [occasions, setOccasions] = useState([]);
@@ -18,6 +20,9 @@ const AdminOccasions = () => {
     });
     // For file input clearing
     const [fileInputKey, setFileInputKey] = useState(Date.now());
+
+    // Product Modal State
+    const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -147,6 +152,51 @@ const AdminOccasions = () => {
         return active && s <= now && e >= now;
     };
 
+    const handleCreateProduct = async (productFormData) => {
+        try {
+            // Build FormData from the modal's plain object if needed, but the modal might pass a plain object 
+            // productFormData from ProductFormModal is just a state object. We need to convert to FormData.
+            // Wait, createProduct in api.js expects FormData.
+            // Let's replicate logic from AdminProducts to build FormData
+
+            const data = new FormData();
+            data.append('name', productFormData.name);
+            data.append('price', productFormData.price);
+            data.append('unit', productFormData.unit || 'pcs');
+            data.append('category', productFormData.category);
+            if (productFormData.subCategory) data.append('subCategory', productFormData.subCategory);
+            data.append('stock', productFormData.countInStock);
+            data.append('description', productFormData.description);
+            if (productFormData.weight) data.append('weight', productFormData.weight);
+            if (productFormData.variants) data.append('variants', JSON.stringify(productFormData.variants));
+            if (productFormData.isTopPick !== undefined) data.append('isTopPick', productFormData.isTopPick);
+
+            if (productFormData.image instanceof File) {
+                data.append('image', productFormData.image);
+            } else if (typeof productFormData.image === 'string' && productFormData.image.trim() !== '') {
+                data.append('image', productFormData.image);
+            }
+
+            const newProduct = await createProduct(data);
+
+            // Re-fetch products locally or append
+            // Assuming the API returns the created product with _id
+            if (newProduct && newProduct._id) {
+                setAllProducts(prev => [newProduct, ...prev]);
+                // Automatically select the new product
+                handleProductToggle(newProduct._id);
+                alert("Product created and added to selection!");
+                setIsProductModalOpen(false);
+            } else {
+                alert("Failed to create product");
+            }
+
+        } catch (error) {
+            console.error("Error creating product:", error);
+            alert("Error creating product");
+        }
+    };
+
     return (
         <div className="space-y-8 animate-fade-in max-w-5xl mx-auto mt-10">
             <div className="flex justify-between items-center">
@@ -248,7 +298,16 @@ const AdminOccasions = () => {
 
                     {/* Product Selection */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Select Products</label>
+                        <div className="flex justify-between items-center mb-2">
+                            <label className="block text-sm font-medium text-gray-700">Select Products</label>
+                            <button
+                                type="button"
+                                onClick={() => setIsProductModalOpen(true)}
+                                className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded border border-purple-200 hover:bg-purple-100"
+                            >
+                                + Add New Product
+                            </button>
+                        </div>
                         <div className="h-60 overflow-y-auto border rounded-lg p-2 bg-gray-50 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             {allProducts.map(prod => (
                                 <div
@@ -328,6 +387,13 @@ const AdminOccasions = () => {
                     )}
                 </div>
             </div>
+            {/* Product Create Modal */}
+            <ProductFormModal
+                isOpen={isProductModalOpen}
+                onClose={() => setIsProductModalOpen(false)}
+                onSave={handleCreateProduct}
+                initialData={null}
+            />
         </div>
     );
 };

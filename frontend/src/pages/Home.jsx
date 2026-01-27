@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useContext } from "react";
 import ProductCard from "../components/ProductCard";
 import ProductDetails from "../components/ProductDetails";
-import { getProducts, getPopularProducts, getActiveOccasions } from "../services/api";
+import { getProducts, getPopularProducts, getActiveOccasions, getAllCategories } from "../services/api";
 import { CartContext } from "../context/CartContext";
 import { useLocation } from "react-router-dom";
+import { AnimatePresence } from 'framer-motion';
 
 import HomeBanner from "../components/HomeBanner";
 import CategoryShowcase from "../components/CategoryShowcase";
 import TopPicks from "../components/TopPicks";
 import CategorySection from "../components/CategorySection";
 import OccasionSection from "../components/OccasionSection";
-import { MAIN_CATEGORIES } from "../data/CategoryStructure";
+// import { MAIN_CATEGORIES } from "../data/CategoryStructure"; // Removing static import
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -21,6 +22,10 @@ const Home = () => {
 
   const [activeOccasions, setActiveOccasions] = useState([]);
   const [popularProducts, setPopularProducts] = useState([]);
+  // Dynamic Categories Control
+  const [categories, setCategories] = useState([]);
+  const [visibleCategories, setVisibleCategories] = useState(5); // Start with 5 loaded
+  const [moreLoading, setMoreLoading] = useState(false);
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
@@ -32,17 +37,20 @@ const Home = () => {
       try {
         setLoading(true);
 
-        const [productsData, popularData, occasionsData] = await Promise.all([
+        const [productsData, popularData, occasionsData, categoriesData] = await Promise.all([
           getProducts(searchQuery),
           getPopularProducts(),
-          getActiveOccasions()
+          getActiveOccasions(),
+          getAllCategories()
         ]);
 
         setProducts(productsData || []);
         setPopularProducts(popularData || []);
         setActiveOccasions(occasionsData || []);
+        setCategories(categoriesData || []);
       } catch (err) {
         setError("Failed to load products. Please try again later.");
+        console.error("Error fetching home data:", err);
       } finally {
         setLoading(false);
       }
@@ -50,6 +58,8 @@ const Home = () => {
 
     fetchAllData();
   }, [location.search]);
+
+  const categorySections = categories.slice(0, visibleCategories);
 
   return (
     <div className="px-3 py-6 md:px-6 md:py-10">
@@ -103,54 +113,58 @@ const Home = () => {
                 />
               ))}
 
-              {/* Category Showcase - Shop by Category */}
-              <CategoryShowcase />
+              {/* Categories Grid */}
+              <CategoryShowcase categories={categories} />
 
               {/* Top Picks Section */}
               <TopPicks />
 
-              {/* Popular Products Section (Optional: Keeping it as it was requested before or similar to Top Picks) */}
-              {popularProducts.length > 0 && (
-                <div className="mb-12">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                    <span>🔥</span> Popular Right Now
-                  </h2>
-                  <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                    {popularProducts.map((product) => (
-                      <ProductCard
-                        key={`pop-${product._id || product.id}`}
-                        product={product}
-                        onClick={setSelectedProduct}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Category Wise Products */}
-              <div className="mt-8">
-                {MAIN_CATEGORIES.map((category) => (
-                  <CategorySection key={category} category={category} title={category} onProductClick={setSelectedProduct} />
+              {/* Dynamic Lazy Loaded Category Sections */}
+              <div className="space-y-4">
+                {categorySections.map((category) => (
+                  <CategorySection
+                    key={category._id}
+                    title={category.name}
+                    products={products.filter(p => p.category === category.name)}
+                    onProductClick={setSelectedProduct}
+                  />
                 ))}
               </div>
-            </>
-          )}
 
-          {/* Product Details Modal */}
-          {selectedProduct && (
-            <ProductDetails
-              product={selectedProduct}
-              onClose={() => setSelectedProduct(null)}
-              onAdd={(item) => {
-                addToCart(item, item.quantity);
-              }}
-              onProductSelect={setSelectedProduct}
-            />
+              {/* Load More Button (Optional) */}
+              {!allCategoriesLoaded && categories.length > 5 && (
+                <div className="flex justify-center py-6">
+                  <button
+                    onClick={loadMoreCategories}
+                    disabled={moreLoading}
+                    className="px-6 py-2 bg-white border border-gray-200 text-gray-600 font-bold rounded-full shadow-sm hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    {moreLoading ? 'Loading...' : 'Show More Categories'}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </>
       )}
+
+      {/* Product Details Modal */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <ProductDetails
+            product={selectedProduct}
+            onClose={() => setSelectedProduct(null)}
+            onAdd={(item) => {
+              addToCart(item, item.quantity);
+            }}
+            onProductSelect={setSelectedProduct}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
+
+
 
 export default Home;

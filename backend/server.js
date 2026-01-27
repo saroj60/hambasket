@@ -20,6 +20,7 @@ import offerRoutes from "./routes/offerRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import setupRoutes from "./routes/setupRoutes.js";
 import occasionRoutes from "./routes/occasionRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -148,7 +149,8 @@ app.use("/api/drivers", driverRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/stores", storeRoutes);
 app.use("/api/offers", offerRoutes);
-app.use("/api/occasions", occasionRoutes);
+app.use('/api/occasions', occasionRoutes);
+app.use('/api/categories', categoryRoutes);
 app.use("/api/analytics", analyticsRoutes);
 import locationRoutes from "./routes/locationRoutes.js";
 app.use("/api/location", locationRoutes);

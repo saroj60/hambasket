@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { BASE_URL } from '../../config';
-import { CATEGORY_HIERARCHY } from '../../data/CategoryStructure'; // Ensure this path is correct
+import { getAllCategories } from '../../services/api';
 
 const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
-    // Get keys from hierarchy, excluding 'All' if it exists as a key (usually it's a value inside)
-    // Structure keys are "Fresh Produce", "Dairy...", etc.
-    const CATEGORIES = Object.keys(CATEGORY_HIERARCHY).filter(k => k !== "All");
+    // Dynamic Categories State
+    const [categories, setCategories] = useState([]);
+    const [categoryMap, setCategoryMap] = useState({}); // Map for quick subcat lookup
 
     const [formData, setFormData] = useState(initialData || {
         name: '',
         price: '',
-        unit: 'pcs', // Default unit
+        unit: 'pcs',
 
-        category: CATEGORIES[0],
+        category: '',
         subCategory: '',
         countInStock: '',
         description: '',
@@ -27,19 +27,34 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
     // 'upload' or 'url'
     const [imageInputType, setImageInputType] = useState('upload');
 
+    // Fetch Categories
+    useEffect(() => {
+        const loadCategories = async () => {
+            try {
+                const data = await getAllCategories(true);
+                // Transform to map for easier subcat access
+                const map = {};
+                data.forEach(cat => {
+                    map[cat.name] = cat.subCategories.map(sub => sub.name);
+                });
+                setCategories(data);
+                setCategoryMap(map);
+            } catch (error) {
+                console.error("Failed to load categories", error);
+            }
+        };
+        if (isOpen) loadCategories();
+    }, [isOpen]);
+
     // Initialize state when initialData changes
     useEffect(() => {
         if (initialData) {
             setFormData(initialData);
-            // Fix Preview Logic:
             if (initialData.image) {
                 const img = initialData.image.startsWith('http')
                     ? initialData.image
-                    : `${BASE_URL}/${initialData.image}`;
+                    : `${BASE_URL}${initialData.image.startsWith('/') ? '' : '/'}${initialData.image}`;
                 setPreview(img);
-                // If it's a remote URL not from our domain/uploads, set type to url? 
-                // Actually, simplify: Just default to upload, user can switch if they want to change it.
-                // But if they are editing, and want to replace... 
             } else {
                 setPreview('');
             }
@@ -50,19 +65,19 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                 price: '',
                 unit: 'pcs',
 
-                category: CATEGORIES[0],
+                category: categories.length > 0 ? categories[0].name : '',
                 subCategory: '',
                 countInStock: '',
                 description: '',
                 image: null,
                 isTopPick: false,
-                variants: [] // Initialize variants
+                variants: []
             });
             setPreview('');
             setImageInputType('upload');
-            setVariantInput({ weight: '', price: '', stock: '' }); // Reset variant input
+            setVariantInput({ weight: '', price: '', stock: '' });
         }
-    }, [initialData, isOpen]);
+    }, [initialData, isOpen, categories]);
 
     // Local state for new variant input
     const [variantInput, setVariantInput] = useState({ weight: '', price: '', stock: '' });
@@ -87,11 +102,8 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
     // Update Available SubCategories when Category changes
     useEffect(() => {
         const cat = formData.category;
-        if (cat && CATEGORY_HIERARCHY[cat]) {
-            // Filter out 'All' and map to names
-            const subs = CATEGORY_HIERARCHY[cat]
-                .filter(item => item.name !== 'All')
-                .map(item => item.name);
+        if (cat && categoryMap[cat]) {
+            const subs = categoryMap[cat];
             setAvailableSubCategories(subs);
 
             // If current subCategory is not valid for new category, reset it
@@ -102,7 +114,7 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
             setAvailableSubCategories([]);
             setFormData(prev => ({ ...prev, subCategory: '' }));
         }
-    }, [formData.category]);
+    }, [formData.category, categoryMap]);
 
 
     if (!isOpen) return null;
@@ -299,7 +311,7 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                                     onChange={handleChange}
                                     className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 transition-all outline-none font-medium cursor-pointer"
                                 >
-                                    {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                                    {categories.map(cat => <option key={cat._id} value={cat.name}>{cat.name}</option>)}
                                 </select>
                             </div>
                             <div className="space-y-2">

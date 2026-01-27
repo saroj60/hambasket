@@ -30,6 +30,15 @@ export const getTopPickedProducts = async () => {
   return res.json();
 };
 
+export const createProduct = async (formData) => {
+  const res = await fetch(`${API_URL}/products`, {
+    method: 'POST',
+    body: formData,
+    credentials: 'include'
+  });
+  return res.json();
+};
+
 // Occasion API
 export const getActiveOccasions = async () => {
   const res = await fetch(`${API_URL}/occasions`);
@@ -68,8 +77,57 @@ export const deleteOccasion = async (id) => {
   });
   return res.json();
 };
+// Category API
+export const getAllCategories = async (admin = false) => {
+  const url = admin ? `${API_URL}/categories/admin` : `${API_URL}/categories`;
+  const res = await fetch(url, { credentials: 'include' });
+  return res.json();
+};
 
-// Cart API
+export const createCategory = async (formData) => {
+  const res = await fetch(`${API_URL}/categories`, {
+    method: 'POST',
+    body: formData,
+    credentials: 'include'
+  });
+  return res.json();
+};
+
+export const updateCategory = async (id, formData) => {
+  const res = await fetch(`${API_URL}/categories/${id}`, {
+    method: 'PUT',
+    body: formData,
+    credentials: 'include'
+  });
+  return res.json();
+};
+
+export const deleteCategory = async (id) => {
+  const res = await fetch(`${API_URL}/categories/${id}`, {
+    method: 'DELETE',
+    credentials: 'include'
+  });
+  return res.json();
+};
+
+export const addSubCategory = async (id, data) => {
+  const res = await fetch(`${API_URL}/categories/${id}/subcategory`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+    credentials: 'include'
+  });
+  return res.json();
+};
+
+export const removeSubCategory = async (id, subName) => {
+  const res = await fetch(`${API_URL}/categories/${id}/subcategory/${encodeURIComponent(subName)}`, {
+    method: 'DELETE',
+    credentials: 'include'
+  });
+  return res.json();
+};
+
 export const getCartItems = async () => {
   const res = await fetch(`${API_URL}/cart`, {
     credentials: 'include'
