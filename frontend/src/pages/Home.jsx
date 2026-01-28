@@ -64,7 +64,7 @@ const Home = () => {
   return (
     <div className="px-3 py-6 md:px-6 md:py-10">
       {/* Promotional Banner - Always visible */}
-      <HomeBanner />
+      {/* <HomeBanner /> */}
 
       {/* Loading State */}
       {loading ? (

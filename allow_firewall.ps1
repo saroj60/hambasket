@@ -23,4 +23,4 @@ foreach ($port in $ports) {
 
 Write-Host "Firewall configuration complete!" -ForegroundColor Cyan
 Write-Host "You should now be able to access the app from your phone at:"
-Write-Host "http://192.168.254.40:5173" -ForegroundColor Yellow
+Write-Host "http://192.168.1.62:5173" -ForegroundColor Yellow

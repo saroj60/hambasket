@@ -38,7 +38,7 @@ import { CartProvider, CartContext } from "./context/CartContext";
 import { SocketProvider } from "./context/SocketContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 
-import { MAIN_CATEGORIES } from "./data/CategoryStructure";
+import { MAIN_CATEGORIES, CATEGORY_HIERARCHY } from "./data/CategoryStructure";
 
 // const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery", "Beverages", "Snacks", "Frozen", "Baby Care", "Chocolate and Ice Cream", "Cooking Oil, Masala and more", "Birthday items", "Other"];
 
@@ -252,7 +252,7 @@ function ShopContent() {
 
 
                 {/* Promotional Offers */}
-                {!filters.search && <HomeBanner onShopNow={handleOpenCategories} />}
+                {/* {!filters.search && <HomeBanner onShopNow={handleOpenCategories} />} */}
 
                 {/* Nearby Offers */}
                 {!filters.search && <NearbyOffers />}
@@ -261,6 +261,11 @@ function ShopContent() {
                 {!filters.search && (
                   <div ref={categorySectionRef}>
                     <CategoryShowcase
+                      categories={MAIN_CATEGORIES.map(cat => ({
+                        _id: cat,
+                        name: cat,
+                        image: CATEGORY_HIERARCHY[cat]?.[0]?.image || ''
+                      }))}
                       activeCategory={filters.category}
                       onSelectCategory={(cat) => handleFilterChange({ category: cat })}
                     />
@@ -281,6 +286,7 @@ function ShopContent() {
                           key={category}
                           title={category}
                           category={category}
+                          products={products.filter(p => p.category === category)}
                           onProductClick={setSelectedProduct}
                         />
                       ))}

@@ -55,7 +55,7 @@ const ProductCard = ({ product, onClick }) => {
       )}
 
       {/* 1. Image Area - Fixed Height for Uniformity */}
-      <div className="w-full h-[140px] bg-white p-3 flex items-center justify-center relative shrink-0">
+      <div className="w-full h-[140px] bg-white p-3 flex items-center justify-center relative shrink-0 mb-2">
         {/* Out of Stock Overlay */}
         {isOutOfStock && (
           <div className="absolute inset-0 bg-white/60 z-10 flex items-center justify-center backdrop-blur-[1px]">

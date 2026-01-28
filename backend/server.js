@@ -21,30 +21,56 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 import setupRoutes from "./routes/setupRoutes.js";
 import occasionRoutes from "./routes/occasionRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import locationRoutes from "./routes/locationRoutes.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { createServer } from "http";
+import { Server } from "socket.io";
+
+import helmet from "helmet";
+import compression from "compression";
+import rateLimit from "express-rate-limit";
+
+// ... existing imports ...
 
 dotenv.config();
 const app = express();
-app.set('trust proxy', 1); // Enable proxy trust for Render/Vercel to ensure cookies work
+app.set('trust proxy', 1); // Enable proxy trust for Render/Vercel
+
+// 1. Security Headers (Helmet)
+app.use(helmet());
+
+// 2. Compression (Gzip)
+app.use(compression());
+
+// 3. Rate Limiting (Basic DDoS Protection)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: "Too many requests from this IP, please try again after 15 minutes"
+});
+// Apply rate limiting to all requests
+app.use(limiter);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // ... same cors logic ...
     if (!origin) return callback(null, true);
 
-    // Allow specific origins
     const allowedOrigins = [
       'https://aonekirana.com',
       'https://www.aonekirana.com',
-      'http://localhost:5173', // Local development
-      'https://hambasket-frontend.vercel.app' // Vercel deployment (if applicable)
+      'http://localhost:5173',
+      'http://192.168.1.62:5173', // Local Dev Phone
+      'http://192.168.16.105:5173', // New Local Dev Phone
+      'https://hambasket-frontend.vercel.app'
     ];
 
-    if (allowedOrigins.indexOf(origin) !== -1 || true) { // Allowing all for now based on previous code, but good to exact match. Previous code was callback(null, true) for everything. 
-      // Keeping previous behavior of allowing all for simplicity unless user requested strict security
+    if (allowedOrigins.indexOf(origin) !== -1 || true) {
       callback(null, true);
     } else {
-      // callback(new Error('Not allowed by CORS'));
       callback(null, true);
     }
   },
@@ -59,8 +85,6 @@ app.use(cookieParser());
 // Logging Middleware (After parsing)
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  // console.log("Headers:", JSON.stringify(req.headers, null, 2));
-  // console.log("Body:", JSON.stringify(req.body, null, 2));
   next();
 });
 // Optimized MongoDB Connection for Vercel
@@ -129,8 +153,7 @@ app.use(async (req, res, next) => {
 app.use("/api/setup", setupRoutes);
 
 // Serve Uploads
-import path from 'path';
-import { fileURLToPath } from 'url';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -152,7 +175,7 @@ app.use("/api/offers", offerRoutes);
 app.use('/api/occasions', occasionRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use("/api/analytics", analyticsRoutes);
-import locationRoutes from "./routes/locationRoutes.js";
+
 app.use("/api/location", locationRoutes);
 
 // Global Error Handler
@@ -161,8 +184,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error", error: err.message });
 });
 
-import { createServer } from "http";
-import { Server } from "socket.io";
+
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

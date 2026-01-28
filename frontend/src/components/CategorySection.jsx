@@ -4,38 +4,25 @@ import { getProducts } from '../services/api';
 import { CartContext } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
-const CategorySection = ({ title, category, onProductClick }) => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
+const CategorySection = ({ title, category, products = [], onProductClick }) => {
+    // const [products, setProducts] = useState([]); // Removed internal state
+    // const [loading, setLoading] = useState(true); // Removed internal loading
     const { addToCart } = useContext(CartContext);
     const navigate = useNavigate();
 
+    // Effect removed - using passed products
+    /*
     useEffect(() => {
         const loadProducts = async () => {
-            // Fetch all products or filter by category if API supports it directly
-            // Based on API signature: getProducts(query) -> /products?query
-            // So we pass 'category=Candies%20%26%20Gums'
-            try {
-                const query = `category=${encodeURIComponent(category)}`;
-                console.log('Fetching', category, query);
-                const data = await getProducts(query);
-                console.log('Got data for', category, data ? data.length : 'null');
-                if (Array.isArray(data)) {
-                    setProducts(data);
-                }
-            } catch (err) {
-                console.error("Failed to load category products for", category, err);
-            } finally {
-                setLoading(false);
-            }
+             ...
         };
-
         if (category) {
             loadProducts();
         }
     }, [category]);
+    */
 
-    if (loading || products.length === 0) return null;
+    if (!products || products.length === 0) return null;
 
     const handleSeeAll = () => {
         // Navigate to category page

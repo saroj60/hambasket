@@ -25,7 +25,9 @@ const CategoryShowcase = ({ categories = [], activeCategory }) => {
             <div className="category-grid">
                 {categories.map((cat, index) => {
                     const imgUrl = cat.image
-                        ? (cat.image.startsWith('http') ? cat.image : `${BASE_URL}${cat.image}`)
+                        ? (cat.image.startsWith('http') || cat.image.startsWith('/images') || cat.image.startsWith('/assets')
+                            ? cat.image
+                            : `${BASE_URL}${cat.image}`)
                         : '/assets/categories/default.png';
 
                     return (

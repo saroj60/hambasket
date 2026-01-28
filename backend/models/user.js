@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
     isBlocked: { type: Boolean, default: false }
 }, { timestamps: true });
 
+// Performance Indexes
+userSchema.index({ role: 1 });
+userSchema.index({ isBlocked: 1 });
+
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;

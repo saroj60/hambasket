@@ -1,4 +1,4 @@
-package com.hamket.app;
+package com.aonekirana.app;
 
 import com.getcapacitor.BridgeActivity;
 

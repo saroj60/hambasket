@@ -24,5 +24,9 @@ const categorySchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+// Performance Indexes
+categorySchema.index({ displayOrder: 1 }); // For sorting
+categorySchema.index({ isActive: 1 }); // For filtering hidden categories
+
 const Category = mongoose.model('Category', categorySchema);
 export default Category;

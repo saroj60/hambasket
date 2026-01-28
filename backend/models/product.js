@@ -36,6 +36,10 @@ const productSchema = new mongoose.Schema({
 productSchema.index({ category: 1 });
 productSchema.index({ name: 'text', description: 'text', brand: 'text', subCategory: 'text' });
 productSchema.index({ store: 1 });
+productSchema.index({ isTopPick: 1 });
+productSchema.index({ "flashSale.active": 1 });
+productSchema.index({ occasions: 1 });
+productSchema.index({ price: 1 });
 
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
 
