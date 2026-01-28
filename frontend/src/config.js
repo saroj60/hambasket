@@ -6,7 +6,7 @@ const isNative = Capacitor.isNativePlatform();
 // Default to LAN IP for physical devices (fallback)
 const LAN_IP = '192.168.16.105'; // Updated to your current IP
 const EMULATOR_IP = '10.0.2.2';
-const PORT = '5000';
+const PORT = '5001';
 
 let apiUrl = '/api';
 let baseUrl = '';
