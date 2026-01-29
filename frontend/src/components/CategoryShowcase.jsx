@@ -1,6 +1,29 @@
 import React from 'react';
 import { BASE_URL } from '../config';
 
+// 1. Static Local Image Map (Fallback for missing backend images)
+const CATEGORY_IMAGE_MAP = {
+    "Fresh Produce": "/assets/categories/fruits_veg.png",
+    "Dairy, Bread & Eggs": "/assets/categories/dairy_bread.png",
+    "Atta, Rice, Oil & Dals": "/assets/categories/staples.png",
+    "Bakery and Biscuits": "/assets/categories/bakery_biscuits.png",
+    "Snacks & Beverages": "/assets/categories/snacks_beverages.png",
+    "Tea and coffee": "/assets/categories/tea_coffee.png",
+    "Organic and Dry Fruits": "/assets/categories/organic_dryfruits.png",
+    "Breakfast and sauce": "/assets/categories/breakfast_sauces.png",
+    "Household & Personal Care": "/assets/categories/household_care.png",
+    "Baby Care": "/assets/categories/baby_care.png",
+    "Beauty & Self-Care": "/assets/categories/beauty_selfcare.png",
+    "Liquors": "/assets/categories/liquors.png",
+    "Water & Gas": "/assets/categories/water_gas.png",
+    "Meat, Fish & Eggs": "/assets/categories/meat_fish.png",
+    "Meat & Fish": "/assets/categories/meat_fish.png",
+    "Chicken, Meat & Fish": "/assets/categories/meat_fish.png",
+    "Cooking Oil, Masala and more": "/assets/categories/cooking_oil.png",
+    "Chocolate and Ice Cream": "/assets/categories/chocolate_icecream.png",
+    "Pharmacy": "/assets/categories/pharmacy.png"
+};
+
 const getPastelColor = (index) => {
     const colors = [
         '#ffe8e8', // Soft Red
@@ -24,11 +47,20 @@ const CategoryShowcase = ({ categories = [], activeCategory }) => {
             <h2 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '1rem', paddingLeft: '0.5rem' }}>Shop by category</h2>
             <div className="category-grid">
                 {categories.map((cat, index) => {
-                    const imgUrl = cat.image
-                        ? (cat.image.startsWith('http') || cat.image.startsWith('/images') || cat.image.startsWith('/assets')
-                            ? cat.image
-                            : `${BASE_URL}${cat.image}`)
-                        : '/assets/categories/default.png';
+                    // RESOLVE IMAGE URL:
+                    // 1. Check Local Map first (Most reliable)
+                    // 2. Then check backend URL
+                    // 3. Fallback to default
+                    let imgUrl = CATEGORY_IMAGE_MAP[cat.name] || cat.image;
+
+                    if (!imgUrl) {
+                        imgUrl = '/assets/categories/default.png';
+                    } else if (imgUrl.startsWith('http') || imgUrl.startsWith('/assets') || imgUrl.startsWith('/images')) {
+                        // Already full URL or local path
+                    } else {
+                        // Needs Base URL (backend upload)
+                        imgUrl = `${BASE_URL}${imgUrl}`;
+                    }
 
                     return (
                         <div
@@ -45,7 +77,10 @@ const CategoryShowcase = ({ categories = [], activeCategory }) => {
                                     src={imgUrl}
                                     alt={cat.name}
                                     loading="lazy"
-                                    onError={(e) => { e.target.src = 'https://via.placeholder.com/100?text=Category'; }}
+                                    onError={(e) => {
+                                        e.target.onerror = null; // Prevent loop
+                                        e.target.src = 'https://via.placeholder.com/100?text=' + encodeURIComponent(cat.name);
+                                    }}
                                 />
                             </div>
                             <span className="category-card-label">{cat.name}</span>

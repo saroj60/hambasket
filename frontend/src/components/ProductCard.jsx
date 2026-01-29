@@ -44,7 +44,7 @@ const ProductCard = ({ product, onClick }) => {
 
   return (
     <div
-      className="group flex flex-col h-[280px] w-full bg-white rounded-xl overflow-hidden transition-all duration-300 border border-gray-100 hover:shadow-lg hover:border-purple-100 relative"
+      className="group flex flex-col h-[280px] w-full bg-white rounded-xl overflow-hidden transition-all duration-300 border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-purple-300 relative"
       onClick={() => onClick(product)}
     >
       {/* Discount Badge */}
@@ -140,11 +140,11 @@ const ProductCard = ({ product, onClick }) => {
                         w-full h-full rounded text-[10px] font-bold uppercase transition-all shadow-sm flex items-center justify-center border
                         ${isOutOfStock
                       ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
-                      : 'bg-white text-green-600 border-green-600 hover:bg-green-50 active:scale-95'
+                      : 'bg-green-50 text-green-700 border-green-600 hover:bg-green-600 hover:text-white active:scale-95'
                     }
                         `}
                 >
-                  {isOutOfStock ? 'Out of Stock' : 'ADD'}
+                  {isOutOfStock ? 'Stock' : 'ADD'}
                 </button>
               )
             )}
