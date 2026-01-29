@@ -7,7 +7,7 @@ const CATEGORY_IMAGE_MAP = {
     "Dairy, Bread & Eggs": "/assets/categories/dairy_bread.png",
     "Atta, Rice, Oil & Dals": "/assets/categories/staples.png",
     "Bakery and Biscuits": "/assets/categories/bakery_biscuits.png",
-    "Snacks & Beverages": "/assets/categories/snacks_beverages.png",
+    "Snacks & Beverages": "/assets/categories/snack_beverage.png",
     "Tea and coffee": "/assets/categories/tea_coffee.png",
     "Organic and Dry Fruits": "/assets/categories/organic_dryfruits.png",
     "Breakfast and sauce": "/assets/categories/breakfast_sauces.png",

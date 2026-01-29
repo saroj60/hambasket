@@ -44,7 +44,7 @@ const ProductCard = ({ product, onClick }) => {
 
   return (
     <div
-      className="group flex flex-col h-[280px] w-full bg-white rounded-xl overflow-hidden transition-all duration-300 border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-purple-300 relative"
+      className="group flex flex-col h-[250px] w-full bg-white rounded-xl overflow-hidden transition-all duration-300 border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-purple-300 relative"
       onClick={() => onClick(product)}
     >
       {/* Discount Badge */}
@@ -81,7 +81,7 @@ const ProductCard = ({ product, onClick }) => {
       </div>
 
       {/* 2. Content Section - Equal Spacing */}
-      <div className="flex flex-col flex-1 px-3 pb-3 min-h-0">
+      <div className="flex flex-col flex-1 px-3 pb-2 min-h-0">
 
         {/* Title: Stronger Font, Fixed Lines */}
         <h3 className={`text-[13px] font-bold text-gray-900 leading-tight line-clamp-2 mb-1 group-hover:text-purple-700 transition-colors h-[32px] ${isOutOfStock ? 'text-gray-500' : ''}`}>

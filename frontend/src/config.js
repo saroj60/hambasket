@@ -14,9 +14,9 @@ let isVirtual = false;
 
 // 1. Force Native Check
 if (isNative) {
-    console.log("Running on Native Device/Emulator, using Local Backend");
-    // baseUrl = `https://hambasket-backend.onrender.com`; // Production (Commented out)
-    baseUrl = `http://${EMULATOR_IP}:${PORT}`; // Local Dev (Emulator)
+    console.log("Running on Native Device/Emulator, using Remote Backend");
+    baseUrl = `https://hambasket-backend.onrender.com`; // Production (Active)
+    // baseUrl = `http://${EMULATOR_IP}:${PORT}`; // Local Dev (Emulator) - Commented out
     apiUrl = `${baseUrl}/api`;
 } else {
     // 2. Web Environment
