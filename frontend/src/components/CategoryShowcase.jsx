@@ -3,6 +3,14 @@ import { BASE_URL } from '../config';
 
 // 1. Static Local Image Map (Fallback for missing backend images)
 const CATEGORY_IMAGE_MAP = {
+    "Rice, Dal & Atta": "/assets/categories/staples.png",
+    "Bakery & Biscuits": "/assets/categories/bakery_biscuits.png",
+    "Tea & Coffee": "/assets/categories/tea_coffee.png",
+    "Breakfast & Sauces": "/assets/categories/breakfast_sauces.png",
+    "Cleaning Essential": "/assets/categories/household_care.png",
+    "Dairy & Eggs": "/assets/categories/dairy_bread.png",
+    "Organic & Dry Fruits": "/assets/categories/organic_dryfruits.png", // Added mapping logic from screenshot
+
     "Fresh Produce": "/assets/categories/fruits_veg.png",
     "Dairy, Bread & Eggs": "/assets/categories/dairy_bread.png",
     "Atta, Rice, Oil & Dals": "/assets/categories/staples.png",
@@ -63,7 +71,7 @@ const CategoryShowcase = ({ categories = [], activeCategory }) => {
                         cat.image;
 
                     if (!imgUrl) {
-                        imgUrl = '/assets/categories/default.png';
+                        imgUrl = '/assets/categories/fruits_veg.png'; // Fallback to safe default
                     } else if (imgUrl.startsWith('http') || imgUrl.startsWith('/assets') || imgUrl.startsWith('/images')) {
                         // Already full URL or local path
                     } else {
