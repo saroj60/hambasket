@@ -3,33 +3,33 @@ import { BASE_URL } from '../config';
 
 // 1. Static Local Image Map (Fallback for missing backend images)
 const CATEGORY_IMAGE_MAP = {
-    "Rice, Dal & Atta": "/assets/categories/staples.png",
-    "Bakery & Biscuits": "/assets/categories/bakery_biscuits.png",
-    "Tea & Coffee": "/assets/categories/tea_coffee.png",
-    "Breakfast & Sauces": "/assets/categories/breakfast_sauces.png",
-    "Cleaning Essential": "/assets/categories/household_care.png",
-    "Dairy & Eggs": "/assets/categories/dairy_bread.png",
-    "Organic & Dry Fruits": "/assets/categories/organic_dryfruits.png", // Added mapping logic from screenshot
+    "Rice, Dal & Atta": "assets/categories/staples.png",
+    "Bakery & Biscuits": "assets/categories/bakery_biscuits.png",
+    "Tea & Coffee": "assets/categories/tea_coffee.png",
+    "Breakfast & Sauces": "assets/categories/breakfast_sauces.png",
+    "Cleaning Essential": "assets/categories/household_care.png",
+    "Dairy & Eggs": "assets/categories/dairy_bread.png",
+    "Organic & Dry Fruits": "assets/categories/organic_dryfruits.png",
 
-    "Fresh Produce": "/assets/categories/fruits_veg.png",
-    "Dairy, Bread & Eggs": "/assets/categories/dairy_bread.png",
-    "Atta, Rice, Oil & Dals": "/assets/categories/staples.png",
-    "Bakery and Biscuits": "/assets/categories/bakery_biscuits.png",
-    "Snacks & Beverages": "/assets/categories/snack_beverage.png",
-    "Tea and coffee": "/assets/categories/tea_coffee.png",
-    "Organic and Dry Fruits": "/assets/categories/organic_dryfruits.png",
-    "Breakfast and sauce": "/assets/categories/breakfast_sauces.png",
-    "Household & Personal Care": "/assets/categories/household_care.png",
-    "Baby Care": "/assets/categories/baby_care.png",
-    "Beauty & Self-Care": "/assets/categories/beauty_selfcare.png",
-    "Liquors": "/assets/categories/liquors.png",
-    "Water & Gas": "/assets/categories/water_gas.png",
-    "Meat, Fish & Eggs": "/assets/categories/meat_fish.png",
-    "Meat & Fish": "/assets/categories/meat_fish.png",
-    "Chicken, Meat & Fish": "/assets/categories/meat_fish.png",
-    "Cooking Oil, Masala and more": "/assets/categories/cooking_oil.png",
-    "Chocolate and Ice Cream": "/assets/categories/chocolate_icecream.png",
-    "Pharmacy": "/assets/categories/pharmacy.png"
+    "Fresh Produce": "assets/categories/fruits_veg.png",
+    "Dairy, Bread & Eggs": "assets/categories/dairy_bread.png",
+    "Atta, Rice, Oil & Dals": "assets/categories/staples.png",
+    "Bakery and Biscuits": "assets/categories/bakery_biscuits.png",
+    "Snacks & Beverages": "assets/categories/snack_beverage.png",
+    "Tea and coffee": "assets/categories/tea_coffee.png",
+    "Organic and Dry Fruits": "assets/categories/organic_dryfruits.png",
+    "Breakfast and sauce": "assets/categories/breakfast_sauces.png",
+    "Household & Personal Care": "assets/categories/household_care.png",
+    "Baby Care": "assets/categories/baby_care.png",
+    "Beauty & Self-Care": "assets/categories/beauty_selfcare.png",
+    "Liquors": "assets/categories/liquors.png",
+    "Water & Gas": "assets/categories/water_gas.png",
+    "Meat, Fish & Eggs": "assets/categories/meat_fish.png",
+    "Meat & Fish": "assets/categories/meat_fish.png",
+    "Chicken, Meat & Fish": "assets/categories/meat_fish.png",
+    "Cooking Oil, Masala and more": "assets/categories/cooking_oil.png",
+    "Chocolate and Ice Cream": "assets/categories/chocolate_icecream.png",
+    "Pharmacy": "assets/categories/pharmacy.png"
 };
 
 // Create a normalized map for case-insensitive lookup
@@ -71,7 +71,7 @@ const CategoryShowcase = ({ categories = [], activeCategory }) => {
                         cat.image;
 
                     if (!imgUrl) {
-                        imgUrl = '/assets/categories/fruits_veg.png'; // Fallback to safe default
+                        imgUrl = 'assets/categories/fruits_veg.png'; // Fallback to safe default relative path
                     } else if (imgUrl.startsWith('http') || imgUrl.startsWith('/assets') || imgUrl.startsWith('/images')) {
                         // Already full URL or local path
                     } else {
