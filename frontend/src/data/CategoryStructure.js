@@ -36,7 +36,8 @@ export const CATEGORY_HIERARCHY = {
         { name: "Chips & Namkeen", image: "/images/snacks/chips.png" }, // Chips
         { name: "Soft Drinks", image: "/images/snacks/soft_drinks.png" }, // Coke
         { name: "Juices", image: "/images/snacks/juices.png" }, // Juice
-        { name: "Cold Coffee", image: "/images/snacks/cold_coffee.png" } // Tea Cup
+        { name: "Cold Coffee", image: "/images/snacks/cold_coffee.png" }, // Tea Cup
+        { name: "Noodles and chawchaw", image: "/assets/categories/noodles_chawchaw.png" }
     ],
     "Tea and coffee": [
         { name: "All", image: "/images/beverages/all.png" },

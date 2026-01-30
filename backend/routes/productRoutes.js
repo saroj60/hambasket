@@ -73,11 +73,33 @@ router.get("/:id", async (req, res) => {
 import upload from "../config/multerConfig.js";
 
 // Safer Upload Middleware to catch Multer/Cloudinary errors
+// Safer Upload Middleware to catch Multer/Cloudinary errors
 const uploadMiddleware = (req, res, next) => {
   upload.single('image')(req, res, (err) => {
     if (err) {
       console.error("Upload Error:", err);
-      return res.status(500).json({ message: "Image upload failed (Cloudinary/Multer)", error: err.message });
+
+      const errorDetails = {
+        message: err.message,
+        stack: err.stack,
+        code: err.code,
+        name: err.name,
+        details: err
+      };
+
+      // DEBUG: Write error to absolute path
+      import('fs').then(fs => {
+        try {
+          fs.writeFileSync('C:/Users/saroj/Desktop/HB/backend/upload_debug_error.txt', JSON.stringify(errorDetails, null, 2));
+        } catch (e) { console.error("Write failed", e); }
+      });
+
+      // Exposre error in message for user to see in alert
+      return res.status(500).json({
+        message: `Upload Failed: ${err.message}`,
+        error: err.message,
+        details: err
+      });
     }
     next();
   });

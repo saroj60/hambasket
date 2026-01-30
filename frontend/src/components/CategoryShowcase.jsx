@@ -24,6 +24,12 @@ const CATEGORY_IMAGE_MAP = {
     "Pharmacy": "/assets/categories/pharmacy.png"
 };
 
+// Create a normalized map for case-insensitive lookup
+const NORMALIZED_MAP = Object.keys(CATEGORY_IMAGE_MAP).reduce((acc, key) => {
+    acc[key.trim().toLowerCase()] = CATEGORY_IMAGE_MAP[key];
+    return acc;
+}, {});
+
 const getPastelColor = (index) => {
     const colors = [
         '#ffe8e8', // Soft Red
@@ -49,9 +55,12 @@ const CategoryShowcase = ({ categories = [], activeCategory }) => {
                 {categories.map((cat, index) => {
                     // RESOLVE IMAGE URL:
                     // 1. Check Local Map first (Most reliable)
-                    // 2. Then check backend URL
-                    // 3. Fallback to default
-                    let imgUrl = CATEGORY_IMAGE_MAP[cat.name] || cat.image;
+                    // 2. Check Normalized Map (Case insensitive)
+                    // 3. Then check backend URL
+                    // 4. Fallback to default
+                    let imgUrl = CATEGORY_IMAGE_MAP[cat.name] ||
+                        NORMALIZED_MAP[cat.name?.trim().toLowerCase()] ||
+                        cat.image;
 
                     if (!imgUrl) {
                         imgUrl = '/assets/categories/default.png';
