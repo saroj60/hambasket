@@ -73,6 +73,9 @@ const CategoryShowcase = ({ categories = [], activeCategory }) => {
                         NORMALIZED_MAP[cat.name?.trim().toLowerCase()] ||
                         cat.image;
 
+                    // DEBUG LOG
+                    console.log(`[CategoryShowcase] ${cat.name} -> Resolved: ${imgUrl} (Original: ${cat.image})`);
+
                     if (!imgUrl) {
                         imgUrl = '/assets/categories/fruits_veg.png'; // Fallback to safe default relative path
                     } else if (imgUrl.startsWith('http') || imgUrl.startsWith('/assets') || imgUrl.startsWith('/images')) {

@@ -22,6 +22,10 @@ const CategorySection = ({ title, category, products = [], onProductClick }) => 
     }, [category]);
     */
 
+
+    // DEBUG LOG
+    // console.log(`[CategorySection] Rendering ${category} with ${products?.length} products`);
+
     if (!products || products.length === 0) return null;
 
     const handleSeeAll = () => {
