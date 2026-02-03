@@ -259,11 +259,11 @@ function ShopContent() {
         </div>
       }>
         <Routes>
+          <Route path="/admin" element={<AdminRedirect setIsAdminMode={setIsAdminMode} setShowAuthModal={setShowAuthModal} />} />
           <Route path="/" element={
             <>
               {/* User Actions Bar Removed - Now in Header */}
 
-              <Route path="/admin" element={<AdminRedirect setIsAdminMode={setIsAdminMode} setShowAuthModal={setShowAuthModal} />} />
               <div className="w-full pb-40">
                 {/* Hero / Banner Removed */}
 
