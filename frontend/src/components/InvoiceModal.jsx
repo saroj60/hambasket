@@ -126,7 +126,7 @@ const InvoiceModal = ({ order, isOpen, onClose }) => {
                                 <p style={{ color: '#4b5563', lineHeight: '1.4' }}>
                                     Kathmandu, Nepal<br />
                                     sarojbhagat666@gmail.com<br />
-                                    +9779815769007
+                                    +9779808554745
                                 </p>
                             </div>
                         </div>

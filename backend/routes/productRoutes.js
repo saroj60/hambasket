@@ -116,7 +116,7 @@ router.post("/", isVendorOrAdmin, uploadMiddleware, async (req, res) => {
     }
 
     if (req.file) {
-      productData.image = req.file.path;
+      productData.image = '/uploads/' + req.file.filename;
     }
     if (productData.flashSale) {
       try {
@@ -145,7 +145,7 @@ router.put("/:id", isVendorOrAdmin, upload.single('image'), async (req, res) => 
   try {
     const productData = req.body;
     if (req.file) {
-      productData.image = req.file.path;
+      productData.image = '/uploads/' + req.file.filename;
     }
     if (productData.flashSale) {
       try {

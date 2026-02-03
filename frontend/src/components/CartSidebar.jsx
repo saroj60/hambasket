@@ -186,7 +186,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, onRemove, onCheckout, onLogin
         `*Location:* ${locationLink}`;
 
       // 6. Generate Link & Redirect Immediately
-      const url = `https://wa.me/+9779815769007?text=${encodeURIComponent(message)}`;
+      const url = `https://wa.me/+9779808554745?text=${encodeURIComponent(message)}`;
 
       // Use window.location.href for reliable mobile redirection without popup blockers
       // Or window.open if you prefer a new tab, but href is safer for "app-like" feel

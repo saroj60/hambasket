@@ -42,6 +42,24 @@ import { MAIN_CATEGORIES, CATEGORY_HIERARCHY } from "./data/CategoryStructure";
 
 // const CATEGORIES = ["All", "Vegetables", "Fruits", "Dairy", "Bakery", "Beverages", "Snacks", "Frozen", "Baby Care", "Chocolate and Ice Cream", "Cooking Oil, Masala and more", "Birthday items", "Other"];
 
+const AdminRedirect = ({ setIsAdminMode, setShowAuthModal }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.role === 'admin') {
+      setIsAdminMode(true);
+      navigate('/');
+      window.location.hash = 'dashboard';
+    } else {
+      setShowAuthModal(true);
+      navigate('/');
+    }
+  }, [user, navigate, setIsAdminMode, setShowAuthModal]);
+
+  return null;
+};
+
 function ShopContent() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -124,9 +142,7 @@ function ShopContent() {
           <div className="text-primary font-bold text-xl">Loading Admin Panel...</div>
         </div>
       }>
-        <DesktopGuard>
-          <AdminPanel />
-        </DesktopGuard>
+        <AdminPanel />
       </Suspense>
     );
   }
@@ -247,6 +263,7 @@ function ShopContent() {
             <>
               {/* User Actions Bar Removed - Now in Header */}
 
+              <Route path="/admin" element={<AdminRedirect setIsAdminMode={setIsAdminMode} setShowAuthModal={setShowAuthModal} />} />
               <div className="w-full pb-40">
                 {/* Hero / Banner Removed */}
 

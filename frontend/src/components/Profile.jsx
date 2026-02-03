@@ -555,13 +555,13 @@ const Profile = ({ onClose, onTrackOrder }) => {
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                            <a href="tel:+9779815769007" style={{ textDecoration: 'none' }}>
+                            <a href="tel:+9779808554745" style={{ textDecoration: 'none' }}>
                                 <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'transform 0.1s' }}>
                                     <span style={{ fontSize: '2rem' }}>📞</span>
                                     <span style={{ fontWeight: '600', color: 'var(--text)' }}>Call Us</span>
                                 </div>
                             </a>
-                            <a href="https://wa.me/+9779815769007" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                            <a href="https://wa.me/+9779808554745" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
                                 <div className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'transform 0.1s' }}>
                                     <span style={{ fontSize: '2rem' }}>💬</span>
                                     <span style={{ fontWeight: '600', color: 'var(--text)' }}>WhatsApp</span>
