@@ -268,7 +268,7 @@ const AdminProducts = () => {
                             </div>
 
                             {/* Actions Overlay */}
-                            <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-gray-50 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
+                            <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-gray-50 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity transform translate-y-0 md:translate-y-2 md:group-hover:translate-y-0">
                                 <button
                                     onClick={() => handleEditProduct(product)}
                                     className="py-2.5 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs hover:bg-blue-100 transition-colors flex items-center justify-center gap-1"

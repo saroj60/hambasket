@@ -454,7 +454,7 @@ const ProductFormModal = ({ isOpen, onClose, onSave, initialData }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => handleVariantRemove(i)}
-                                                className="w-8 h-8 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors opacity-0 group-hover:opacity-100 font-bold"
+                                                className="w-8 h-8 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100 font-bold"
                                             >
                                                 ✕
                                             </button>
