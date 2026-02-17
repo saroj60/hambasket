@@ -279,6 +279,42 @@ const Layout = ({ children, cartCount, onOpenCart, searchTerm, onSearch, suggest
                 </div>
               )}
 
+              {/* Cart Button with Count Badge - Visible on Desktop */}
+              <div
+                onClick={onOpenCart}
+                className="hidden md:flex"
+                style={{ cursor: 'pointer', flexDirection: 'column', alignItems: 'center', gap: '2px', position: 'relative', marginRight: '16px' }}
+              >
+                <div style={{ position: 'relative' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                  </svg>
+                  {cartCount > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '-8px',
+                      right: '-8px',
+                      backgroundColor: '#ef4444',
+                      color: 'white',
+                      fontSize: '0.7rem',
+                      fontWeight: 'bold',
+                      borderRadius: '50%',
+                      width: '18px',
+                      height: '18px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '2px solid white'
+                    }}>
+                      {cartCount}
+                    </span>
+                  )}
+                </div>
+                <span style={{ fontSize: '0.7rem', fontWeight: '600', color: '#374151' }}>Cart</span>
+              </div>
+
               {/* Login Button - Visible on Desktop */}
               <div
                 onClick={user ? () => navigate('/profile') : onLogin}

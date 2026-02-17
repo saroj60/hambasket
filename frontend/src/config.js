@@ -24,8 +24,8 @@ if (isNative) {
 
     // Smart Local Dev Detection: If serving from localhost or local IP, look for backend on same IP
     if (hostname === 'localhost' || hostname.startsWith('192.168.') || hostname.startsWith('10.')) {
-        baseUrl = `http://${hostname}:${PORT}`; // CONNECT TO LOCAL BACKEND
-        // baseUrl = `https://hambasket-backend.onrender.com`; // FORCE REMOTE BACKEND FOR TESTING
+        // baseUrl = `http://${hostname}:${PORT}`; // CONNECT TO LOCAL BACKEND
+        baseUrl = `https://hambasket-backend.onrender.com`; // FORCE REMOTE BACKEND FOR TESTING
     } else {
         // Production / Vercel
         baseUrl = import.meta.env.VITE_API_URL || `https://hambasket-backend.onrender.com`;

@@ -22,6 +22,7 @@ const StoreDetails = lazy(() => import("./components/StoreDetails"));
 const VerifyEmail = lazy(() => import("./components/VerifyEmail"));
 const ResetPassword = lazy(() => import("./components/ResetPassword"));
 const CategoryProducts = lazy(() => import("./pages/CategoryProducts"));
+import SplashScreen from "./components/SplashScreen";
 
 import CategoryShowcase from "./components/CategoryShowcase";
 import CategorySection from "./components/CategorySection";
@@ -383,6 +384,12 @@ function ShopContent() {
 }
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  if (loading) {
+    return <SplashScreen onComplete={() => setLoading(false)} />;
+  }
+
   return (
     <ErrorBoundary>
       <AuthProvider>
