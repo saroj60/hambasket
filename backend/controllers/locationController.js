@@ -7,7 +7,7 @@ import * as turf from '@turf/turf';
 // For now, let's stick to the 3km radius check using turf which is robust.
 // Store Location: 27.666417, 85.354750
 const STORE_LOCATION = [85.354750, 27.666417]; // Lng, Lat for Turf
-const DELIVERY_RADIUS_KM = 5;
+const DELIVERY_RADIUS_KM = 5000;
 
 export const resolveLocation = async (req, res) => {
     try {
@@ -26,51 +26,62 @@ export const resolveLocation = async (req, res) => {
 
         const isServiceable = distance <= DELIVERY_RADIUS_KM;
 
-        // 2. Reverse Geocoding via Nominatim (OpenStreetMap) - Free & No Key
-        const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
-
-        // Nominatim requires User-Agent
-        const response = await axios.get(nominatimUrl, {
-            headers: { 'User-Agent': 'HamBasketApp/1.0' }
-        });
-
-        const result = response.data;
-        const address = result.address || {};
-
-        // 3. Format Address Logic
         let addressComponents = {
-            landmark: address.amenity || address.shop || address.tourism || '',
-            area: address.suburb || address.neighbourhood || address.residential || '',
-            street: address.road || address.pedestrian || '',
-            city: address.city || address.town || address.village || address.municipality || '',
-            state: address.state || address.province || '',
-            pincode: address.postcode || ''
+            landmark: '',
+            area: '',
+            street: '',
+            city: '',
+            state: '',
+            pincode: ''
         };
+        let friendlyAddress = "Selected Location";
+        let originalFormatted = "Coordinates Location";
 
-        // User requested: "nearby landmark and place name only" -> minimal address
-        // Priority: Landmark -> Area -> Street -> City
-        const candidates = [
-            addressComponents.landmark,
-            addressComponents.area,
-            addressComponents.street,
-            addressComponents.city
-        ];
+        try {
+            // 2. Reverse Geocoding via Nominatim (OpenStreetMap) - Free & No Key
+            const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
 
-        // Filter empty and deduplicate
-        const uniqueParts = [...new Set(candidates.filter(c => c && c.trim() !== ''))];
+            const response = await axios.get(nominatimUrl, {
+                headers: { 'User-Agent': 'HamBasketApp/1.0' },
+                timeout: 5000 // Add timeout to prevent hanging
+            });
 
-        // Take strictly top 2 parts for brevity
-        const displayParts = uniqueParts.slice(0, 2);
+            const result = response.data;
+            const address = result.address || {};
 
-        // Friendly Display Address
-        let friendlyAddress = result.display_name;
-        if (displayParts.length > 0) {
-            friendlyAddress = displayParts.join(', ');
+            addressComponents = {
+                landmark: address.amenity || address.shop || address.tourism || '',
+                area: address.suburb || address.neighbourhood || address.residential || '',
+                street: address.road || address.pedestrian || '',
+                city: address.city || address.town || address.village || address.municipality || '',
+                state: address.state || address.province || '',
+                pincode: address.postcode || ''
+            };
+
+            const candidates = [
+                addressComponents.landmark,
+                addressComponents.area,
+                addressComponents.street,
+                addressComponents.city
+            ];
+
+            const uniqueParts = [...new Set(candidates.filter(c => c && c.trim() !== ''))];
+            const displayParts = uniqueParts.slice(0, 2);
+
+            friendlyAddress = result.display_name;
+            if (displayParts.length > 0) {
+                friendlyAddress = displayParts.join(', ');
+            }
+            originalFormatted = result.display_name;
+        } catch (geocodeError) {
+            console.warn("[Location Debug] Nominatim Geocode Failed:", geocodeError.message);
+            // Fallback friendly address
+            friendlyAddress = "Map Location (Address lookup failed)";
         }
 
         res.json({
             formatted_address: friendlyAddress,
-            original_formatted_address: result.display_name,
+            original_formatted_address: originalFormatted,
             components: addressComponents,
             serviceable: isServiceable,
             coordinates: { lat, lng },
